@@ -1,0 +1,28 @@
+{
+  "name": "scratch-info",
+  "version": "0.1.0",
+  "description": "A simple Node app built on fastify, instantly up and running.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "fastify": "^4.21.0",
+    "handlebars": "^4.7.8",
+    "@fastify/view": "^8.0.0",
+    "@fastify/static": "^6.10.2",
+    "@fastify/rate-limit": "^9.x",
+    "node-fetch": "^2.7.0",
+    "ua-parser-js": "^2.0.3",
+    "node-html-parser": "^7.0.1",
+    "easy-json-database": "^1.5.1"
+  },
+  "engines": {
+    "node": "16.14.2"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch"
+  ]
+}

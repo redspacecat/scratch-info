@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{{title}} — Scratch Info</title>
+
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/info.js"></script>
+  </head>
+  <body>
+    <div id="container">
+    <div style="display:flex;flex-wrap:wrap;">
+      <div>
+        <a href="https://scratch.mit.edu/projects/{{id}}" target="_blank">
+        <img src="{{image}}" loading="lazy" style="max-height:360px;max-width:100%;border-radius:10px;border:1px solid black;">
+        </a>
+        <a href="https://scratch.mit.edu/projects/{{id}}" target="_blank" style="text-decoration: none;vertical-align: top;margin-left: 10px;display:block;">
+          <img src="https://scratch.mit.edu/favicon.ico" style="vertical-align:middle">
+          <span style="vertical-align:middle;color:darkyellow">Scratch link</span>
+        </a>
+        <a href="https://turbowarp.org/{{id}}" style="text-decoration: none;vertical-align: top;margin-left: 10px;display:block;">
+          <img src="https://turbowarp.org/favicon.ico" target="_blank" style="vertical-align:middle">
+          <span style="vertical-align:middle;color:red">TurboWarp link</span>
+        </a>
+      </div>
+      <div style="vertical-align: top;margin-left: 10px">
+        <a style="font-size: x-large;color:blue" target="_blank" href="https://scratch.mit.edu/projects/{{id}}">{{title}}</a>
+        <br>
+        <div style="display:flex">
+          <a id="user-link" href="/users/{{author.username}}" style="text-decoration:none;color:black;">
+            <div style="width: fit-content">
+              <img src="{{author.image}}" style="height: 35px;width:35px;margin-right:5px;vertical-align:middle;">
+              <span style="vertical-align:middle">{{author.username}}</span>
+            </div>
+          </a>
+        </div>
+        <table id="project-stats" width="300px" style="margin-top:5px;text-align:center">
+          <tr><td colspan="3">Project Statistics</td></tr>
+          <tr><td class="loves"></td><td class="faves"></td></tr>
+          <tr><td class="views"></td><td class="remixes" style="vertical-align:middle;"></td></tr>
+          <tr><td class="loveToViewRatio" colspan="2"><span></span><span class="info" data-info="lovetoview"></span></td></tr>
+          <tr><td class="faveToViewRatio" colspan="2"><span></span><span class="info" data-info="favetoview"></span></td></tr>
+          <tr><td class="faveToLoveRatio" colspan="2"><span></span><span class="info" data-info="favetolove"></span></td></tr>
+        </table>
+        <table style="font-size:small;margin-top:5px;margin-bottom:5px;">
+          <tr><td id="created"></td></tr>
+          <tr><td id="modified"></td></tr>
+          <tr><td id="shared"></td></tr>
+        </table>
+        <span id="review-status">...</span><span class="info" data-info="reviewstatus"></span>
+      </div>
+    </div>
+    </div>
+    <script>
+      window.addEventListener("DOMContentLoaded", setup2)
+      function setup2() {
+        if ("{{reviewStatus}}" == "notreviewed") {
+            document.querySelector("#review-status").innerText = "🤔 Not Rated"
+        } else if ("{{reviewStatus}}" == "safe") {
+            document.querySelector("#review-status").innerText = "✅ Rated FE"
+        } else if ("{{reviewStatus}}" == "notsafe") {
+            document.querySelector("#review-status").innerText = "⛔ Rated NFE"
+        }
+        
+        document.querySelector(".loves").innerText = ({{stats.loves}}).toLocaleString()
+        document.querySelector(".faves").innerText = ({{stats.favorites}}).toLocaleString()
+        document.querySelector(".views").innerText = ({{stats.views}}).toLocaleString()
+        document.querySelector(".remixes").innerText = ({{stats.remixes}}).toLocaleString()
+        document.querySelector(".loveToViewRatio").children[0].innerText = `Love/view ratio: ${Math.round({{loveToViewRatio}} * 100) / 100}%`
+        document.querySelector(".faveToViewRatio").children[0].innerText = `Favorite/view ratio: ${Math.round({{faveToViewRatio}} * 100) / 100}%`
+        document.querySelector(".faveToLoveRatio").children[0].innerText = `Favorite/love ratio: ${Math.round({{faveToLoveRatio}} * 100) / 100}%`
+        
+        document.querySelector("#created").innerText = `Created: ${new Date("{{history.created}}").toLocaleString()}`
+        document.querySelector("#modified").innerText = `Last Modified: ${new Date("{{history.created}}").toLocaleString()}`
+        document.querySelector("#shared").innerText = `Shared: ${new Date("{{history.created}}").toLocaleString()}`
+      }
+    </script>
+  </body>
+</html>

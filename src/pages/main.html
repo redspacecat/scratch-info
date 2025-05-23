@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scratch Info</title>
+    <link rel="stylesheet" href="homepage.css">
+</head>
+<body>
+  <h2>
+    Get information about Scratch users
+  </h2>
+  
+  <form action="javascript:;" onsubmit="redirect()">
+    <label for="name-input">Try it out by picking a user:</label><br>
+    <input type="text" id="name-input" required><br>
+    <input type="submit" value="Submit" style="margin-top: 5px">
+  </form>
+  
+  <script>
+    function redirect() {
+      window.location.href = "/users/" + document.querySelector("#name-input").value
+    }
+  </script>
+</body>
+</html>

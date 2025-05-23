@@ -1,0 +1,254 @@
+/* a minimalist set of CSS resets */
+
+/* default to border-box */
+html {
+    box-sizing: border-box;
+    font-size: 16px;
+    min-height: 100vh;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+/* adjust typography defaults */
+body {
+    margin: 0px;
+    font-family: Arial;
+    line-height: 1.5;
+    background-image: linear-gradient(to right, white, #ebf7fe 150px, #ebf7fe 650px, white 800px);
+    background-size: 800px 100%;
+    background-position: 50% 100%;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: fit-content;
+}
+
+#container {
+    margin: 1rem;
+}
+
+/* images and videos max out at full width */
+img,
+video {
+    height: auto;
+    max-width: 100%;
+}
+
+#username-text {
+    font-size: xx-large;
+    margin-left: 10px;
+}
+
+#username-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 7px;
+}
+
+#username-text,
+#username-img {
+    vertical-align: middle;
+}
+
+table,
+td {
+    border-collapse: collapse;
+    border: 2px solid black;
+    padding: 5px;
+}
+
+#averageLoves::after,
+#totalLoves::after {
+    content: "❤️";
+}
+#averageFaves::after,
+#totalFaves::after {
+    content: "⭐";
+}
+#averageViews::after,
+#totalViews::after {
+    content: "👁️";
+}
+
+.loves::after {
+    content: "❤️";
+}
+.faves::after {
+    content: "⭐";
+}
+.views::after {
+    content: "👁️";
+}
+.remixes::after {
+    content: url("https://cdn.glitch.global/46f28da1-51b4-4b23-81a7-f21e8ed090ab/remix.svg?v=1747794488974");
+    filter: invert(40%) sepia(25%) saturate(938%) hue-rotate(83deg) brightness(95%) contrast(93%);
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: -10px;
+}
+.loveToViewRatio::after {
+    /*   content: "❤️/👁️" */
+}
+.loves,
+.faves,
+.views,
+.loveToViewRatio,
+.faveToViewRatio,
+.faveToLoveRatio,
+.remixes {
+    font-size: small;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.loveToViewRatio,
+.faveToViewRatio,
+.faveToLoveRatio {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.project-title {
+    overflow-x: hidden;
+    text-wrap: nowrap;
+    width: 210px;
+    display: inline-block;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+.project-image {
+    width: 250px;
+    border: 1px solid gray;
+    border-radius: 10px;
+
+    opacity: 1;
+    animation-name: fadeInOpacity;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 0.5s;
+}
+
+.project-container {
+    width: 85%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-left: auto;
+    margin-right: auto;
+    transition: 0.5s;
+}
+
+.one-project {
+    width: 251px;
+    padding: 5px;
+    min-height: 280px;
+}
+
+.project-stats-line {
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+    margin-top: -5px;
+}
+
+@media screen and (max-width: 630px) {
+    .project-container {
+        width: 100%;
+        transition: 0.5s;
+    }
+}
+
+#stats-table td,
+#average-stats-table td {
+    text-align: center;
+    width: 33.3%;
+}
+
+@keyframes fadeInOpacity {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.info {
+    width: 15px;
+    height: 15px;
+    background-image: url("https://cdn.glitch.global/46f28da1-51b4-4b23-81a7-f21e8ed090ab/info.svg?v=1747614037251");
+    position: absolute;
+    display: inline-block;
+    margin-left: 2px;
+}
+
+#sort-buttons {
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+}
+
+.c,
+.cf {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cf {
+    width: fit-content;
+}
+
+.ct {
+    text-align: center;
+}
+
+.h0 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#basicInfo {
+    margin-right: 7px;
+}
+#browserandos {
+    margin-left: 7px;
+}
+
+@media screen and (max-width: 550px) {
+    #basicInfo,
+    #browserandos {
+        margin-left: auto;
+        margin-right: auto;
+    }
+  #otherinfo {
+    min-width: 60%
+  }
+}
+
+#otherinfo {
+  min-width: 30%
+}
+
+#stats-table,
+#average-stats-table {
+    width: 100%;
+    max-width: 550px;
+}
+
+#user-link span:hover {
+    color: blue !important;
+}
+
+.user-info-box {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 15px;
+    border: 1px solid gray;
+    margin-bottom: 10px;
+}

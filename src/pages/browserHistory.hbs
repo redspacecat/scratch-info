@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{{username}} — Scratch Info</title>
+
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/spinner.css" />
+  </head>
+  <body>
+    <h3>Viewing Browser and OS history for {{username}}</h3>
+<!--     <table id="info-table">
+      
+    </table> -->
+    
+<div style="width: 90%;margin-left:auto;margin-right:auto;">
+  <div class="spinner" style="margin-left:auto;margin-right:auto;display:block"><div></div><div></div><div></div></div>
+  <canvas id="data-chart"></canvas>
+  <a id="previous-page" href="?page={{prevPage}}">Previous Page</a>
+  <span>•</span>
+  <a id="next-page" href="?page={{nextPage}}">Next Page</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script type="module">
+  let history = await (await fetch("/api/browserHistory/{{username}}?page={{page}}")).json()
+  document.querySelector(".spinner").remove()
+  let data = []
+  let labels = []
+  for (let h of history) {
+    let version = h.browser.split(" ")[h.browser.split(" ").length - 1]
+    let name = h.browser.replace(version, "")
+    data.push(Math.round(parseFloat(version)))
+    labels.push(`${h.os} — ${name}${Math.round(parseFloat(version))}`)
+  }
+  
+  const ctx = document.getElementById('data-chart');
+  // const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,//['Windows 10', 'Windows 10', 'Windows 10', 'Windows 10', 'Windows 10', 'Windows 10', "Windows 11", "Windows 10"],
+      datasets: [{
+        label: 'Version',
+        data: data,//[90, 95, 100, 110, 105, null, null, null],
+        borderWidth: 2
+      }],
+      // {
+      //   label: 'Firefox',
+      //   data: [null, null, null, null, 100, 115, 125, 130],
+      //   borderWidth: 1
+      // }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: false,
+          //max: Math.max(data) + 10,
+          //min: Math.min(data) - 10
+        },
+        x:  {
+            ticks: {
+                    callback: function(value, index, values) {
+                        // Custom date formatting logic
+                        return months[new Date(history[index].time).getMonth()] + " " + new Date(history[index].time).getFullYear()
+                    }
+                }
+        }
+      },
+      layout: {
+            padding: 10
+        },
+      plugins: {
+        legend: {
+                display: false
+          }
+      }
+    }
+  });
+</script>
+    <script>
+      window.onerror = function(e) {
+        alert("Error: " + e)
+      }
+    </script>
+    
+    <br><br><br>
+    <a href="/">Go Home</a>
+  </body>
+</html>
