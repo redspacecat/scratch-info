@@ -19,6 +19,7 @@
         engine: {
             handlebars: require("handlebars"),
         },
+        root: path.join(__dirname, "")
     });
 
     fastify.all("/api/followering/:username", api.followering);
