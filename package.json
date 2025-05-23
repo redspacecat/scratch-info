@@ -1,11 +1,4 @@
 {
-  "name": "scratch-info",
-  "version": "0.1.0",
-  "description": "A simple Node app built on fastify, instantly up and running.",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
   "dependencies": {
     "fastify": "^4.21.0",
     "handlebars": "^4.7.8",
@@ -20,9 +13,5 @@
   "engines": {
     "node": "16.14.2"
   },
-  "license": "MIT",
-  "keywords": [
-    "node",
-    "glitch"
-  ]
+  "license": "MIT"
 }

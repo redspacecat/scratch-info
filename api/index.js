@@ -1,11 +1,11 @@
-async function main() {
     const path = require("path");
-    const api = require("./api.js");
+    const api = require("../api.js");
 
     // Require the fastify framework and instantiate it
     const fastify = require("fastify")({
       ignoreTrailingSlash: true
     });
+    async function main() {
     await fastify.register(import("@fastify/rate-limit"), { global: true, max: 30, timeWindow: 60 * 1000 });
 
     // Setup our static files
@@ -43,5 +43,27 @@ async function main() {
         }
         console.log(`Your app is listening on ${address}`);
     });
+    // module.exports = fastify
+
+    
 }
 main();
+export default async function handler(req, res) {
+        await fastify.ready()
+        fastify.server.emit('request', req, res)
+    }
+
+// import Fastify from 'fastify'
+
+// const app = Fastify({
+//   logger: true,
+// })
+
+// app.get('/', async (req, res) => {
+//   return res.status(200).type('text/html').send("<p>Hello world</p>")
+// })
+
+// export default async function handler(req, res) {
+//   await app.ready()
+//   app.server.emit('request', req, res)
+// }
