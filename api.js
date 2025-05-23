@@ -1,6 +1,7 @@
 const fetch = require("node-fetch");
 const uap = require("ua-parser-js");
 const HTMLParser = require("node-html-parser");
+const path = require("path")
 // const Database = require("easy-json-database");
 // const projectDB = new Database("./user-project-database.json", {
 //     snapshots: {
@@ -208,7 +209,7 @@ api.getUser = async function (request, reply) {
     let user = request.params.username;
     let data = await getUserData(user);
     if (data == 404) {
-        return reply.view("/src/pages/UserNotFound.hbs", { username: user });
+        return reply.view("/UserNotFound.hbs", { username: user });
     }
     params.browser = data.browser;
     params.os = data.os || "?";
@@ -267,7 +268,7 @@ api.getUser = async function (request, reply) {
     //         params.projectsShared = text.slice(text.indexOf("(") + 1, text.indexOf(")"));
     //     } catch {}
 
-    return reply.view("/src/pages/user.hbs", params);
+    return reply.view("/user.hbs", params);
 };
 
 api.getUserInfo = async function (request, reply) {
@@ -290,7 +291,7 @@ api.browserHistoryPage = async function (request, reply) {
     };
     params.prevPage = params.page > 1 ? params.page - 1 : 1;
 
-    return reply.view("/src/pages/browserHistory.hbs", params);
+    return reply.view("/browserHistory.hbs", params);
 };
 
 api.browserHistory = async function (request, reply) {
@@ -396,7 +397,7 @@ api.projectPage = async function getProjectPage(request, reply) {
     let params = {};
     let id = request.params.project;
     params = await getProjectData(id);
-    return reply.view("/src/pages/project.hbs", params);
+    return reply.view("/project.hbs", params);
 };
 
 api.apiProjectData = async function apiProjectData(request, reply) {

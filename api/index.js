@@ -19,6 +19,7 @@
         engine: {
             handlebars: require("handlebars"),
         },
+        root: path.join(__dirname, "views")
     });
 
     fastify.all("/api/followering/:username", api.followering);
@@ -32,7 +33,7 @@
     fastify.all("/projects/:project", api.projectPage)
 
     fastify.all("/", async function (request, reply) {
-        return reply.view("/src/pages/main.html");
+        return reply.view("/main.html");
     });
 
     // Run the server and report out to the logs
