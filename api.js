@@ -1,17 +1,17 @@
 const fetch = require("node-fetch");
 const uap = require("ua-parser-js");
 const HTMLParser = require("node-html-parser");
-const Database = require("easy-json-database");
-const projectDB = new Database("./user-project-database.json", {
-    snapshots: {
-        enabled: false,
-    },
-});
-const projectInfoDB = new Database("./project-database.json", {
-    snapshots: {
-        enabled: false,
-    },
-});
+// const Database = require("easy-json-database");
+// const projectDB = new Database("./user-project-database.json", {
+//     snapshots: {
+//         enabled: false,
+//     },
+// });
+// const projectInfoDB = new Database("./project-database.json", {
+//     snapshots: {
+//         enabled: false,
+//     },
+// });
 
 let api = {};
 
@@ -298,7 +298,8 @@ api.browserHistory = async function (request, reply) {
     let data = [];
     let projects;
 
-    if (projectDB.has(user)) {
+    // if (projectDB.has(user)) {
+    if (false) {
         let offset = request.query.page ? (request.query.page - 1) * 40 : 0;
         projects = projectDB.get(user).slice(offset, offset + 40);
         console.log("using stored projects for user", user);
@@ -321,11 +322,11 @@ api.browserHistory = async function (request, reply) {
         projects.sort((a, b) => new Date(b.history.modified).getTime() - new Date(a.history.modified).getTime());
 
         let ids = projects.map((a) => a.id);
-        projectDB.set(user, ids);
+        // projectDB.set(user, ids);
         console.log("created project list for user:", user);
 
         let offset = request.query.page ? (request.query.page - 1) * 40 : 0;
-        projects = projectDB.get(user).slice(offset, offset + 40);
+        // projects = projectDB.get(user).slice(offset, offset + 40);
     }
     // console.log("using project list", projects)
     let promises = [];
@@ -335,7 +336,8 @@ api.browserHistory = async function (request, reply) {
             new Promise(async function (resolve, reject) {
                 let id = projects[i]; //.id
                 let time, ua;
-                if (projectInfoDB.has(id.toString())) {
+                // if (projectInfoDB.has(id.toString())) {
+                if (false) {
                     time = projectInfoDB.get(`${id}.time`);
                     ua = projectInfoDB.get(`${id}.ua`);
                 } else {
@@ -348,9 +350,9 @@ api.browserHistory = async function (request, reply) {
                     } catch {
                         ua = "";
                     }
-                    projectInfoDB.set(id.toString(), {});
-                    projectInfoDB.set(`${id}.time`, time);
-                    projectInfoDB.set(`${id}.ua`, ua);
+                    // projectInfoDB.set(id.toString(), {});
+                    // projectInfoDB.set(`${id}.time`, time);
+                    // projectInfoDB.set(`${id}.ua`, ua);
                 }
                 projectInfo.push({ time: time, agent: ua, id: id });
                 resolve();
