@@ -11,7 +11,7 @@
     "easy-json-database": "^1.5.1"
   },
   "engines": {
-    "node": "16.14.2"
+    "node": "18.x"
   },
   "license": "MIT"
 }
