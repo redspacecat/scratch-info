@@ -46,6 +46,11 @@ body {
     align-items: center;
 }
 
+#search-input {
+    width: 220px;
+    color: black;
+}
+
 .search-form input {
     padding: 4.5px 10px;
     border: none;
