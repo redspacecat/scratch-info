@@ -290,10 +290,12 @@ api.getUserInfo = async function (request, reply) {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
     })
+    let data = await getUserData(request.params.username)
+    delete data.nav
     reply
         .code(200)
         .header("Content-Type", "application/json; charset=utf-8")
-        .send(JSON.stringify(await getUserData(request.params.username), null, 4));
+        .send(JSON.stringify(data, null, 4));
 };
 
 api.browserHistoryPage = async function (request, reply) {
@@ -424,7 +426,9 @@ api.apiProjectData = async function apiProjectData(request, reply) {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
     })
-    reply.code(200).header("Content-Type", "application/json; charset=utf-8").send(JSON.stringify(await getProjectData(request.params.id), null, 4));
+    let data = await getProjectData(request.params.id)
+    delete data.nav
+    reply.code(200).header("Content-Type", "application/json; charset=utf-8").send(JSON.stringify(data, null, 4));
 }
 
 async function getProjectData(id) {
