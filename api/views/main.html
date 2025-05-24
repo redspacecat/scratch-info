@@ -91,7 +91,6 @@
 
         <script>
             let currentSearchType = "user"; // Default search type
-
             /**
              * Toggles the search type between 'user' and 'project'.
              * Updates button styles, input label, and submit button text accordingly.
@@ -118,17 +117,19 @@
                     inputLabel.textContent = "Enter a Scratch project ID:";
                     submitButton.textContent = "Get Project Info";
                 }
+
                 // Clear input field when switching search type
                 searchInput.value = "";
                 searchInput.focus(); // Keep focus on the input for convenience
             }
-
             /**
-             * Shows the loading spinner and then redirects the user to the appropriate URL
+             * Shows the loading spinner, hides the submit button, and then redirects the user to the appropriate URL
              * based on the current search type and the input value.
              */
             function showSpinnerAndRedirect() {
                 const inputValue = document.getElementById("search-input").value.trim(); // Trim whitespace
+                const submitButton = document.querySelector(".submit-button"); // Get a reference to the submit button
+
                 if (!inputValue) {
                     console.log("Please enter a value to search.");
                     return; // Prevent showing spinner and redirect if input is empty
@@ -137,8 +138,11 @@
                 // Show the spinner
                 document.getElementById("loading-spinner").style.display = "block";
 
-                // Temporarily disable the submit button to prevent multiple submissions
-                document.querySelector(".submit-button").disabled = true;
+                // Hide the submit button
+                submitButton.style.display = "none";
+
+                // Temporarily disable the submit button to prevent multiple submissions (though hiding it also achieves this)
+                submitButton.disabled = true;
 
                 // Redirect after a short delay to allow the spinner to be seen
                 setTimeout(() => {
