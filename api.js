@@ -21,6 +21,7 @@ async function fetch2(url) {
     return await fetch(proxyURL + encodeURIComponent(url))
 }
 
+
 api.followering = async function (request, reply) {
     let data = {
         followers: "?",
