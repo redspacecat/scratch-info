@@ -18,7 +18,11 @@ let api = {};
 
 async function fetch2(url) {
     let proxyURL = 'https://corsproxy.josueart40.workers.dev/?'
-    return await fetch(proxyURL + encodeURIComponent(url))
+    if (url.startsWith("https://api.scratch.mit.edu")) {
+        return await fetch(proxyURL + encodeURIComponent(url))
+    } else {
+        return await fetch(url)
+    }
 }
 
 
