@@ -27,6 +27,7 @@ body {
     color: white;
     text-decoration: none;
     margin-right: 20px;
+    white-space: nowrap;
 }
 
 .nav-link {
@@ -47,7 +48,7 @@ body {
 }
 
 #search-input {
-    width: 220px;
+    width: 250px;
     color: black;
 }
 
@@ -60,7 +61,7 @@ body {
 }
 
 .search-form button {
-    padding: 6px 12px;
+    padding: 0px 12px;
     border: none;
     background-color: #008b8b; /* turquoise */
     color: white;
