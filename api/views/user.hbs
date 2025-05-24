@@ -9,6 +9,7 @@
         <!-- import the webpage's stylesheet -->
         <link rel="stylesheet" href="/style.css" />
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/main.js"></script>
     </head>
     <body>
       <div id="container">
@@ -140,11 +141,11 @@ async function getProjectStats() {
 function createList() {
     let projectListEl = document.querySelector("#projects");
     let baseProject = `<div class="one-project">
-                <a target="_blank">
+                <a onclick="topbar.show()">
                   <img class="project-image" loading="lazy">
                 </a>
                 <br>
-                <a class="project-title" target="_blank"></a>
+                <a class="project-title" onclick="topbar.show()"></a>
                 <br>
                 <div class="project-stats-line">
                   <span class="loves"></span>
