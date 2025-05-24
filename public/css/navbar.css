@@ -5,7 +5,7 @@ body {
 
 .navbar {
     background: linear-gradient(to right, #1976d2, #7b1fa2); /* lighter dark blue to lighter purple */
-    padding: 12px 0;
+    padding: 8px 0;
     color: white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
