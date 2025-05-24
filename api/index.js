@@ -1,5 +1,7 @@
     const path = require("path");
     const api = require("../api.js");
+    import { inject } from '@vercel/analytics';
+    inject()
 
     // Require the fastify framework and instantiate it
     const fastify = require("fastify")({
