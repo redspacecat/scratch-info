@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -22,5 +22,108 @@
       window.location.href = "/users/" + document.querySelector("#name-input").value
     }
   </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scratch Info</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Optional: Custom font import if 'Inter' is not desired or for specific branding */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom active state for toggle buttons */
+        .toggle-btn.active {
+          background-color: #d3ddeb;
+        }
+        .toggle-btn:not(.active):hover {
+          background-color: #e2e9f2;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen p-4">
+    <div class="container bg-white p-8 md:p-12 rounded-xl shadow-lg text-center w-full max-w-md">
+        <h1 class="text-3xl md:text-4xl font-bold text-blue-700 mb-8">Scratch Info</h1>
+
+        <div class="toggle-switch flex justify-center mb-8 bg-blue-50 rounded-lg shadow-inner">
+            <button id="user-toggle" class="toggle-btn flex-1 py-3 px-4 rounded-lg text-gray-700 text-lg cursor-pointer transition-all duration-300 ease-in-out active" onclick="toggleSearch('user')">
+                Search Users
+            </button>
+            <button id="project-toggle" class="toggle-btn flex-1 py-3 px-4 rounded-lg text-gray-700 text-lg cursor-pointer transition-all duration-300 ease-in-out" onclick="toggleSearch('project')">
+                Search Projects
+            </button>
+        </div>
+
+        <form id="search-form" action="javascript:;" onsubmit="redirect()" class="flex flex-col items-center">
+            <label for="search-input" id="input-label" class="mb-4 text-lg text-gray-600 font-medium">
+                Enter a Scratch username:
+            </label>
+            <input type="text" id="search-input" required
+                   class="w-full p-3 mb-6 border-2 border-gray-300 rounded-lg text-lg focus:border-blue-500 focus:ring-4 focus:ring-blue-200 outline-none transition-all duration-300 ease-in-out shadow-sm">
+            <button type="submit" class="submit-button bg-green-600 hover:bg-green-700 text-white py-3 px-8 rounded-lg text-xl font-semibold cursor-pointer transition-all duration-300 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-1">
+                Get User Info
+            </button>
+        </form>
+    </div>
+
+    <script>
+        let currentSearchType = 'user'; // Default search type
+
+        /**
+         * Toggles the search type between 'user' and 'project'.
+         * Updates button styles, input label, and submit button text accordingly.
+         * @param {string} type - The search type ('user' or 'project').
+         */
+        function toggleSearch(type) {
+            currentSearchType = type;
+            const userToggle = document.getElementById('user-toggle');
+            const projectToggle = document.getElementById('project-toggle');
+            const inputLabel = document.getElementById('input-label');
+            const searchInput = document.getElementById('search-input');
+            const submitButton = document.querySelector('.submit-button');
+
+            // Remove active class from both and add to the selected one
+            userToggle.classList.remove('active');
+            projectToggle.classList.remove('active');
+            document.getElementById(`${type}-toggle`).classList.add('active');
+
+            // Update label and submit button text based on selected type
+            if (type === 'user') {
+                inputLabel.textContent = 'Enter a Scratch username:';
+                submitButton.textContent = 'Get User Info';
+            } else {
+                inputLabel.textContent = 'Enter a Scratch project ID:';
+                submitButton.textContent = 'Get Project Info';
+            }
+            // Clear input field when switching search type
+            searchInput.value = '';
+            searchInput.focus(); // Keep focus on the input for convenience
+        }
+
+        /**
+         * Redirects the user to the appropriate URL based on the current search type
+         * and the input value.
+         */
+        function redirect() {
+            const inputValue = document.getElementById("search-input").value.trim(); // Trim whitespace
+            if (!inputValue) {
+                // Optionally show a message if input is empty, instead of redirecting
+                console.log("Please enter a value to search.");
+                return; // Prevent redirect if input is empty
+            }
+
+            if (currentSearchType === 'user') {
+                window.location.href = "/users/" + inputValue;
+            } else {
+                window.location.href = "/projects/" + inputValue;
+            }
+        }
+    </script>
 </body>
 </html>

@@ -16,6 +16,11 @@ const path = require("path")
 
 let api = {};
 
+async function fetch2(url) {
+    let proxyURL = 'https://corsproxy.josueart40.workers.dev/?'
+    return await fetch(proxyURL + encodeURIComponent(url))
+}
+
 api.followering = async function (request, reply) {
     let data = {
         followers: "?",
@@ -28,8 +33,8 @@ api.followering = async function (request, reply) {
     }
     try {
         // Get followers/following
-        let followingHTML = await (await fetch(`https://scratch.mit.edu/users/${user}/following`)).text();
-        let followersHTML = await (await fetch(`https://scratch.mit.edu/users/${user}/followers`)).text();
+        let followingHTML = await (await fetch2(`https://scratch.mit.edu/users/${user}/following`)).text();
+        let followersHTML = await (await fetch2(`https://scratch.mit.edu/users/${user}/followers`)).text();
 
         let root, text;
 
@@ -72,7 +77,7 @@ async function getStats(username) {
     while (true) {
         let url = `https://api.scratch.mit.edu/users/${user}/projects?limit=40&offset=${page * 40}`;
         console.log(url);
-        let r = await (await fetch(url)).json();
+        let r = await (await fetch2(url)).json();
         projects.push(r);
 
         if (Object.keys(r).length < 40 || page > 10) {
@@ -149,7 +154,7 @@ async function getUserData(username) {
         projectsShared: "0",
     };
     let user = params.username;
-    let userInfo = await (await fetch(`https://api.scratch.mit.edu/users/${user}`)).json();
+    let userInfo = await (await fetch2(`https://api.scratch.mit.edu/users/${user}`)).json();
     if (userInfo.code) {
         if (userInfo.code.includes("NotFound")) {
             return 404;
@@ -162,17 +167,17 @@ async function getUserData(username) {
     params.username = userInfo.username;
     params.scratchteam = userInfo.scratchteam;
 
-    let projects = await (await fetch(`https://api.scratch.mit.edu/users/${user}/projects`)).json();
+    let projects = await (await fetch2(`https://api.scratch.mit.edu/users/${user}/projects`)).json();
     uaIf: if (Object.keys(projects).length == 0) {
         break uaIf;
     } else {
         let firstProject = Object.values(projects)[0].id;
-        let projectData = await (await fetch(`https://api.scratch.mit.edu/projects/${firstProject}`)).json();
+        let projectData = await (await fetch2(`https://api.scratch.mit.edu/projects/${firstProject}`)).json();
         let projectDate = new Date(projectData.history.modified).getTime();
         let difference = Math.round((Date.now() - projectDate) / (1000 * 3600 * 24));
         params.browserOStimeAgo = difference;
         try {
-            let agent = (await (await fetch(`https://projects.scratch.mit.edu/${firstProject}?token=${projectData.project_token}`)).json()).meta.agent;
+            let agent = (await (await fetch2(`https://projects.scratch.mit.edu/${firstProject}?token=${projectData.project_token}`)).json()).meta.agent;
             let parsed = uap(agent);
             params.browser = `${parsed.browser.name} ${parsed.browser.version || ""}`.trim();
             if (parsed.os.name == "Windows" && parsed.os.version == "10") {
@@ -183,7 +188,7 @@ async function getUserData(username) {
     }
     try {
         let root, text;
-        root = HTMLParser.parse(await (await fetch(`https://scratch.mit.edu/users/${user}/projects`)).text());
+        root = HTMLParser.parse(await (await fetch2(`https://scratch.mit.edu/users/${user}/projects`)).text());
         text = root.querySelector(".box-head h2").childNodes[1].textContent;
         params.projectsShared = text.slice(text.indexOf("(") + 1, text.indexOf(")"));
     } catch {}
@@ -221,7 +226,7 @@ api.getUser = async function (request, reply) {
     params.profilePicture = data.profilePicture;
     params.usernameAsterisk = data.username + (data.scratchteam ? "*" : "");
     //     let user = params.username;
-    //     let userInfo = await (await fetch(`https://api.scratch.mit.edu/users/${user}`)).json();
+    //     let userInfo = await (await fetch2(`https://api.scratch.mit.edu/users/${user}`)).json();
     //     if (userInfo.code) {
     //         if (userInfo.code.includes("NotFound")) {
     //             return reply.view("/src/pages/UserNotFound.hbs", { username: user });
@@ -233,19 +238,19 @@ api.getUser = async function (request, reply) {
     //     params.country = userInfo.profile.country;
     //     params.username = userInfo.username + (userInfo.scratchteam ? "*" : "");
 
-    //     let projects = await (await fetch(`https://api.scratch.mit.edu/users/${user}/projects`)).json();
+    //     let projects = await (await fetch2(`https://api.scratch.mit.edu/users/${user}/projects`)).json();
     //     uaIf: if (Object.keys(projects).length == 0) {
     //         break uaIf;
     //     } else {
     //         let firstProject = Object.values(projects)[0].id;
-    //         let projectData = await (await fetch(`https://api.scratch.mit.edu/projects/${firstProject}`)).json();
+    //         let projectData = await (await fetch2(`https://api.scratch.mit.edu/projects/${firstProject}`)).json();
     //         let projectDate = new Date(projectData.history.modified).getTime();
     //         let difference = Math.round((Date.now() - projectDate) / (1000 * 3600 * 24));
     //         if (difference > 1) {
     //             params.browserOStimeAgo = `(as of ${difference} days ago)`;
     //         }
     //         try {
-    //             let agent = (await (await fetch(`https://projects.scratch.mit.edu/${firstProject}?token=${projectData.project_token}`)).json()).meta.agent;
+    //             let agent = (await (await fetch2(`https://projects.scratch.mit.edu/${firstProject}?token=${projectData.project_token}`)).json()).meta.agent;
     //             let parsed = uap(agent);
     //             params.browser = `${parsed.browser.name} ${parsed.browser.version}`;
     //             if (parsed.os.name == "Windows" && parsed.os.version == "10") {
@@ -263,7 +268,7 @@ api.getUser = async function (request, reply) {
     //     // projects shared
     //     try {
     //         let root, text;
-    //         root = HTMLParser.parse(await (await fetch(`https://scratch.mit.edu/users/${user}/projects`)).text());
+    //         root = HTMLParser.parse(await (await fetch2(`https://scratch.mit.edu/users/${user}/projects`)).text());
     //         text = root.querySelector(".box-head h2").childNodes[1].textContent;
     //         params.projectsShared = text.slice(text.indexOf("(") + 1, text.indexOf(")"));
     //     } catch {}
@@ -310,7 +315,7 @@ api.browserHistory = async function (request, reply) {
         while (true) {
             let url = `https://api.scratch.mit.edu/users/${user}/projects?limit=40&offset=${page * 40}`;
             console.log(url);
-            let r = await (await fetch(url)).json();
+            let r = await (await fetch2(url)).json();
             projects.push(r);
 
             if (Object.keys(r).length < 40 || page > 10) {
@@ -342,12 +347,12 @@ api.browserHistory = async function (request, reply) {
                     time = projectInfoDB.get(`${id}.time`);
                     ua = projectInfoDB.get(`${id}.ua`);
                 } else {
-                    let info = await (await fetch("https://api.scratch.mit.edu/projects/" + id)).json();
+                    let info = await (await fetch2("https://api.scratch.mit.edu/projects/" + id)).json();
                     time = new Date(info.history.modified).getTime();
                     let token;
                     token = info.project_token;
                     try {
-                        ua = (await (await fetch("https://projects.scratch.mit.edu/" + id + "?token=" + token)).json()).meta.agent;
+                        ua = (await (await fetch2("https://projects.scratch.mit.edu/" + id + "?token=" + token)).json()).meta.agent;
                     } catch {
                         ua = "";
                     }
@@ -413,7 +418,7 @@ async function getProjectData(id) {
       return {}
     }
     let params = {};
-    let basicInfo = await (await fetch(`https://api.scratch.mit.edu/projects/${id}`)).json();
+    let basicInfo = await (await fetch2(`https://api.scratch.mit.edu/projects/${id}`)).json();
     if (basicInfo.code == "NotFound") {
         return 404;
     }
@@ -430,7 +435,7 @@ async function getProjectData(id) {
     params.faveToViewRatio = (params.stats.favorites / params.stats.views) * 100;
     params.faveToLoveRatio = (params.stats.favorites / params.stats.loves) * 100;
 
-    let response = await fetch("https://scratch.mit.edu/projects/" + id.toString() + "/remixtree/");
+    let response = await fetch2("https://scratch.mit.edu/projects/" + id.toString() + "/remixtree/");
     let t = await response.text();
 
     let root = HTMLParser.parse(t);
