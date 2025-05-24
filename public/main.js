@@ -7,9 +7,12 @@ function setup3() {
     s.onload = function() {
         topbar.config({autoRun: false})
         topbar.show()
-        topbar.progress(0.7)
-        topbar.hide()
-        topbar.config({autoRun: true})
+        topbar.progress(Math.min(Math.max(Math.random(), 0.5), 0.75))
+        setTimeout(function() {
+            topbar.hide()
+            topbar.config({autoRun: true})
+        }, 100)
+        
     }
     document.head.appendChild(s)
     document.querySelectorAll("a").forEach(function(a) {
