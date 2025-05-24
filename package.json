@@ -3,7 +3,6 @@
     "@fastify/rate-limit": "^9.x",
     "@fastify/static": "^6.10.2",
     "@fastify/view": "^8.0.0",
-    "@vercel/analytics": "^1.5.0",
     "easy-json-database": "^1.5.1",
     "fastify": "^4.21.0",
     "handlebars": "^4.7.8",
