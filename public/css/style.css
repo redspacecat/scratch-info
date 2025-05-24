@@ -83,7 +83,7 @@ td {
     content: "👁️";
 }
 .remixes::after {
-    content: url("https://cdn.glitch.global/46f28da1-51b4-4b23-81a7-f21e8ed090ab/remix.svg?v=1747794488974");
+    content: url("/images/remix.svg");
     filter: invert(40%) sepia(25%) saturate(938%) hue-rotate(83deg) brightness(95%) contrast(93%);
     width: 15px;
     height: 15px;
@@ -182,7 +182,7 @@ td {
 .info {
     width: 15px;
     height: 15px;
-    background-image: url("https://cdn.glitch.global/46f28da1-51b4-4b23-81a7-f21e8ed090ab/info.svg?v=1747614037251");
+    background-image: url("/images/info.svg");
     position: absolute;
     display: inline-block;
     margin-left: 2px;
