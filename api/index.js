@@ -38,7 +38,7 @@ async function main() {
 
     const navbarCode = fs.readFileSync(path.join(__dirname, "navbar.txt"), "utf8");
     // const navbarCode = "<p>Hi</p>"
-    console.log(navbarCode);
+    // console.log(navbarCode);
     fastify.all("/", async function (request, reply) {
         let params = {};
         params.nav = navbarCode;
