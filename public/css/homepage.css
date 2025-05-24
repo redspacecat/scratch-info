@@ -1,0 +1,33 @@
+/* Optional: Custom font import if 'Inter' is not desired or for specific branding */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+body {
+    font-family: "Inter", sans-serif;
+}
+/* Custom active state for toggle buttons */
+.toggle-btn.active {
+    background-color: #d3ddeb;
+}
+.toggle-btn:not(.active):hover {
+    background-color: #e2e9f2;
+}
+
+/* Spinner specific styles */
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #22d3ee; /* Tailwind's cyan-400 */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    display: none; /* Hidden by default */
+    /* Removed margin-top from here, will use Tailwind classes in HTML */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

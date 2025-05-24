@@ -1,14 +1,15 @@
-    const path = require("path");
-    const api = require("../api.js");
-    // import { inject } from '@vercel/analytics';
-    // const inject = require("@vercel/analytics")
-    // inject()
+const path = require("path");
+const api = require("../api.js");
+const fs = require("fs");
+// import { inject } from '@vercel/analytics';
+// const inject = require("@vercel/analytics")
+// inject()
 
-    // Require the fastify framework and instantiate it
-    const fastify = require("fastify")({
-      ignoreTrailingSlash: true
-    });
-    async function main() {
+// Require the fastify framework and instantiate it
+const fastify = require("fastify")({
+    ignoreTrailingSlash: true,
+});
+async function main() {
     await fastify.register(import("@fastify/rate-limit"), { global: true, max: 30, timeWindow: 60 * 1000 });
 
     // Setup our static files
@@ -22,7 +23,7 @@
         engine: {
             handlebars: require("handlebars"),
         },
-        root: path.join(__dirname, "views")
+        root: path.join(__dirname, "views"),
     });
 
     fastify.all("/api/followering/:username", api.followering);
@@ -30,13 +31,18 @@
     fastify.all("/api/userInfo/:username", api.getUserInfo);
     fastify.all("/api/browserHistory/:username", api.browserHistory);
     fastify.all("/api/projectInfo/:id", api.apiProjectData);
-  
+
     fastify.all("/users/:username", api.getUser);
     fastify.all("/users/:username/browserHistory", { config: { rateLimit: { max: 4, timeWindow: 15000 } } }, api.browserHistoryPage);
-    fastify.all("/projects/:project", api.projectPage)
+    fastify.all("/projects/:project", api.projectPage);
 
+    const navbarCode = fs.readFileSync(path.join(__dirname, "navbar.txt"), "utf8");
+    // const navbarCode = "<p>Hi</p>"
+    console.log(navbarCode);
     fastify.all("/", async function (request, reply) {
-        return reply.view("/main.html");
+        let params = {};
+        params.nav = navbarCode;
+        return reply.view("/main.hbs", params);
     });
 
     // Run the server and report out to the logs
@@ -48,14 +54,12 @@
         console.log(`Your app is listening on ${address}`);
     });
     // module.exports = fastify
-
-    
 }
 main();
 export default async function handler(req, res) {
-        await fastify.ready()
-        fastify.server.emit('request', req, res)
-    }
+    await fastify.ready();
+    fastify.server.emit("request", req, res);
+}
 
 // import Fastify from 'fastify'
 
