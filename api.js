@@ -412,9 +412,8 @@ api.projectPage = async function getProjectPage(request, reply) {
     let params = {};
     let id = request.params.project;
     params = await getProjectData(id);
-    params.id = id
     if (params == 404) {
-        return reply.view("/projectNotFound.hbs", params)
+        return reply.view("/projectNotFound.hbs", {id: id, nav: navbarCode})
     } else {
         return reply.view("/project.hbs", params);
     }
@@ -435,7 +434,7 @@ async function getProjectData(id) {
     let params = {};
     params.nav = navbarCode
     let basicInfo = await (await fetch2(`https://api.scratch.mit.edu/projects/${id}`)).json();
-    if (basicInfo.code.includes("NotFound")) {
+    if (basicInfo.code == "NotFound") {
         return 404;
     }
     params.id = id
