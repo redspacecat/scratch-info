@@ -116,6 +116,7 @@
 
                 // Redirect after a short delay to allow the spinner to be seen
                 setTimeout(() => {
+                    topbar.show()
                     if (currentSearchType === "user") {
                         window.location.href = "/users/" + inputValue;
                     } else {
