@@ -37,12 +37,15 @@ async function main() {
     fastify.all("/projects/:project", api.projectPage);
 
     const navbarCode = fs.readFileSync(path.join(__dirname, "navbar.txt"), "utf8");
-    // const navbarCode = "<p>Hi</p>"
-    // console.log(navbarCode);
     fastify.all("/", async function (request, reply) {
         let params = {};
         params.nav = navbarCode;
         return reply.view("/main.hbs", params);
+    });
+    fastify.all("/about", async function (request, reply) {
+        let params = {};
+        params.nav = navbarCode;
+        return reply.view("/about.hbs", params);
     });
 
     // Run the server and report out to the logs

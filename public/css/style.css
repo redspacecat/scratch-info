@@ -91,9 +91,9 @@ td {
     vertical-align: middle;
     margin-top: -10px;
 }
-.loveToViewRatio::after {
+/* .loveToViewRatio::after { */
     /*   content: "❤️/👁️" */
-}
+/* } */
 .loves,
 .faves,
 .views,

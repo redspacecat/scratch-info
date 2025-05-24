@@ -223,7 +223,7 @@ api.getUser = async function (request, reply) {
     let user = request.params.username;
     let data = await getUserData(user);
     if (data == 404) {
-        return reply.view("/UserNotFound.hbs", { username: user });
+        return reply.view("/userNotFound.hbs", params);
     }
     params.browser = data.browser;
     params.os = data.os || "?";
@@ -410,10 +410,14 @@ api.browserHistory = async function (request, reply) {
 
 api.projectPage = async function getProjectPage(request, reply) {
     let params = {};
-    params.nav = navbarCode
     let id = request.params.project;
     params = await getProjectData(id);
-    return reply.view("/project.hbs", params);
+    params.id = id
+    if (params == 404) {
+        return reply.view("/projectNotFound.hbs", params)
+    } else {
+        return reply.view("/project.hbs", params);
+    }
 };
 
 api.apiProjectData = async function apiProjectData(request, reply) {
@@ -431,7 +435,7 @@ async function getProjectData(id) {
     let params = {};
     params.nav = navbarCode
     let basicInfo = await (await fetch2(`https://api.scratch.mit.edu/projects/${id}`)).json();
-    if (basicInfo.code == "NotFound") {
+    if (basicInfo.code.includes("NotFound")) {
         return 404;
     }
     params.id = id
