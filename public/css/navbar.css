@@ -95,3 +95,7 @@ body {
         font-size: 0.95em;
     }
 }
+
+#search-input, .search-form button {
+    height: 32px;
+}
