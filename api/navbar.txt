@@ -1,0 +1,11 @@
+<nav class="navbar">
+    <div class="navbar-content">
+        <a href="/" class="nav-logo">Scratch Info</a>
+        <a href="/" class="nav-link">Home</a>
+        <a href="/about" class="nav-link">About</a>
+        <form id="search-form" class="search-form">
+            <input type="text" id="search-input" placeholder="Search users or projects..." />
+            <button type="submit">Search</button>
+        </form>
+    </div>
+</nav>

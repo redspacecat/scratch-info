@@ -1,0 +1,95 @@
+body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar {
+    background: linear-gradient(to right, #1976d2, #7b1fa2); /* lighter dark blue to lighter purple */
+    padding: 12px 0;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: nowrap;
+    padding: 0 24px;
+}
+
+.nav-logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    font-size: 1em;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #ffd700;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+}
+
+.search-form input {
+    padding: 4.5px 10px;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+    font-size: 0.95em;
+}
+
+.search-form button {
+    padding: 6px 12px;
+    border: none;
+    background-color: #008b8b; /* turquoise */
+    color: white;
+    border-radius: 0 4px 4px 0;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-form button:hover {
+    background-color: #30cfc4; /* slightly darker turquoise on hover */
+}
+
+@media (max-width: 655px) {
+    .navbar-content {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px; /* smaller gap between items */
+    }
+
+    .nav-logo {
+        margin-right: 0;
+        font-size: 1.2em;
+    }
+
+    .search-form input {
+    }
+
+    .search-form button {
+        padding: 6px 8px;
+        font-size: 0.9em;
+    }
+
+    .nav-link {
+        font-size: 0.95em;
+    }
+}

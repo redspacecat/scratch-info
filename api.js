@@ -2,6 +2,8 @@ const fetch = require("node-fetch");
 const uap = require("ua-parser-js");
 const HTMLParser = require("node-html-parser");
 const path = require("path")
+const fs = require("fs");
+const navbarCode = fs.readFileSync(path.join(__dirname, "api", "navbar.txt"), "utf8");
 // const Database = require("easy-json-database");
 // const projectDB = new Database("./user-project-database.json", {
 //     snapshots: {
@@ -158,6 +160,7 @@ async function getUserData(username) {
         profilePicture: "",
         projectsShared: "0",
     };
+    params.nav = navbarCode
     let user = params.username;
     let userInfo = await (await fetch2(`https://api.scratch.mit.edu/users/${user}`)).json();
     if (userInfo.code) {
@@ -216,6 +219,7 @@ api.getUser = async function (request, reply) {
         stats: {},
         projectsShared: "0",
     };
+    params.nav = navbarCode
     let user = request.params.username;
     let data = await getUserData(user);
     if (data == 404) {
@@ -299,6 +303,7 @@ api.browserHistoryPage = async function (request, reply) {
         page: request.query.page || 1,
         nextPage: parseInt(request.query.page || 1) + 1,
     };
+    params.nav = navbarCode
     params.prevPage = params.page > 1 ? params.page - 1 : 1;
 
     return reply.view("/browserHistory.hbs", params);
@@ -405,6 +410,7 @@ api.browserHistory = async function (request, reply) {
 
 api.projectPage = async function getProjectPage(request, reply) {
     let params = {};
+    params.nav = navbarCode
     let id = request.params.project;
     params = await getProjectData(id);
     return reply.view("/project.hbs", params);
@@ -423,6 +429,7 @@ async function getProjectData(id) {
       return {}
     }
     let params = {};
+    params.nav = navbarCode
     let basicInfo = await (await fetch2(`https://api.scratch.mit.edu/projects/${id}`)).json();
     if (basicInfo.code == "NotFound") {
         return 404;
