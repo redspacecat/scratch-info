@@ -49,13 +49,13 @@ api.followering = async function (request, reply) {
         text = root.querySelector(".box-head h2").childNodes[1].textContent;
         // let dom1 = new JSDOM(followingHTML);
         // let text = dom1.window.document.querySelector(".box-head h2").textContent;
-        data.following = text.slice(text.indexOf("(") + 1, text.indexOf(")"));
+        data.following = parseInt(text.slice(text.indexOf("(") + 1, text.indexOf(")")));
 
         root = HTMLParser.parse(followersHTML);
         text = root.querySelector(".box-head h2").childNodes[1].textContent;
         // let dom2 = new JSDOM(followersHTML);
         // let text2 = dom2.window.document.querySelector(".box-head h2").textContent;
-        data.followers = text.slice(text.indexOf("(") + 1, text.indexOf(")"));
+        data.followers = parseInt(text.slice(text.indexOf("(") + 1, text.indexOf(")")));
     } catch {}
   
     reply.headers({
@@ -147,7 +147,7 @@ api.projectStats = async function (request, reply) {
         .send(JSON.stringify(await getStats(user), null, 4));
 };
 
-async function getUserData(username, extra) {
+async function getUserData(username, mode) {
     let params = {
         username: username,
         scratchteam: "?",
@@ -159,11 +159,13 @@ async function getUserData(username, extra) {
         country: "?",
         profilePicture: "",
         projectsShared: "?",
+        followers: "?",
+        following: "?"
     };
     params.nav = navbarCode
     let user = params.username;
     // console.log("extra", extra)
-    if (extra == false) {
+    if (mode == "regular" || mode == "all") {
         let userInfo = await (await fetch2(`https://api.scratch.mit.edu/users/${user}`)).json();
         if (userInfo.code) {
             if (userInfo.code.includes("NotFound")) {
@@ -178,7 +180,7 @@ async function getUserData(username, extra) {
         params.scratchteam = userInfo.scratchteam;
     }
 
-    if (extra == true) {
+    if (mode == "extra" || mode == "all") {
         let projects = await (await fetch2(`https://api.scratch.mit.edu/users/${user}/projects`)).json();
         uaIf: if (Object.keys(projects).length == 0) {
             break uaIf;
@@ -202,10 +204,40 @@ async function getUserData(username, extra) {
             let root, text;
             root = HTMLParser.parse(await (await fetch2(`https://scratch.mit.edu/users/${user}/projects`)).text());
             text = root.querySelector(".box-head h2").childNodes[1].textContent;
-            params.projectsShared = text.slice(text.indexOf("(") + 1, text.indexOf(")"));
+            params.projectsShared = parseInt(text.slice(text.indexOf("(") + 1, text.indexOf(")")));
         } catch {}
     }
-    return params;
+
+    if (mode == "followering" || mode == "all") {
+        try {
+            // Get followers/following
+            let followingHTML = await (await fetch2(`https://scratch.mit.edu/users/${user}/following`)).text();
+            let followersHTML = await (await fetch2(`https://scratch.mit.edu/users/${user}/followers`)).text();
+
+            let root, text;
+
+            root = HTMLParser.parse(followingHTML);
+            text = root.querySelector(".box-head h2").childNodes[1].textContent;
+            // let dom1 = new JSDOM(followingHTML);
+            // let text = dom1.window.document.querySelector(".box-head h2").textContent;
+            params.following = parseInt(text.slice(text.indexOf("(") + 1, text.indexOf(")")));
+
+            root = HTMLParser.parse(followersHTML);
+            text = root.querySelector(".box-head h2").childNodes[1].textContent;
+            // let dom2 = new JSDOM(followersHTML);
+            // let text2 = dom2.window.document.querySelector(".box-head h2").textContent;
+            params.followers = parseInt(text.slice(text.indexOf("(") + 1, text.indexOf(")")));
+        } catch {}
+    }
+
+    let newParams = {}
+    for (let param of Object.keys(params)) {
+        if (params[param] != "?" && params[param] != "" && params[param]) {
+            newParams[param] = params[param]
+        }
+    }
+
+    return newParams;
 }
 
 api.getUser = async function (request, reply) {
@@ -226,7 +258,7 @@ api.getUser = async function (request, reply) {
     };
     params.nav = navbarCode
     let user = request.params.username;
-    let data = await getUserData(user, false);
+    let data = await getUserData(user, "regular");
     if (data == 404) {
         return reply.view("/userNotFound.hbs", params);
     }
@@ -295,17 +327,20 @@ api.getUserInfo = async function (request, reply) {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
     })
+    let code = 200
     let data
-    if (request.query.extra) {
+    if (request.query.mode) {
         // console.log("extra")
-        data = await getUserData(request.params.username, true)
+        data = await getUserData(request.params.username, request.query.mode)
     } else {
         // console.log("regular")
-        data = await getUserData(request.params.username, false)
+        // data = await getUserData(request.params.username, false)
+        data = {"error": "must specify 'mode' parameter"}
+        code = 400
     }
     delete data.nav
     reply
-        .code(200)
+        .code(code)
         .header("Content-Type", "application/json; charset=utf-8")
         .send(JSON.stringify(data, null, 4));
 };

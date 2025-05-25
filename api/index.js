@@ -26,11 +26,11 @@ async function main() {
         root: path.join(__dirname, "views"),
     });
 
-    fastify.all("/api/followering/:username", api.followering);
-    fastify.all("/api/projectStats/:username", api.projectStats);
-    fastify.all("/api/userInfo/:username", api.getUserInfo);
-    fastify.all("/api/browserHistory/:username", api.browserHistory);
-    fastify.all("/api/projectInfo/:id", api.apiProjectData);
+    fastify.all("/api/v1/users/:username/followering", api.followering);
+    fastify.all("/api/v1/users/:username/projectStats", api.projectStats);
+    fastify.all("/api/v1/users/:username/info", api.getUserInfo);
+    fastify.all("/api/v1/users/:username/browserHistory", api.browserHistory);
+    fastify.all("/api/v1/projects/:id/projectInfo", api.apiProjectData);
 
     fastify.all("/users/:username", api.getUser);
     fastify.all("/users/:username/browserHistory", { config: { rateLimit: { max: 4, timeWindow: 15000 } } }, api.browserHistoryPage);

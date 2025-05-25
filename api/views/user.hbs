@@ -93,14 +93,14 @@
         let text = document.querySelector("#username-text").innerText;
 history.replaceState(null, "", "/users/" + text.slice(0, text.endsWith("*") ? text.length - 1 : text.length));
 async function getMoreData() {
-    let data = await (await fetch("/api/followering/{{username}}")).json();
+    let data = await (await fetch("/api/v1/users/{{username}}/info?mode=followering")).json();
     if ("{{username}}" != "griffpatch") {
         document.querySelector("#followers").innerText = data.followers;
     }
     document.querySelector("#following").innerText = data.following;
 
     // other data
-    let data2 = await (await fetch("/api/userInfo/{{username}}?extra=true")).json();
+    let data2 = await (await fetch("/api/v1/users/{{username}}/info?mode=extra")).json();
     document.querySelector("#browserOStimeAgo").innerText = `(as of ${data2.browserOStimeAgo} days ago)`
     document.querySelector("#browser").innerText = data2.browser || "?"
     document.querySelector("#os").innerText = data2.os || "?"
@@ -138,7 +138,7 @@ function htmlToNode(html) {
     return template.content.firstChild;
 }
 async function getProjectStats() {
-    let stats = await (await fetch("/api/projectStats/{{username}}")).json();
+    let stats = await (await fetch("/api/v1/users/{{username}}/projectStats")).json();
     projectData = stats.projects;
     applyStats(stats);
     createList();

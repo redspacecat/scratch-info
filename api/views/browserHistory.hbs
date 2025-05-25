@@ -31,7 +31,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script type="module">
-  let history = await (await fetch("/api/browserHistory/{{username}}?page={{page}}")).json()
+  let history = await (await fetch("/api/v1/users/{{username}}/browserHistory?page={{page}}")).json()
   document.querySelector(".spinner").remove()
   let data = []
   let labels = []
