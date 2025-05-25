@@ -52,6 +52,10 @@ body {
     color: black;
 }
 
+#search-input:focus::placeholder {
+  color: transparent;
+}
+
 .search-form input {
     padding: 4.5px 10px;
     border: none;
