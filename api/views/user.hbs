@@ -100,7 +100,7 @@ async function getMoreData() {
     document.querySelector("#following").innerText = data.following;
 
     // other data
-    let data2 = await (await fetch("/api/userInfo/{{username}}")).json();
+    let data2 = await (await fetch("/api/userInfo/{{username}}?extra=true")).json();
     document.querySelector("#browserOStimeAgo").innerText = `(as of ${data2.browserOStimeAgo} days ago)`
     document.querySelector("#browser").innerText = data2.browser || "?"
     document.querySelector("#os").innerText = data2.os || "?"

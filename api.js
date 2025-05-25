@@ -147,7 +147,7 @@ api.projectStats = async function (request, reply) {
         .send(JSON.stringify(await getStats(user), null, 4));
 };
 
-async function getUserData(username, limited) {
+async function getUserData(username, extra) {
     let params = {
         username: username,
         scratchteam: "?",
@@ -162,20 +162,23 @@ async function getUserData(username, limited) {
     };
     params.nav = navbarCode
     let user = params.username;
-    let userInfo = await (await fetch2(`https://api.scratch.mit.edu/users/${user}`)).json();
-    if (userInfo.code) {
-        if (userInfo.code.includes("NotFound")) {
-            return 404;
+    // console.log("extra", extra)
+    if (extra == false) {
+        let userInfo = await (await fetch2(`https://api.scratch.mit.edu/users/${user}`)).json();
+        if (userInfo.code) {
+            if (userInfo.code.includes("NotFound")) {
+                return 404;
+            }
         }
+        params.id = userInfo.id;
+        params.joinDate = new Date(userInfo.history.joined).toLocaleString();
+        params.profilePicture = userInfo.profile.images["60x60"];
+        params.country = userInfo.profile.country;
+        params.username = userInfo.username;
+        params.scratchteam = userInfo.scratchteam;
     }
-    params.id = userInfo.id;
-    params.joinDate = new Date(userInfo.history.joined).toLocaleString();
-    params.profilePicture = userInfo.profile.images["60x60"];
-    params.country = userInfo.profile.country;
-    params.username = userInfo.username;
-    params.scratchteam = userInfo.scratchteam;
 
-    if (!limited) {
+    if (extra == true) {
         let projects = await (await fetch2(`https://api.scratch.mit.edu/users/${user}/projects`)).json();
         uaIf: if (Object.keys(projects).length == 0) {
             break uaIf;
@@ -223,7 +226,7 @@ api.getUser = async function (request, reply) {
     };
     params.nav = navbarCode
     let user = request.params.username;
-    let data = await getUserData(user, true);
+    let data = await getUserData(user, false);
     if (data == 404) {
         return reply.view("/userNotFound.hbs", params);
     }
@@ -293,9 +296,11 @@ api.getUserInfo = async function (request, reply) {
       "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
     })
     let data
-    if (request.query.limited) {
+    if (request.query.extra) {
+        // console.log("extra")
         data = await getUserData(request.params.username, true)
     } else {
+        // console.log("regular")
         data = await getUserData(request.params.username, false)
     }
     delete data.nav
