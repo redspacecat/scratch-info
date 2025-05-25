@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@fastify/rate-limit": "^9.x",
+    "@fastify/rate-limit": "9.1.0",
     "@fastify/static": "^6.10.2",
     "@fastify/view": "^8.0.0",
     "easy-json-database": "^1.5.1",

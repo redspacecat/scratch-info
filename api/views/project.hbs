@@ -9,6 +9,7 @@
     <!-- import the webpage's stylesheet -->
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/projects.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/js/info.js"></script>
     <script src="/js/main.js"></script>
@@ -20,14 +21,17 @@
     <div style="display:flex;flex-wrap:wrap;">
       <div>
         <a href="https://scratch.mit.edu/projects/{{id}}" target="_blank">
-        <img src="{{image}}" loading="lazy" style="max-height:360px;max-width:100%;border-radius:10px;border:1px solid black;">
+        <div class="img-load-wrapper" style="width: 480px;height: 360px;">
+          <div class="activity"></div>
+        </div>
+        <img src="{{image}}" loading="lazy" style="max-height:360px;max-width:100%;border-radius:10px;border:1px solid black;" onload="this.previousElementSibling.style.display = 'none'">
         </a>
         <a href="https://scratch.mit.edu/projects/{{id}}" target="_blank" style="text-decoration: none;vertical-align: top;margin-left: 10px;display:block;">
-          <img src="https://scratch.mit.edu/favicon.ico" style="vertical-align:middle">
+          <img src="/images/scratch-favicon.png" style="vertical-align:middle;width:32px;height:32px;">
           <span style="vertical-align:middle;color:darkyellow">Scratch link</span>
         </a>
         <a href="https://turbowarp.org/{{id}}"  target="_blank" style="text-decoration: none;vertical-align: top;margin-left: 10px;display:block;">
-          <img src="https://turbowarp.org/favicon.ico" style="vertical-align:middle">
+          <img src="/images/turbowarp-favicon.png" style="vertical-align:middle;width:32px;height:32px;">
           <span style="vertical-align:middle;color:red">TurboWarp link</span>
         </a>
       </div>
