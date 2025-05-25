@@ -73,6 +73,8 @@ async function getStats(username) {
         totalLoves: "?",
         totalFaves: "?",
         loveToViewRatio: "?",
+        faveToViewRatio: "?",
+        faveToLoveRatio: "?",
         averageStats: {
             averageViews: "?",
             averageLoves: "?",
