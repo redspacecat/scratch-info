@@ -1,0 +1,212 @@
+openapi: 3.0.4
+swagger: "2.0"
+info:
+  title: Scratch Info API
+  description: Welcome to the documention for the Scratch Info API. The endpoints are listed below.
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Scratch Info
+  url: /about
+servers:
+  - url: https://scratch-info.vercel.app/api/v1
+tags:
+  - name: users
+    description: Information about users
+  - name: projects
+    description: Information about projects
+paths:
+  /users/{username}/info:
+    get:
+      tags:
+       - users
+      summary: Get information about a user
+      description: This endpoint gives information about a user
+      operationId: userInfo
+      parameters:
+        - name: username
+          in: path
+          description: The username of the of the user
+          required: true
+          schema:
+            type: string
+        - name: mode
+          in: query
+          description: Controls which data is returned. Can be "all", "extra", "regular", or "followering". "all" is all the data, "extra" is the browser, os, and projects shared, "regular" is just basic data abou the user, and "followering" is the follower and following counts of the user.
+          required: true
+          schema:
+            type: string
+            enum:
+            - all
+            - extra
+            - regular
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    example: ScratchCat
+                  scratchteam:
+                    type: boolean
+                    example: true
+                  id:
+                    type: integer
+                    example: 15883188
+                  browser:
+                    type: string
+                    example: "Chrome 135.0.0.0"
+                  os:
+                    type: string
+                    example: "macOS 10.15.7"
+                  browserAndOStimeAgo:
+                    type: integer
+                    example: 9
+                  joinDate:
+                    type: string
+                    example: "3/5/2007, 5:00:00 AM"
+                  country:
+                    type: string
+                    example: "United States"
+                  profilePicture:
+                    type: string
+                    example: "https://cdn2.scratch.mit.edu/get_image/user/15883188_60x60.png?v="
+                  projectsShared:
+                    type: integer
+                    example: 130
+                  followers:
+                    type: integer
+                    example: 138966
+                  following:
+                    type: integer
+                    example: 9
+                  
+        '400':
+          description: "Didn't supply 'mode' parameter"
+  /users/{username}/projectStats:
+    get:
+      tags:
+        - users
+      summary: Get user project info
+      description: This endpoint gives information about a user's projects and statistics
+      operationId: userProjectStats
+      parameters:
+        - name: username
+          in: path
+          description: The username of the of the user
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalViews:
+                    type: integer
+                    example: 2912338
+                  totalLoves:
+                    type: integer
+                    example: 160487
+                  totalFaves:
+                    type: integer
+                    example: 133073
+                  loveToViewRatio:
+                    type: number
+                    example: 5.510589773577106
+                  faveToViewRatio:
+                    type: number
+                    example: 4.5692841970952545
+                  faveToLoveRatio:
+                    type: number
+                    example: 82.91824259908903
+                  averageStats:
+                    type: object
+                    example:
+                      averageViews: 22403
+                      averageLoves: 1235
+                      averageFaves: 1024
+                  projects:
+                    type: array
+                    items:
+                      type: object
+                      example:
+                        - loves: 6473
+                          faves: 5088
+                          views: 161825
+                          loveToViewRatio: 4
+                          faveToViewRatio: 3.144137185230959
+                          faveToLoveRatio: 78.60342963077397
+                          id: 276660763
+                          title: "Scratch 3.0 is here!"
+                          img: "https://uploads.scratch.mit.edu/get_image/project/276660763_230x500.png"
+                          time: 1546458127000
+                        - "more data": "goes here"
+  /projects/{projectID}/info:
+    get:
+      tags:
+        - projects
+      summary: "Get information about a project"
+      description: "This endpoint gives information about a user's project"
+      operationId: projectInfo
+      parameters:
+        - name: projectID
+          in: path
+          description: The ID of the project
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123456
+                  title:
+                    type: string
+                    example: "interactive forest"
+                  author:
+                    type: object
+                    example:
+                      username: ninjawolf14
+                      id: 92560
+                      image: "https://cdn2.scratch.mit.edu/get_image/user/92560_60x60.png?v="
+                  history:
+                    type: object
+                    example:
+                      "created": "2008-03-19T18:29:57.000Z"
+                      "modified": "2008-03-19T18:29:57.000Z"
+                      "shared": "2008-03-19T18:29:57.000Z"
+                  stats:
+                    type: object
+                    example:
+                      "views": 14763
+                      "loves": 699
+                      "favorites": 581
+                      "remixes": 39
+                  image:
+                    type: string
+                    example: "https://cdn2.scratch.mit.edu/get_image/project/123456_480x360.png"
+                  loveToViewRatio:
+                    type: number
+                    example: 4.734809997967893
+                  faveToViewRatio:
+                    type: number
+                    example: 3.9355144618302513
+                  faveToLoveRatio:
+                    type: number
+                    example: 83.11874105865522
+                  reviewStatus:
+                    type: string
+                    example: "notreviewed"
