@@ -47,6 +47,11 @@ async function main() {
         params.nav = navbarCode;
         return reply.view("/about.hbs", params);
     });
+    fastify.all("/api/docs", async function (request, reply) {
+        let params = {};
+        params.nav = navbarCode;
+        return reply.view("/apiDocs.hbs", params);
+    });
 
     // Run the server and report out to the logs
     fastify.listen({ port: process.env.PORT, host: "0.0.0.0" }, function (err, address) {

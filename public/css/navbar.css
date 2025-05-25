@@ -104,3 +104,13 @@ body {
 #search-input, .search-form button {
     height: 32px;
 }
+
+.navbar * {
+    box-sizing: border-box;
+    line-height: 1.5;
+}
+.navbar input::placeholder,
+    textarea::placeholder {
+        opacity:1;
+        color:#9ca3af;
+    }

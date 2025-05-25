@@ -12,12 +12,16 @@ function setup3() {
             topbar.hide();
             topbar.config({ autoRun: true });
         }, 100);
+        // topbar.show()
+        // window.addEventListener("load", topbar.hide)
     };
     document.head.appendChild(s);
     document.querySelectorAll("a").forEach(function (a) {
         if (a.target != "_blank") {
-            a.addEventListener("click", function () {
-                topbar.show();
+            a.addEventListener("click", function (e) {
+                if (!e.ctrlKey) {
+                    topbar.show();
+                }
             });
         }
     });
