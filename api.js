@@ -120,7 +120,7 @@ async function getStats(username) {
         views: a.stats.views,
         loveToViewRatio: (a.stats.loves / a.stats.views) * 100,
         faveToViewRatio: (a.stats.favorites / a.stats.views) * 100,
-        faveToLoveRatio: (a.stats.favorites / a.stats.loves) * 100,
+        faveToLoveRatio: (a.stats.favorites / a.stats.loves) * 100 || 0,
         // remixCount: a.stats.remixes,
         id: a.id,
         title: a.title,
