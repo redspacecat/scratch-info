@@ -37,11 +37,11 @@
             <div class="cf ct user-info-box" id="browserandos">
                 <div style="text-align:center">
                     <h3 class="ct h0">Browser and OS<span class="info" data-info="browserandos"></span></h3>
-                    <small><span>{{browserOStimeAgo}}</span></small><br />
+                    <small><span id="browserOStimeAgo">Loading...</span></span></small><br />
                 </div>
-                <span>Browser: {{browser}}</span><br>
-                <span>OS: {{os}}</span>
-                <br><a href="{{username}}/browserHistory">View Browser and OS History</a><br />
+                <span>Browser: <span id="browser">Loading...</span></span><br>
+                <span>OS: <span id="os">Loading...</span></span><br>
+                <a href="{{username}}/browserHistory">View Browser and OS History</a><br />
             </div></div>
 
         <div class="cf user-info-box" id="otherinfo">
@@ -49,7 +49,7 @@
           <div class="cf">
             <span>Follower Count: <span id="followers">{{followers}}</span></span><span class="info" data-info="griffyfollowers" style="visibility:hidden;"></span><br />
             <span>Following Count: <span id="following">{{following}}</span></span><br />
-            <span>Project Shared: {{projectsShared}}</span><br />
+            <span>Project Shared: <span id="projectsShared">Loading...</span></span><br />
           </div>
         </div>
         <!--       </div> -->
@@ -98,7 +98,15 @@ async function getMoreData() {
         document.querySelector("#followers").innerText = data.followers;
     }
     document.querySelector("#following").innerText = data.following;
+
+    // other data
+    let data2 = await (await fetch("/api/userInfo/{{username}}")).json();
+    document.querySelector("#browserOStimeAgo").innerText = `(as of ${data2.browserOStimeAgo} days ago)`
+    document.querySelector("#browser").innerText = data2.browser || "?"
+    document.querySelector("#os").innerText = data2.os || "?"
+    document.querySelector("#projectsShared").innerText = data2.projectsShared || "?"
 }
+
 async function getGriffyFollowers() {
     document.querySelector("span.info[data-info='griffyfollowers']").style.visibility = "visible"
     document.querySelector("#followers").innerText = "Loading... (this may take up to 30 seconds if the server is slow)";

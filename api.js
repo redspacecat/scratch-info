@@ -147,7 +147,7 @@ api.projectStats = async function (request, reply) {
         .send(JSON.stringify(await getStats(user), null, 4));
 };
 
-async function getUserData(username) {
+async function getUserData(username, limited) {
     let params = {
         username: username,
         scratchteam: "?",
@@ -158,7 +158,7 @@ async function getUserData(username) {
         joinDate: "?",
         country: "?",
         profilePicture: "",
-        projectsShared: "0",
+        projectsShared: "?",
     };
     params.nav = navbarCode
     let user = params.username;
@@ -175,31 +175,33 @@ async function getUserData(username) {
     params.username = userInfo.username;
     params.scratchteam = userInfo.scratchteam;
 
-    let projects = await (await fetch2(`https://api.scratch.mit.edu/users/${user}/projects`)).json();
-    uaIf: if (Object.keys(projects).length == 0) {
-        break uaIf;
-    } else {
-        let firstProject = Object.values(projects)[0].id;
-        let projectData = await (await fetch2(`https://api.scratch.mit.edu/projects/${firstProject}`)).json();
-        let projectDate = new Date(projectData.history.modified).getTime();
-        let difference = Math.round((Date.now() - projectDate) / (1000 * 3600 * 24));
-        params.browserOStimeAgo = difference;
+    if (!limited) {
+        let projects = await (await fetch2(`https://api.scratch.mit.edu/users/${user}/projects`)).json();
+        uaIf: if (Object.keys(projects).length == 0) {
+            break uaIf;
+        } else {
+            let firstProject = Object.values(projects)[0].id;
+            let projectData = await (await fetch2(`https://api.scratch.mit.edu/projects/${firstProject}`)).json();
+            let projectDate = new Date(projectData.history.modified).getTime();
+            let difference = Math.round((Date.now() - projectDate) / (1000 * 3600 * 24));
+            params.browserOStimeAgo = difference;
+            try {
+                let agent = (await (await fetch2(`https://projects.scratch.mit.edu/${firstProject}?token=${projectData.project_token}`)).json()).meta.agent;
+                let parsed = uap(agent);
+                params.browser = `${parsed.browser.name} ${parsed.browser.version || ""}`.trim();
+                if (parsed.os.name == "Windows" && parsed.os.version == "10") {
+                    parsed.os.version = "10/11";
+                }
+                params.os = `${parsed.os.name} ${parsed.os.version || ""}`.trim();
+            } catch {}
+        }
         try {
-            let agent = (await (await fetch2(`https://projects.scratch.mit.edu/${firstProject}?token=${projectData.project_token}`)).json()).meta.agent;
-            let parsed = uap(agent);
-            params.browser = `${parsed.browser.name} ${parsed.browser.version || ""}`.trim();
-            if (parsed.os.name == "Windows" && parsed.os.version == "10") {
-                parsed.os.version = "10/11";
-            }
-            params.os = `${parsed.os.name} ${parsed.os.version || ""}`.trim();
+            let root, text;
+            root = HTMLParser.parse(await (await fetch2(`https://scratch.mit.edu/users/${user}/projects`)).text());
+            text = root.querySelector(".box-head h2").childNodes[1].textContent;
+            params.projectsShared = text.slice(text.indexOf("(") + 1, text.indexOf(")"));
         } catch {}
     }
-    try {
-        let root, text;
-        root = HTMLParser.parse(await (await fetch2(`https://scratch.mit.edu/users/${user}/projects`)).text());
-        text = root.querySelector(".box-head h2").childNodes[1].textContent;
-        params.projectsShared = text.slice(text.indexOf("(") + 1, text.indexOf(")"));
-    } catch {}
     return params;
 }
 
@@ -207,21 +209,21 @@ api.getUser = async function (request, reply) {
     let params = {
         username: request.params.username,
         usernameAsterisk: request.params.username,
-        browser: "?",
-        os: "?",
-        browserOStimeAgo: "",
-        id: "?",
+        browser: "Loading...",
+        os: "Loading...",
+        browserOStimeAgo: "Loading...",
+        id: "Loading...",
         joinDate: "?",
         country: "?",
         followers: "Loading...",
         following: "Loading...",
         profilePicture: "",
         stats: {},
-        projectsShared: "0",
+        projectsShared: "Loading...",
     };
     params.nav = navbarCode
     let user = request.params.username;
-    let data = await getUserData(user);
+    let data = await getUserData(user, true);
     if (data == 404) {
         return reply.view("/userNotFound.hbs", params);
     }
@@ -290,7 +292,12 @@ api.getUserInfo = async function (request, reply) {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
     })
-    let data = await getUserData(request.params.username)
+    let data
+    if (request.query.limited) {
+        data = await getUserData(request.params.username, true)
+    } else {
+        data = await getUserData(request.params.username, false)
+    }
     delete data.nav
     reply
         .code(200)
