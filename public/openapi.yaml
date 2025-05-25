@@ -1,5 +1,6 @@
 openapi: 3.0.4
 swagger: "2.0"
+basePath: "/api/v1"
 info:
   title: Scratch Info API
   description: Welcome to the documention for the Scratch Info API. The endpoints are listed below.

@@ -95,9 +95,9 @@ history.replaceState(null, "", "/users/" + text.slice(0, text.endsWith("*") ? te
 async function getMoreData() {
     let data = await (await fetch("/api/v1/users/{{username}}/info?mode=followering")).json();
     if ("{{username}}" != "griffpatch") {
-        document.querySelector("#followers").innerText = data.followers;
+        document.querySelector("#followers").innerText = data.followers || "?";
     }
-    document.querySelector("#following").innerText = data.following;
+    document.querySelector("#following").innerText = data.following || "?";
 
     // other data
     let data2 = await (await fetch("/api/v1/users/{{username}}/info?mode=extra")).json();
