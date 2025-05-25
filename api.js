@@ -487,10 +487,15 @@ async function getProjectData(id) {
     let params = {};
     params.nav = navbarCode
     let basicInfo = await (await fetch2(`https://api.scratch.mit.edu/projects/${id}`)).json();
-    if (basicInfo.code == "NotFound") {
+    if (basicInfo.code == "NotFound" || basicInfo.code == "ResourceNotFound") {
         return 404;
     }
-    params.id = id
+    try {
+        params.id = parseInt(id)
+    }
+    catch {
+        params.id = id
+    }
     params.title = basicInfo.title;
     params.author = {};
     params.author.username = basicInfo.author.username;
