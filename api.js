@@ -1,7 +1,8 @@
 const fetch = require("node-fetch");
 const uap = require("ua-parser-js");
 const HTMLParser = require("node-html-parser");
-const path = require("path")
+const path = require("path");
+import { put, head } from "@vercel/blob";
 const fs = require("fs");
 const navbarCode = fs.readFileSync(path.join(__dirname, "api", "navbar.txt"), "utf8");
 // const Database = require("easy-json-database");
@@ -19,14 +20,13 @@ const navbarCode = fs.readFileSync(path.join(__dirname, "api", "navbar.txt"), "u
 let api = {};
 
 async function fetch2(url) {
-    let proxyURL = 'https://corsproxy.josueart40.workers.dev/?'
+    let proxyURL = "https://corsproxy.josueart40.workers.dev/?";
     if (url.startsWith("https://api.scratch.mit.edu")) {
-        return await fetch(proxyURL + encodeURIComponent(url))
+        return await fetch(proxyURL + encodeURIComponent(url));
     } else {
-        return await fetch(url)
+        return await fetch(url);
     }
 }
-
 
 api.followering = async function (request, reply) {
     let data = {
@@ -57,11 +57,11 @@ api.followering = async function (request, reply) {
         // let text2 = dom2.window.document.querySelector(".box-head h2").textContent;
         data.followers = parseInt(text.slice(text.indexOf("(") + 1, text.indexOf(")")));
     } catch {}
-  
+
     reply.headers({
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
-    })
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+    });
     reply.code(200).header("Content-Type", "application/json; charset=utf-8").send(JSON.stringify(data, null, 4));
 };
 
@@ -138,11 +138,11 @@ async function getStats(username) {
 
 api.projectStats = async function (request, reply) {
     let user = request.params.username;
-  
+
     reply.headers({
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
-    })
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+    });
     reply
         .code(200)
         .header("Content-Type", "application/json; charset=utf-8")
@@ -163,9 +163,9 @@ async function getUserData(username, mode) {
         projectsShared: "?",
         followers: "?",
         following: "?",
-        deleted: "?"
+        deleted: "?",
     };
-    params.nav = navbarCode
+    params.nav = navbarCode;
     let user = params.username;
     // console.log("extra", extra)
     if (mode == "regular" || mode == "all") {
@@ -205,17 +205,17 @@ async function getUserData(username, mode) {
         }
         try {
             let root, text;
-            let response2 = await fetch2(`https://scratch.mit.edu/users/${user}/projects`)
+            let response2 = await fetch2(`https://scratch.mit.edu/users/${user}/projects`);
             if (response2.status == 404) {
-                params.deleted = true
+                params.deleted = true;
             } else {
-                params.deleted = false
+                params.deleted = false;
             }
-            root = HTMLParser.parse(await response2.text())
+            root = HTMLParser.parse(await response2.text());
             text = root.querySelector(".box-head h2").childNodes[1].textContent;
             params.projectsShared = parseInt(text.slice(text.indexOf("(") + 1, text.indexOf(")")));
-        } catch(e) {
-            console.log("failed to get users projects")
+        } catch (e) {
+            console.log("failed to get users projects");
         }
     }
 
@@ -241,10 +241,10 @@ async function getUserData(username, mode) {
         } catch {}
     }
 
-    let newParams = {}
+    let newParams = {};
     for (let param of Object.keys(params)) {
         if (params[param] != "?" && params[param] != "" && params[param] != undefined) {
-            newParams[param] = params[param]
+            newParams[param] = params[param];
         }
     }
 
@@ -267,7 +267,7 @@ api.getUser = async function (request, reply) {
         stats: {},
         projectsShared: "Loading...",
     };
-    params.nav = navbarCode
+    params.nav = navbarCode;
     let user = request.params.username;
     let data = await getUserData(user, "regular");
     if (data == 404) {
@@ -282,8 +282,8 @@ api.getUser = async function (request, reply) {
     params.projectsShared = data.projectsShared;
     params.profilePicture = data.profilePicture;
     params.usernameAsterisk = data.username + (data.scratchteam ? "*" : "");
-    params.smallLoading = `<span class="img-load-wrapper" style="width: 70px;height: 20px;display: inline-block;margin-bottom: -4px;"><span class="activity"></span></span>`
-    params.mediumLoading = `<span class="img-load-wrapper" style="width: 75px;height: 20px;display: inline-block;margin-bottom: -4px;"><span class="activity"></span></span>`
+    params.smallLoading = `<span class="img-load-wrapper" style="width: 70px;height: 20px;display: inline-block;margin-bottom: -4px;"><span class="activity"></span></span>`;
+    params.mediumLoading = `<span class="img-load-wrapper" style="width: 75px;height: 20px;display: inline-block;margin-bottom: -4px;"><span class="activity"></span></span>`;
     //     let user = params.username;
     //     let userInfo = await (await fetch2(`https://api.scratch.mit.edu/users/${user}`)).json();
     //     if (userInfo.code) {
@@ -337,25 +337,22 @@ api.getUser = async function (request, reply) {
 
 api.getUserInfo = async function (request, reply) {
     reply.headers({
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
-    })
-    let code = 200
-    let data
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+    });
+    let code = 200;
+    let data;
     if (request.query.mode) {
         // console.log("extra")
-        data = await getUserData(request.params.username, request.query.mode)
+        data = await getUserData(request.params.username, request.query.mode);
     } else {
         // console.log("regular")
         // data = await getUserData(request.params.username, false)
-        data = {"error": "must specify 'mode' parameter"}
-        code = 400
+        data = { error: "must specify 'mode' parameter" };
+        code = 400;
     }
-    delete data.nav
-    reply
-        .code(code)
-        .header("Content-Type", "application/json; charset=utf-8")
-        .send(JSON.stringify(data, null, 4));
+    delete data.nav;
+    reply.code(code).header("Content-Type", "application/json; charset=utf-8").send(JSON.stringify(data, null, 4));
 };
 
 api.browserHistoryPage = async function (request, reply) {
@@ -365,7 +362,7 @@ api.browserHistoryPage = async function (request, reply) {
         page: request.query.page || 1,
         nextPage: parseInt(request.query.page || 1) + 1,
     };
-    params.nav = navbarCode
+    params.nav = navbarCode;
     params.prevPage = params.page > 1 ? params.page - 1 : 1;
 
     return reply.view("/browserHistory.hbs", params);
@@ -376,8 +373,8 @@ api.browserHistory = async function (request, reply) {
     let data = [];
     let projects;
 
-    // if (projectDB.has(user)) {
-    if (false) {
+    if (projectDB.has(user)) {
+    // if (false) {
         let offset = request.query.page ? (request.query.page - 1) * 40 : 0;
         projects = projectDB.get(user).slice(offset, offset + 40);
         console.log("using stored projects for user", user);
@@ -464,9 +461,9 @@ api.browserHistory = async function (request, reply) {
     }
     //data.sort(compare)
     reply.headers({
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
-    })
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+    });
     reply.code(200).header("Content-Type", "application/json; charset=utf-8").send(JSON.stringify(data, null, 4));
 };
 
@@ -475,7 +472,7 @@ api.projectPage = async function getProjectPage(request, reply) {
     let id = request.params.project;
     params = await getProjectData(id);
     if (params == 404) {
-        return reply.view("/projectNotFound.hbs", {id: id, nav: navbarCode})
+        return reply.view("/projectNotFound.hbs", { id: id, nav: navbarCode });
     } else {
         return reply.view("/project.hbs", params);
     }
@@ -483,29 +480,28 @@ api.projectPage = async function getProjectPage(request, reply) {
 
 api.apiProjectData = async function apiProjectData(request, reply) {
     reply.headers({
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
-    })
-    let data = await getProjectData(request.params.id)
-    delete data.nav
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+    });
+    let data = await getProjectData(request.params.id);
+    delete data.nav;
     reply.code(200).header("Content-Type", "application/json; charset=utf-8").send(JSON.stringify(data, null, 4));
-}
+};
 
 async function getProjectData(id) {
     if (!id) {
-      return {}
+        return {};
     }
     let params = {};
-    params.nav = navbarCode
+    params.nav = navbarCode;
     let basicInfo = await (await fetch2(`https://api.scratch.mit.edu/projects/${id}`)).json();
     if (basicInfo.code == "NotFound" || basicInfo.code == "ResourceNotFound") {
         return 404;
     }
     try {
-        params.id = parseInt(id)
-    }
-    catch {
-        params.id = id
+        params.id = parseInt(id);
+    } catch {
+        params.id = id;
     }
     params.title = basicInfo.title;
     params.author = {};
@@ -524,21 +520,21 @@ async function getProjectData(id) {
 
     let root = HTMLParser.parse(t);
     let els = root.getElementsByTagName("script");
-  
+
     for (var i = 0; i < els.length; i++) {
         if (els[i].textContent.includes("var projectData = {")) {
             let el = els[i];
             if (el.textContent.includes("notsafe")) {
                 params.reviewStatus = "notsafe";
-                break
+                break;
             }
             if (el.textContent.includes("safe")) {
                 params.reviewStatus = "safe";
-                break
+                break;
             }
             if (el.innerHTML.includes("notreviewed")) {
                 params.reviewStatus = "notreviewed";
-                break
+                break;
             }
             break;
         }
@@ -553,5 +549,88 @@ async function getProjectData(id) {
 //   browserHistoryPage: api.browserHistoryPage,
 //   browserHistory: api.browserHistory
 // };
+
+api.griffpatchFollowerCount = async function (request, reply) {
+    let blobDetails = await head("data.json");
+    let data = await (await fetch(blobDetails.url + `?nocache=${Math.random()}`)).json();
+    // return reply.send(data)
+
+    let min = data.lastCount;
+    let hours = Math.max(Math.abs(Date.now() - data.lastTime) / 36e5, 0.8);
+    console.log("Difference in hours: ", hours);
+    let estimatedNewFollowers = Math.ceil(data.perHour * hours);
+    console.log("Estimated new followers:", estimatedNewFollowers);
+    let max = Math.ceil(min + estimatedNewFollowers);
+    console.log("Min", min, "Max", max);
+
+    let testId = min;
+    let result = [];
+    console.time("count");
+
+    // Do a binary search to find the follower count
+    let attempts = 0;
+    while (max - min > 1) {
+        if (attempts > 20) {
+            return reply.code(500).send("Error, attempt counter exceeded 20");
+            break;
+        }
+        let startTime = Date.now();
+        testId = Math.ceil((min + max) / 2);
+        result = await (await fetch2(`https://api.scratch.mit.edu/users/griffpatch/followers/?offset=${testId}&limit=1`)).json();
+        // console.log(result)
+        if (result.response == "Too many requests") {
+            console.log("oops", result);
+            return "sorry, the scratch api isn't working right now";
+        }
+        if (result == undefined) {
+            result = 0;
+        }
+        if (result.length == 0) {
+            max = testId;
+        } else {
+            min = testId;
+        }
+        let sleepTime = Math.max(400 - (Date.now() - startTime), 50);
+        console.log("test", testId, "max", max, "min", min, "sleeping", sleepTime);
+        await sleep(sleepTime);
+        attempts += 1;
+    }
+    console.timeEnd("count");
+    if (result.length == 0) {
+        testId -= 1;
+    }
+    console.log("final count: ", testId, "in", attempts, "attempts");
+    data.lastCount = testId;
+    data.lastTime = Date.now();
+    let griffyFollowerCount = testId;
+
+    const blob = await put("data.json", JSON.stringify(data, null, 4), {
+        access: "public",
+        allowOverwrite: true,
+    });
+    reply.code(200).send(griffyFollowerCount);
+};
+
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+api.main = async function (request, reply) {
+    let params = {};
+    params.nav = navbarCode;
+    return reply.view("/main.hbs", params);
+};
+
+api.about = async function (request, reply) {
+    let params = {};
+    params.nav = navbarCode;
+    return reply.view("/about.hbs", params);
+};
+
+api.docs = async function (request, reply) {
+    let params = {};
+    params.nav = navbarCode;
+    return reply.view("/apiDocs.hbs", params);
+};
 
 module.exports = api;

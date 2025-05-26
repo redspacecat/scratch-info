@@ -1,6 +1,7 @@
 const path = require("path");
 const api = require("../api.js");
 const fs = require("fs");
+import { put } from '@vercel/blob'
 // import { inject } from '@vercel/analytics';
 // const inject = require("@vercel/analytics")
 // inject()
@@ -29,29 +30,28 @@ async function main() {
     fastify.all("/api/v1/users/:username/followering", api.followering);
     fastify.all("/api/v1/users/:username/projectStats", api.projectStats);
     fastify.all("/api/v1/users/:username/info", api.getUserInfo);
-    // fastify.all("/api/v1/users/:username/browserHistory", api.browserHistory);
+    fastify.all("/api/v1/users/griffpatch/followerCount", api.griffpatchFollowerCount);
+    fastify.all("/api/v1/users/:username/browserHistory", api.browserHistory);
     fastify.all("/api/v1/projects/:id/info", api.apiProjectData);
 
+    fastify.all("/", api.main);
     fastify.all("/users/:username", api.getUser);
     // fastify.all("/users/:username/browserHistory", { config: { rateLimit: { max: 4, timeWindow: 15000 } } }, api.browserHistoryPage);
     fastify.all("/projects/:project", api.projectPage);
-
-    const navbarCode = fs.readFileSync(path.join(__dirname, "navbar.txt"), "utf8");
-    fastify.all("/", async function (request, reply) {
-        let params = {};
-        params.nav = navbarCode;
-        return reply.view("/main.hbs", params);
-    });
-    fastify.all("/about", async function (request, reply) {
-        let params = {};
-        params.nav = navbarCode;
-        return reply.view("/about.hbs", params);
-    });
-    fastify.all("/api/docs", async function (request, reply) {
-        let params = {};
-        params.nav = navbarCode;
-        return reply.view("/apiDocs.hbs", params);
-    });
+    fastify.all("/about", api.about);
+    fastify.all("/api/docs", api.docs);
+    // fastify.all("/test", async function (request, reply) {
+    //     const data = {
+    //         "lastCount": 735240,
+    //         "lastTime": 1748296478778,
+    //         "perHour": 30
+    //     }
+    //     const blob = await put("data.json", JSON.stringify(data), {
+    //         access: 'public',
+    //         allowOverwrite: true
+    //     });
+    //     reply.code(200).send("ok")
+    // });
 
     // Run the server and report out to the logs
     fastify.listen({ port: process.env.PORT, host: "0.0.0.0" }, function (err, address) {
