@@ -23,7 +23,10 @@
 
         <!--       <div style="display:flex;flex-wrap:wrap;max-width:350px"> -->
         <div style="margin-bottom: 15px" class="cf">
-            <img id="username-img" src="{{profilePicture}}" />
+            <span class="img-load-wrapper" style="width: 60px;height: 60px;border-radius:7px;display: inline-block;vertical-align: middle;">
+                <span class="activity"></span>
+            </span>
+            <img id="username-img" src="{{profilePicture}}" hidden onload="this.hidden = false;this.previousElementSibling.style.display = 'none'"/>
             <span id="username-text">{{usernameAsterisk}}</span><br />
         </div>
         <div style="display:flex;flex-wrap:wrap">
@@ -37,19 +40,24 @@
             <div class="cf ct user-info-box" id="browserandos">
                 <div style="text-align:center">
                     <h3 class="ct h0">Browser and OS<span class="info" data-info="browserandos"></span></h3>
-                    <small><span id="browserOStimeAgo">Loading...</span></small><br />
+                    <small style="text-align: center;height: 20px;display: inline-block;">
+                        <div class="img-load-wrapper" style="width: 103px;height: 18px;margin-left:auto;margin-right:auto;">
+                            <div class="activity"></div>
+                        </div>
+                        <span id="browserOStimeAgo" hidden>Loading...</span>
+                    </small><br />
                 </div>
-                <span>Browser: <span id="browser">Loading...</span></span><br>
-                <span>OS: <span id="os">Loading...</span></span><br>
+                <span>Browser: {{{mediumLoading}}}<span id="browser" hidden>Loading...</span></span><br>
+                <span>OS: {{{mediumLoading}}} <span id="os" hidden>Loading...</span></span><br>
                 <!--<a href="{{username}}/browserHistory">View Browser and OS History</a><br />-->
             </div></div>
 
         <div class="cf user-info-box" id="otherinfo">
           <h3 class="ct h0">Other Info</h3>
           <div class="cf">
-            <span>Follower Count: <span id="followers">{{followers}}</span></span><span class="info" data-info="griffyfollowers" style="visibility:hidden;"></span><br />
-            <span>Following Count: <span id="following">{{following}}</span></span><br />
-            <span>Project Shared: <span id="projectsShared">Loading...</span></span><br />
+            <span>Follower Count: {{{smallLoading}}}<span id="followers" hidden>{{followers}}</span></span><span class="info" data-info="griffyfollowers" style="visibility:hidden;"></span><br />
+            <span>Following Count: {{{smallLoading}}}<span id="following" hidden>{{following}}</span></span><br />
+            <span>Project Shared: {{{smallLoading}}}<span id="projectsShared" hidden>Loading...</span></span><br />
           </div>
         </div>
         <!--       </div> -->
@@ -61,14 +69,25 @@
         <table width="550px" id="stats-table" class="c">
             <tr><td colspan="3" style="text-align:center">Total Project Stats<span class="info" data-info="totalstats"></span></td></tr>
             <!--       <tr><td>{{stats.totalLoves}} ❤️</td><td>{{stats.totalFaves}} ⭐</td><td>{{stats.totalViews}} 👁️</td></tr> -->
-            <tr><td id="totalLoves"></td><td id="totalFaves"></td><td id="totalViews"></td></tr>
-            <tr><td id="loveToViewRatio"><span>...</span><span class="info" data-info="lovetoview"></span></td><td id="faveToViewRatio"><span>...</span><span class="info" data-info="favetoview"></span></td><td id="faveToLoveRatio"><span>...</span><span class="info" data-info="favetolove"></span></td></tr>
+            <tr>
+                <td>{{{smallLoading}}}<span id="totalLoves"></span></td>
+                <td>{{{smallLoading}}}<span id="totalFaves"></span></td>
+                <td>{{{smallLoading}}}<span id="totalViews"></span></td></tr>
+            <tr>
+                <td>{{{smallLoading}}}<span id="loveToViewRatio"></span><span class="info" data-info="lovetoview"></span></td>
+                <td>{{{smallLoading}}}<span id="faveToViewRatio"></span><span class="info" data-info="favetoview"></span></td>
+                <td>{{{smallLoading}}}<span id="faveToLoveRatio"></span><span class="info" data-info="favetolove"></span></td>
+            </tr>
         </table>
         <br />
         <table width="550px" id="average-stats-table" class="c">
             <tr><td colspan="3" style="text-align:center">Average Project Stats<span class="info" data-info="averagestats"></span></td></tr>
             <!--       <tr><td>{{stats.averageStats.averageLoves}} ❤️</td><td>{{stats.averageStats.averageFaves}} ⭐</td><td>{{stats.averageStats.averageViews}} 👁️</td></tr> -->
-            <tr><td id="averageLoves">...</td><td id="averageFaves">...</td><td id="averageViews">...</td></tr>
+            <tr>
+                <td>{{{smallLoading}}}<span id="averageLoves"></span></td>
+                <td>{{{smallLoading}}}<span id="averageFaves"></span></td>
+                <td>{{{smallLoading}}}<span id="averageViews"></span></td>
+            </tr>
         </table>
         <br />
         <div id="user-projects-container" hidden>
@@ -105,17 +124,24 @@ async function getMoreData() {
     document.querySelector("#browser").innerText = data2.browser || "?"
     document.querySelector("#os").innerText = data2.os || "?"
     document.querySelector("#projectsShared").innerText = data2.projectsShared || "?"
+
+    document.querySelectorAll("#browserOStimeAgo, #browser, #os, #followers, #following, #projectsShared").forEach(function(a) {
+        a.previousElementSibling.style.display = "none";
+        a.hidden = false;
+    })
 }
 
 async function getGriffyFollowers() {
     document.querySelector("span.info[data-info='griffyfollowers']").style.visibility = "visible"
-    document.querySelector("#followers").innerText = "Loading... (this may take up to 30 seconds if the server is slow)";
+    //document.querySelector("#followers").innerText = "Loading... (this may take up to 30 seconds if the server is slow)";
     let data = await (
         await fetch("https://griffpatch-follower-count.glitch.me/count", {
             method: "POST",
         })
     ).text();
     document.querySelector("#followers").innerText = data;
+    document.querySelector("#followers").previousElementSibling.style.display = "none"
+    document.querySelector("#followers").hidden = false
 }
 getMoreData();
 if ("{{username}}" == "griffpatch") {
@@ -151,7 +177,10 @@ function createList() {
     let projectListEl = document.querySelector("#projects");
     let baseProject = `<div class="one-project">
                 <a onclick="topbar.show()">
-                  <img class="project-image" loading="lazy">
+                  <div style="width:240px;height:181px;" class="img-load-wrapper">
+                    <div class="activity"></div>
+                  </div>
+                  <img class="project-image" loading="lazy" onload="this.previousElementSibling.style.display = 'none';this.style.visibility = 'visible'">
                 </a>
                 <br>
                 <a class="project-title" onclick="topbar.show()"></a>
@@ -183,6 +212,7 @@ function createList() {
         newProject.querySelectorAll("span")[3].innerText = `${Math.round(project.loveToViewRatio * 100) / 100}% love/view`;
         newProject.querySelectorAll("span")[4].innerText = `${Math.round(project.faveToViewRatio * 100) / 100}% fave/view`;
         newProject.querySelectorAll("span")[5].innerText = `${Math.round(project.faveToLoveRatio * 100) / 100}% favorite/love`; // newProject.querySelectorAll("span")[6].innerText = project.remixCount.toLocaleString()
+
         projectListEl.appendChild(newProject);
     }
   
@@ -190,15 +220,20 @@ function createList() {
 }
 
 function applyStats(stats) {
-    document.querySelector("#loveToViewRatio").children[0].innerText = `${Math.round(stats.loveToViewRatio * 100) / 100}% love/view`;
-    document.querySelector("#faveToViewRatio").children[0].innerText = `${Math.round(stats.faveToViewRatio * 100) / 100}% favorite/view`;
-    document.querySelector("#faveToLoveRatio").children[0].innerText = `${Math.round(stats.faveToLoveRatio * 100) / 100}% favorite/love`;
+    document.querySelector("#loveToViewRatio").innerText = `${Math.round(stats.loveToViewRatio * 100) / 100}% love/view`;
+    document.querySelector("#faveToViewRatio").innerText = `${Math.round(stats.faveToViewRatio * 100) / 100}% favorite/view`;
+    document.querySelector("#faveToLoveRatio").innerText = `${Math.round(stats.faveToLoveRatio * 100) / 100}% favorite/love`;
     document.querySelector("#totalLoves").innerText = stats.totalLoves.toLocaleString();
     document.querySelector("#totalFaves").innerText = stats.totalFaves.toLocaleString();
     document.querySelector("#totalViews").innerText = stats.totalViews.toLocaleString();
     document.querySelector("#averageLoves").innerText = stats.averageStats.averageLoves.toLocaleString();
     document.querySelector("#averageFaves").innerText = stats.averageStats.averageFaves.toLocaleString();
     document.querySelector("#averageViews").innerText = stats.averageStats.averageViews.toLocaleString();
+
+    document.querySelectorAll("#totalLoves, #totalFaves, #totalViews, #loveToViewRatio, #faveToViewRatio, #faveToLoveRatio, #averageLoves, #averageFaves, #averageViews").forEach(function(a) {
+        a.previousElementSibling.style.display = "none";
+        a.hidden = false;
+    })
 }
 
 function popularitySort(a, b) {

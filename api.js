@@ -273,6 +273,8 @@ api.getUser = async function (request, reply) {
     params.projectsShared = data.projectsShared;
     params.profilePicture = data.profilePicture;
     params.usernameAsterisk = data.username + (data.scratchteam ? "*" : "");
+    params.smallLoading = `<span class="img-load-wrapper" style="width: 70px;height: 20px;display: inline-block;margin-bottom: -4px;"><span class="activity"></span></span>`
+    params.mediumLoading = `<span class="img-load-wrapper" style="width: 75px;height: 20px;display: inline-block;margin-bottom: -4px;"><span class="activity"></span></span>`
     //     let user = params.username;
     //     let userInfo = await (await fetch2(`https://api.scratch.mit.edu/users/${user}`)).json();
     //     if (userInfo.code) {

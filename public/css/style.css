@@ -92,7 +92,7 @@ td {
     margin-top: -10px;
 }
 /* .loveToViewRatio::after { */
-    /*   content: "❤️/👁️" */
+/*   content: "❤️/👁️" */
 /* } */
 .loves,
 .faves,
@@ -126,12 +126,13 @@ td {
     width: 250px;
     border: 1px solid gray;
     border-radius: 10px;
-
+    visibility: hidden;
+    /* 
     opacity: 1;
     animation-name: fadeInOpacity;
     animation-iteration-count: 1;
     animation-timing-function: ease-in;
-    animation-duration: 0.5s;
+    animation-duration: 0.5s; */
 }
 
 .project-container {
@@ -226,13 +227,13 @@ td {
         margin-left: auto;
         margin-right: auto;
     }
-  #otherinfo {
-    min-width: 60%
-  }
+    #otherinfo {
+        min-width: 60%;
+    }
 }
 
 #otherinfo {
-  min-width: 30%
+    min-width: 30%;
 }
 
 #stats-table,
@@ -251,4 +252,34 @@ td {
     border-radius: 15px;
     border: 1px solid gray;
     margin-bottom: 10px;
+}
+
+.img-load-wrapper {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-color: rgb(211, 211, 211);
+    z-index: 44;
+    overflow: hidden;
+    border-radius: 5px;
+}
+.activity {
+    position: absolute;
+    left: -45%;
+    height: 100%;
+    width: 45%;
+    background-image: linear-gradient(to left, rgba(251, 251, 251, 0.05), rgba(251, 251, 251, 0.3), rgba(251, 251, 251, 0.6), rgba(251, 251, 251, 0.3), rgba(251, 251, 251, 0.05));
+    background-image: -moz-linear-gradient(to left, rgba(251, 251, 251, 0.05), rgba(251, 251, 251, 0.3), rgba(251, 251, 251, 0.6), rgba(251, 251, 251, 0.3), rgba(251, 251, 251, 0.05));
+    background-image: -webkit-linear-gradient(to left, rgba(251, 251, 251, 0.05), rgba(251, 251, 251, 0.3), rgba(251, 251, 251, 0.6), rgba(251, 251, 251, 0.3), rgba(251, 251, 251, 0.05));
+    animation: loading 1s infinite;
+    z-index: 45;
+}
+
+@keyframes loading {
+    0% {
+        left: -45%;
+    }
+    100% {
+        left: 100%;
+    }
 }

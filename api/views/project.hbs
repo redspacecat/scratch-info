@@ -9,7 +9,6 @@
     <!-- import the webpage's stylesheet -->
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/projects.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/js/info.js"></script>
     <script src="/js/main.js"></script>
@@ -41,7 +40,10 @@
         <div style="display:flex">
           <a id="user-link" href="/users/{{author.username}}" style="text-decoration:none;color:black;">
             <div style="width: fit-content">
-              <img src="{{author.image}}" style="height: 35px;width:35px;margin-right:5px;vertical-align:middle;">
+              <span class="img-load-wrapper" style="height: 35px;width: 35px;margin-right: 5px;vertical-align: middle;border-radius: 5px;display: inline-block;">
+                <span class="activity"></span>
+              </span>
+              <img src="{{author.image}}" style="height: 35px;width: 35px;margin-right: 5px;vertical-align: middle;border-radius: 5px;" hidden onload="this.hidden = false;this.previousElementSibling.style.display = 'none'">
               <span style="vertical-align:middle">{{author.username}}</span>
             </div>
           </a>
