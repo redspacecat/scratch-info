@@ -109,7 +109,7 @@
         <script src="/js/info.js"></script>
       
       <script>
-        let text = document.querySelector("#username-text").innerText;
+let text = document.querySelector("#username-text").innerText;
 history.replaceState(null, "", "/users/" + text.slice(0, text.endsWith("*") ? text.length - 1 : text.length));
 async function getMoreData() {
     let data = await (await fetch("/api/v1/users/{{username}}/info?mode=followering")).json();
@@ -117,8 +117,10 @@ async function getMoreData() {
         document.querySelector("#followers").innerText = data.followers || "?";
     }
     document.querySelector("#following").innerText = data.following || "?";
+}
 
-    // other data
+async function getEvenMoreData() {
+     // other data
     let data2 = await (await fetch("/api/v1/users/{{username}}/info?mode=extra")).json();
     document.querySelector("#browserOStimeAgo").innerText = `(as of ${data2.browserOStimeAgo} days ago)`
     document.querySelector("#browser").innerText = data2.browser || "?"
@@ -144,6 +146,7 @@ async function getGriffyFollowers() {
     document.querySelector("#followers").hidden = false
 }
 getMoreData();
+getEvenMoreData();
 if ("{{username}}" == "griffpatch") {
     getGriffyFollowers();
 }
