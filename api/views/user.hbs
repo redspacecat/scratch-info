@@ -9,6 +9,9 @@
         <!-- import the webpage's stylesheet -->
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/navbar.css">
+        <link rel="preload" href="/api/v1/users/{{username}}/projectStats" as="fetch" crossorigin>
+        <link rel="preload" href="/api/v1/users/{{username}}/info?mode=extra" as="fetch" crossorigin>
+        <link rel="preload" href="/api/v1/users/{{username}}/info?mode=followering" as="fetch" crossorigin>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="/js/main.js"></script>
         <script src="/js/navbar.js"></script>
