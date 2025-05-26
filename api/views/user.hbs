@@ -118,7 +118,7 @@ async function getMoreData() {
     let data = await (await fetch("/api/v1/users/{{username}}/info?mode=followering")).json();
     if ("{{username}}" != "griffpatch") {
         document.querySelector("#followers").innerText = data.followers || "?";
-        
+
         document.querySelectorAll("#followers").forEach(function(a) {
             a.previousElementSibling.style.display = "none";
             a.hidden = false;
@@ -134,7 +134,7 @@ async function getMoreData() {
 async function getEvenMoreData() {
      // other data
     let data2 = await (await fetch("/api/v1/users/{{username}}/info?mode=extra")).json();
-    document.querySelector("#browserOStimeAgo").innerText = `(as of ${data2.browserOStimeAgo} days ago)`
+    document.querySelector("#browserOStimeAgo").innerText = `(as of ${data2.browserOStimeAgo || "?"} days ago)`
     document.querySelector("#browser").innerText = data2.browser || "?"
     document.querySelector("#os").innerText = data2.os || "?"
     document.querySelector("#projectsShared").innerText = data2.projectsShared || "?"
