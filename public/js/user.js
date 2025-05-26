@@ -1,0 +1,208 @@
+let text = document.querySelector("#username-text").innerText;
+history.replaceState(null, "", "/users/" + text.slice(0, text.endsWith("*") ? text.length - 1 : text.length));
+async function getMoreData() {
+    let data = await (await fetch(`/api/v1/users/${username}/info?mode=followering`)).json();
+    if (username != "griffpatch") {
+        document.querySelector("#followers").innerText = data.followers || "?";
+
+        document.querySelectorAll("#followers").forEach(function (a) {
+            a.previousElementSibling.style.display = "none";
+            a.hidden = false;
+        });
+    }
+    document.querySelector("#following").innerText = data.following || "?";
+    document.querySelectorAll("#following").forEach(function (a) {
+        a.previousElementSibling.style.display = "none";
+        a.hidden = false;
+    });
+}
+
+async function getEvenMoreData() {
+    // other data
+    let data2 = await (await fetch(`/api/v1/users/${username}/info?mode=extra`)).json();
+    document.querySelector("#browserOStimeAgo").innerText = `(as of ${data2.browserOStimeAgo || "?"} days ago)`;
+    document.querySelector("#browser").innerText = data2.browser || "?";
+    document.querySelector("#os").innerText = data2.os || "?";
+    document.querySelector("#projectsShared").innerText = data2.projectsShared || "?";
+
+    document.querySelectorAll("#browserOStimeAgo, #browser, #os, #projectsShared").forEach(function (a) {
+        a.previousElementSibling.style.display = "none";
+        a.hidden = false;
+    });
+}
+
+async function getGriffyFollowers() {
+    document.querySelector("span.info[data-info='griffyfollowers']").style.visibility = "visible";
+    //document.querySelector("#followers").innerText = "Loading... (this may take up to 30 seconds if the server is slow)";
+    let data = await (
+        await fetch("https://griffpatch-follower-count.glitch.me/count", {
+            method: "POST",
+        })
+    ).text();
+    document.querySelector("#followers").innerText = data;
+    document.querySelector("#followers").previousElementSibling.style.display = "none";
+    document.querySelector("#followers").hidden = false;
+}
+getMoreData();
+getEvenMoreData();
+if (username == "griffpatch") {
+    getGriffyFollowers();
+}
+
+let projectData;
+let currentSorting = "popularity";
+let direction = 1;
+// 0 is normal, 1 is inverted
+document.querySelectorAll(".info[data-info]").forEach((el) => (el.style.display = "none"));
+
+function htmlToNode(html) {
+    const template = document.createElement("template");
+    template.innerHTML = html;
+    const nNodes = template.content.childNodes.length;
+    if (nNodes !== 1) {
+        throw new Error("failed to parse");
+    }
+    return template.content.firstChild;
+}
+async function getProjectStats() {
+    let stats = await (await fetch(`/api/v1/users/${username}/projectStats`)).json();
+    projectData = stats.projects;
+    applyStats(stats);
+    createList();
+    document.querySelector(".sorter").click();
+    document.querySelectorAll(".info[data-info]").forEach((el) => (el.style.display = ""));
+    document.querySelector("#user-projects-container").hidden = false;
+}
+
+function createList() {
+    let projectListEl = document.querySelector("#projects");
+    let baseProject = `<div class="one-project">
+                <a onclick="topbar.show()">
+                  <div style="width:240px;height:181px;" class="img-load-wrapper">
+                    <div class="activity"></div>
+                  </div>
+                  <img class="project-image" loading="lazy" onload="this.previousElementSibling.style.display = 'none';this.style.visibility = 'visible'">
+                </a>
+                <br>
+                <a class="project-title" onclick="topbar.show()"></a>
+                <br>
+                <div class="project-stats-line">
+                  <span class="loves"></span>
+                  <span class="faves"></span>
+                  <span class="views"></span>
+                </div>
+                <div class="project-stats-line">
+                  <span class="loveToViewRatio"></span>
+                  <span class="loveToViewRatio"></span>
+                </div>
+                <div class="project-stats-line">
+                  <span class="faveToLoveRatio"></span>
+                </div>
+              </div>`;
+    let replaceRegex = /\\n[ ]+/gi;
+    baseProject = baseProject.replaceAll(replaceRegex, "");
+    for (let project of projectData) {
+        let newProject = htmlToNode(baseProject);
+        newProject.querySelector("img").src = project.img;
+        newProject.querySelector("a").href = `/projects/${project.id}`;
+        newProject.querySelectorAll("a")[1].innerText = project.title;
+        newProject.querySelectorAll("a")[1].href = `/projects/${project.id}`;
+        newProject.querySelectorAll("span")[0].innerText = project.loves.toLocaleString();
+        newProject.querySelectorAll("span")[1].innerText = project.faves.toLocaleString();
+        newProject.querySelectorAll("span")[2].innerText = project.views.toLocaleString();
+        newProject.querySelectorAll("span")[3].innerText = `${Math.round(project.loveToViewRatio * 100) / 100}% love/view`;
+        newProject.querySelectorAll("span")[4].innerText = `${Math.round(project.faveToViewRatio * 100) / 100}% fave/view`;
+        newProject.querySelectorAll("span")[5].innerText = `${Math.round(project.faveToLoveRatio * 100) / 100}% favorite/love`; // newProject.querySelectorAll("span")[6].innerText = project.remixCount.toLocaleString()
+
+        projectListEl.appendChild(newProject);
+    }
+
+    search(document.querySelector("#searchbox").value);
+}
+
+function applyStats(stats) {
+    document.querySelector("#loveToViewRatio").innerText = `${Math.round(stats.loveToViewRatio * 100) / 100}% love/view`;
+    document.querySelector("#faveToViewRatio").innerText = `${Math.round(stats.faveToViewRatio * 100) / 100}% favorite/view`;
+    document.querySelector("#faveToLoveRatio").innerText = `${Math.round(stats.faveToLoveRatio * 100) / 100}% favorite/love`;
+    document.querySelector("#totalLoves").innerText = stats.totalLoves.toLocaleString();
+    document.querySelector("#totalFaves").innerText = stats.totalFaves.toLocaleString();
+    document.querySelector("#totalViews").innerText = stats.totalViews.toLocaleString();
+    document.querySelector("#averageLoves").innerText = stats.averageStats.averageLoves.toLocaleString();
+    document.querySelector("#averageFaves").innerText = stats.averageStats.averageFaves.toLocaleString();
+    document.querySelector("#averageViews").innerText = stats.averageStats.averageViews.toLocaleString();
+
+    document.querySelectorAll("#totalLoves, #totalFaves, #totalViews, #loveToViewRatio, #faveToViewRatio, #faveToLoveRatio, #averageLoves, #averageFaves, #averageViews").forEach(function (a) {
+        a.previousElementSibling.style.display = "none";
+        a.hidden = false;
+    });
+}
+
+function popularitySort(a, b) {
+    if (direction == 1) {
+        if (a.loves + a.faves < b.loves + b.faves) {
+            return -1;
+        }
+        if (a.loves + a.faves > b.loves + b.faves) {
+            return 1;
+        }
+        if (a.views < b.views) {
+            return -1;
+        }
+        if (a.views > b.views) {
+            return 1;
+        }
+        return 0;
+    } else {
+        if (b.loves + b.faves < a.loves + a.faves) {
+            return -1;
+        }
+        if (b.loves + b.faves > a.loves + a.faves) {
+            return 1;
+        }
+        if (b.views < a.views) {
+            return -1;
+        }
+        if (b.views > a.views) {
+            return 1;
+        }
+        return 0;
+    }
+}
+
+function sortBy(sorter, el) {
+    document.querySelectorAll(".sorter").forEach((el) => (el.style.fontWeight = ""));
+    el.style.fontWeight = "bold";
+    if (currentSorting == sorter) {
+        direction = 1 - direction;
+    } else {
+        direction = 0;
+    }
+    currentSorting = sorter;
+    if (direction == 0) {
+        if (sorter == "popularity") {
+            projectData.sort(popularitySort); // projectData.sort((a, b) => (b.loves + b.faves) - (a.loves + a.faves))
+        } else {
+            projectData.sort((a, b) => b[sorter] - a[sorter]);
+        }
+    } else {
+        if (sorter == "popularity") {
+            projectData.sort(popularitySort); // projectData.sort((a, b) => (a.loves + a.faves) - (b.loves + b.faves))
+        } else {
+            projectData.sort((a, b) => a[sorter] - b[sorter]);
+        }
+    }
+    document.querySelector("#projects").innerHTML = "";
+    createList();
+}
+getProjectStats();
+
+function search(query) {
+    let els = document.querySelectorAll(".one-project");
+    for (let el of els) {
+        if (el.querySelector(".project-title").innerText.toLowerCase().includes(query.toLowerCase())) {
+            el.hidden = false;
+        } else {
+            el.hidden = true;
+        }
+    }
+}
