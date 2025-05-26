@@ -30,6 +30,10 @@ async function getEvenMoreData() {
         a.previousElementSibling.style.display = "none";
         a.hidden = false;
     });
+
+    if (data2.deleted) {
+        document.querySelector("#profile-picture-link").parentElement.appendChild(htmlToNode(`<span style="margin-left: 10px;vertical-align: middle;"><img src="/images/warning.png" style="width: 32px;vertical-align: middle;"><span style="vertical-align: middle;">Deleted</span></span>`))
+    }
 }
 
 async function getGriffyFollowers() {

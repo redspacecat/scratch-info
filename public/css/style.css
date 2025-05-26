@@ -300,3 +300,13 @@ td {
         left: 100%;
     }
 }
+
+#profile-picture-link {
+    display: inline-block;
+    text-decoration: none;
+    color: black;
+}
+
+#profile-picture-link:hover {
+    color: blue;
+}

@@ -162,7 +162,8 @@ async function getUserData(username, mode) {
         profilePicture: "",
         projectsShared: "?",
         followers: "?",
-        following: "?"
+        following: "?",
+        deleted: "?"
     };
     params.nav = navbarCode
     let user = params.username;
@@ -184,7 +185,7 @@ async function getUserData(username, mode) {
 
     if (mode == "extra" || mode == "all") {
         let projects = await (await fetch2(`https://api.scratch.mit.edu/users/${user}/projects`)).json();
-        uaIf: if (Object.keys(projects).length == 0) {
+        uaIf: if (Object.keys(projects).length == 0 || projects.code == "ResourceNotFound" || projects.code == "NotFound") {
             break uaIf;
         } else {
             let firstProject = Object.values(projects)[0].id;
@@ -204,10 +205,18 @@ async function getUserData(username, mode) {
         }
         try {
             let root, text;
-            root = HTMLParser.parse(await (await fetch2(`https://scratch.mit.edu/users/${user}/projects`)).text());
+            let response2 = await fetch2(`https://scratch.mit.edu/users/${user}/projects`)
+            if (response2.status == 404) {
+                params.deleted = true
+            } else {
+                params.deleted = false
+            }
+            root = HTMLParser.parse(await response2.text())
             text = root.querySelector(".box-head h2").childNodes[1].textContent;
             params.projectsShared = parseInt(text.slice(text.indexOf("(") + 1, text.indexOf(")")));
-        } catch {}
+        } catch(e) {
+            console.log("failed to get users projects")
+        }
     }
 
     if (mode == "followering" || mode == "all") {
@@ -234,7 +243,7 @@ async function getUserData(username, mode) {
 
     let newParams = {}
     for (let param of Object.keys(params)) {
-        if (params[param] != "?" && params[param] != "" && params[param]) {
+        if (params[param] != "?" && params[param] != "" && params[param] != undefined) {
             newParams[param] = params[param]
         }
     }

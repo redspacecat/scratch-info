@@ -65,10 +65,26 @@
             </div>
         </div>
         <script>
-            window.addEventListener("DOMContentLoaded", setup2) function setup2() { if ("{{reviewStatus}}" == "notreviewed") { document.querySelector("#review-status").innerText = "🤔 Not Rated" } else if ("{{reviewStatus}}" == "safe") { document.querySelector("#review-status").innerText = "✅ Rated FE" } else if ("{{reviewStatus}}" == "notsafe") { document.querySelector("#review-status").innerText = "⛔ Rated NFE" } document.querySelector(".loves").innerText = ({{stats.loves}}).toLocaleString() document.querySelector(".faves").innerText = ({{stats.favorites}}).toLocaleString() document.querySelector(".views").innerText = ({{stats.views}}).toLocaleString() document.querySelector(".remixes").innerText = ({{stats.remixes}}).toLocaleString() document.querySelector(".loveToViewRatio").children[0].innerText = `Love/view ratio: ${Math.round({{loveToViewRatio}}
-            * 100) / 100}%` document.querySelector(".faveToViewRatio").children[0].innerText = `Favorite/view ratio: ${Math.round({{faveToViewRatio}}
-            * 100) / 100}%` document.querySelector(".faveToLoveRatio").children[0].innerText = `Favorite/love ratio: ${Math.round({{faveToLoveRatio}}
-            * 100) / 100}%` document.querySelector("#created").innerText = `Created: ${new Date("{{history.created}}").toLocaleString()}` document.querySelector("#modified").innerText = `Last Modified: ${new Date("{{history.created}}").toLocaleString()}` document.querySelector("#shared").innerText = `Shared: ${new Date("{{history.created}}").toLocaleString()}` }
+            window.addEventListener("DOMContentLoaded", setup2)
+            function setup2() {
+                if ("{{reviewStatus}}" == "notreviewed") {
+                    document.querySelector("#review-status").innerText = "🤔 Not Rated"
+                } else if ("{{reviewStatus}}" == "safe") {
+                    document.querySelector("#review-status").innerText = "✅ Rated FE"
+                } else if ("{{reviewStatus}}" == "notsafe") {
+                    document.querySelector("#review-status").innerText = "⛔ Rated NFE"
+                }
+                
+                document.querySelector(".loves").innerText = ({{stats.loves}}).toLocaleString()
+                document.querySelector(".faves").innerText = ({{stats.favorites}}).toLocaleString()
+                document.querySelector(".views").innerText = ({{stats.views}}).toLocaleString()
+                document.querySelector(".remixes").innerText = ({{stats.remixes}}).toLocaleString()
+                document.querySelector(".loveToViewRatio").children[0].innerText = `Love/view ratio: ${Math.round({{loveToViewRatio}} * 100) / 100}%`
+                document.querySelector(".faveToViewRatio").children[0].innerText = `Favorite/view ratio: ${Math.round({{faveToViewRatio}} * 100) / 100}%`
+                document.querySelector(".faveToLoveRatio").children[0].innerText = `Favorite/love ratio: ${Math.round({{faveToLoveRatio}} * 100) / 100}%`
+                document.querySelector("#created").innerText = `Created: ${new Date("{{history.created}}").toLocaleString()}`
+                document.querySelector("#modified").innerText = `Last Modified: ${new Date("{{history.created}}").toLocaleString()}`
+                document.querySelector("#shared").innerText = `Shared: ${new Date("{{history.created}}").toLocaleString()}` }
         </script>
     </body>
 </html>

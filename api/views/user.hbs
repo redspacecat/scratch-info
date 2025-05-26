@@ -26,10 +26,10 @@
 
             <!--       <div style="display:flex;flex-wrap:wrap;max-width:350px"> -->
             <div style="margin-bottom: 15px" class="cf">
-                <span class="img-load-wrapper" style="width: 60px;height: 60px;border-radius:7px;display: inline-block;vertical-align: middle;">
-                    <span class="activity"></span>
-                </span>
-                <a href="https://scratch.mit.edu/users/{{username}}">
+                <a href="https://scratch.mit.edu/users/{{username}}" id="profile-picture-link" target="_blank">
+                    <span class="img-load-wrapper" style="width: 60px;height: 60px;border-radius:7px;display: inline-block;vertical-align: middle;">
+                        <span class="activity"></span>
+                    </span>
                     <img id="username-img" src="{{profilePicture}}" hidden onload="this.hidden = false;this.previousElementSibling.style.display = 'none'" />
                     <span id="username-text">{{usernameAsterisk}}</span><br />
                 </a>
