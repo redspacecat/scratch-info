@@ -120,7 +120,7 @@ async function getMoreData() {
         document.querySelector("#followers").innerText = data.followers || "?";
     }
     document.querySelector("#following").innerText = data.following || "?";
-    document.querySelectorAll("#followers, #following").forEach(function(a) {
+    document.querySelectorAll(`${"#followers, " ? '{{username}}' != 'griffpatch': ""}#following`).forEach(function(a) {
         a.previousElementSibling.style.display = "none";
         a.hidden = false;
     })
