@@ -25,8 +25,9 @@
 </body>
 </html> -->
 
-<!DOCTYPE html>
+
 <html lang="en">
+
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -34,9 +35,10 @@
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="/js/main.js"></script>
         <script src="/js/navbar.js"></script>
-        <link href="/css/homepage.css" rel="stylesheet">
-        <link href="/css/navbar.css" rel="stylesheet">
+        <link href="/css/homepage.css" rel="stylesheet" />
+        <link href="/css/navbar.css" rel="stylesheet" />
     </head>
+
     <body>
         {{{nav}}}
         <div class="bg-gray-100 flex justify-center items-center p-4" style="min-height: calc(100vh - 52px);">
@@ -60,70 +62,8 @@
         </div>
 
         <script>
-            let currentSearchType = "user"; // Default search type
-            /**
-             * Toggles the search type between 'user' and 'project'.
-             * Updates button styles, input label, and submit button text accordingly.
-             * @param {string} type - The search type ('user' or 'project').
-             */
-            function toggleSearch(type) {
-                currentSearchType = type;
-                const userToggle = document.getElementById("user-toggle");
-                const projectToggle = document.getElementById("project-toggle");
-                const inputLabel = document.getElementById("input-label");
-                const searchInput = document.getElementById("search-input-home");
-                const submitButton = document.querySelector(".submit-button");
-
-                // Remove active class from both and add to the selected one
-                userToggle.classList.remove("active");
-                projectToggle.classList.remove("active");
-                document.getElementById(`${type}-toggle`).classList.add("active");
-
-                // Update label and submit button text based on selected type
-                if (type === "user") {
-                    inputLabel.textContent = "Enter a Scratch username:";
-                    submitButton.textContent = "Get User Info";
-                } else {
-                    inputLabel.textContent = "Enter a Scratch project ID:";
-                    submitButton.textContent = "Get Project Info";
-                }
-
-                // Clear input field when switching search type
-                searchInput.value = "";
-                searchInput.focus(); // Keep focus on the input for convenience
-            }
-            /**
-             * Shows the loading spinner, hides the submit button, and then redirects the user to the appropriate URL
-             * based on the current search type and the input value.
-             */
-            function showSpinnerAndRedirect() {
-                const inputValue = document.getElementById("search-input-home").value.trim(); // Trim whitespace
-                const submitButton = document.querySelector(".submit-button"); // Get a reference to the submit button
-
-                if (!inputValue) {
-                    console.log("Please enter a value to search.");
-                    return; // Prevent showing spinner and redirect if input is empty
-                }
-
-                // Show the spinner
-                document.getElementById("loading-spinner").style.display = "block";
-
-                // Hide the submit button
-                submitButton.style.display = "none";
-
-                // Temporarily disable the submit button to prevent multiple submissions (though hiding it also achieves this)
-                submitButton.disabled = true;
-
-                // Redirect after a short delay to allow the spinner to be seen
-                setTimeout(() => {
-                    topbar.show()
-                    if (currentSearchType === "user") {
-                        window.location.href = "/users/" + inputValue;
-                    } else {
-                        window.location.href = "/projects/" + inputValue;
-                    }
-                }, 100); // Small delay to ensure spinner renders
-            }
+            let currentSearchType = "user"; // Default search type /** * Toggles the search type between 'user' and 'project'. * Updates button styles, input label, and submit button text accordingly. * @param {string} type - The search type ('user' or 'project'). */ function toggleSearch(type) { currentSearchType = type; const userToggle = document.getElementById("user-toggle"); const projectToggle = document.getElementById("project-toggle"); const inputLabel = document.getElementById("input-label"); const searchInput = document.getElementById("search-input-home"); const submitButton = document.querySelector(".submit-button"); // Remove active class from both and add to the selected one userToggle.classList.remove("active"); projectToggle.classList.remove("active"); document.getElementById(`${type}-toggle`).classList.add("active"); // Update label and submit button text based on selected type if (type === "user") { inputLabel.textContent = "Enter a Scratch username:"; submitButton.textContent = "Get User Info"; } else { inputLabel.textContent = "Enter a Scratch project ID:"; submitButton.textContent = "Get Project Info"; } // Clear input field when switching search type searchInput.value = ""; searchInput.focus(); // Keep focus on the input for convenience } /** * Shows the loading spinner, hides the submit button, and then redirects the user to the appropriate URL * based on the current search type and the input value. */ function showSpinnerAndRedirect() { const inputValue = document.getElementById("search-input-home").value.trim(); // Trim whitespace const submitButton = document.querySelector(".submit-button"); // Get a reference to the submit button if (!inputValue) { console.log("Please enter a value to search."); return; // Prevent showing spinner and redirect if input is empty } // Show the spinner document.getElementById("loading-spinner").style.display = "block"; // Hide the submit button submitButton.style.display = "none"; // Temporarily disable the submit button to prevent multiple submissions (though hiding it also achieves this) submitButton.disabled = true; // Redirect after a short delay to allow the spinner to be seen setTimeout(() => { topbar.show() if (currentSearchType === "user") { window.location.href = "/users/" + inputValue; } else { window.location.href = "/projects/" + inputValue; } }, 100); // Small delay to ensure spinner renders }
         </script>
     </body>
+
 </html>

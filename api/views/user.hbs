@@ -1,4 +1,5 @@
 <html lang="en">
+
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,6 +16,7 @@
         <script src="/js/main.js"></script>
         <script src="/js/navbar.js"></script>
     </head>
+
     <body>
         {{{nav}}}
         <div id="container">
@@ -27,8 +29,10 @@
                 <span class="img-load-wrapper" style="width: 60px;height: 60px;border-radius:7px;display: inline-block;vertical-align: middle;">
                     <span class="activity"></span>
                 </span>
-                <img id="username-img" src="{{profilePicture}}" hidden onload="this.hidden = false;this.previousElementSibling.style.display = 'none'" />
-                <span id="username-text">{{usernameAsterisk}}</span><br />
+                <a href="https://scratch.mit.edu/users/{{username}}">
+                    <img id="username-img" src="{{profilePicture}}" hidden onload="this.hidden = false;this.previousElementSibling.style.display = 'none'" />
+                    <span id="username-text">{{usernameAsterisk}}</span><br />
+                </a>
             </div>
             <div style="display:flex;flex-wrap:wrap">
                 <div class="cf user-info-box" id="basicInfo">
@@ -50,8 +54,9 @@
                     </div>
                     <span>Browser: {{{mediumLoading}}}<span id="browser" hidden>Loading...</span></span><br />
                     <span>OS: {{{mediumLoading}}} <span id="os" hidden>Loading...</span></span><br />
-                    <!--<a href="{{username}}/browserHistory">View Browser and OS History</a><br />-->
-                </div></div>
+                    <!--<a href="{{username}}/browserHistory">View Browser and OS History</a><br>-->
+                </div>
+            </div>
 
             <div class="cf user-info-box" id="otherinfo">
                 <h3 class="ct h0">Other Info</h3>
@@ -68,12 +73,15 @@
             <h3 class="cf h0">Statistics</h3>
             <!--     <span id="loveToViewRatio"></span> -->
             <table width="550px" id="stats-table" class="c">
-                <tr><td colspan="3" style="text-align:center">Total Project Stats<span class="info" data-info="totalstats"></span></td></tr>
+                <tr>
+                    <td colspan="3" style="text-align:center">Total Project Stats<span class="info" data-info="totalstats"></span></td>
+                </tr>
                 <!--       <tr><td>{{stats.totalLoves}} ❤️</td><td>{{stats.totalFaves}} ⭐</td><td>{{stats.totalViews}} 👁️</td></tr> -->
                 <tr>
                     <td>{{{smallLoading}}}<span id="totalLoves"></span></td>
                     <td>{{{smallLoading}}}<span id="totalFaves"></span></td>
-                    <td>{{{smallLoading}}}<span id="totalViews"></span></td></tr>
+                    <td>{{{smallLoading}}}<span id="totalViews"></span></td>
+                </tr>
                 <tr>
                     <td>{{{smallLoading}}}<span id="loveToViewRatio"></span><span class="info" data-info="lovetoview"></span></td>
                     <td>{{{smallLoading}}}<span id="faveToViewRatio"></span><span class="info" data-info="favetoview"></span></td>
@@ -82,7 +90,9 @@
             </table>
             <br />
             <table width="550px" id="average-stats-table" class="c">
-                <tr><td colspan="3" style="text-align:center">Average Project Stats<span class="info" data-info="averagestats"></span></td></tr>
+                <tr>
+                    <td colspan="3" style="text-align:center">Average Project Stats<span class="info" data-info="averagestats"></span></td>
+                </tr>
                 <!--       <tr><td>{{stats.averageStats.averageLoves}} ❤️</td><td>{{stats.averageStats.averageFaves}} ⭐</td><td>{{stats.averageStats.averageViews}} 👁️</td></tr> -->
                 <tr>
                     <td>{{{smallLoading}}}<span id="averageLoves"></span></td>
@@ -118,4 +128,5 @@
         <script src="/js/info.js"></script>
         <script src="/js/user.js" defer></script>
     </body>
+
 </html>

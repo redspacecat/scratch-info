@@ -117,7 +117,7 @@ td {
 .project-title {
     overflow-x: hidden;
     text-wrap: nowrap;
-    width: 210px;
+    width: 100%;
     display: inline-block;
     text-overflow: ellipsis;
     text-align: center;
@@ -143,7 +143,7 @@ td {
     flex-wrap: wrap;
     margin-left: auto;
     margin-right: auto;
-    transition: 0.5s;
+    transition: 0.25s;
 }
 
 .one-project {
@@ -162,7 +162,23 @@ td {
 @media screen and (max-width: 630px) {
     .project-container {
         width: 100%;
-        transition: 0.5s;
+        transition: 0.25s;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .one-project {
+        width: 50%;
+        transition: 0.25s;
+        margin-bottom: -20px;
+    }
+}
+
+@media screen and (max-width: 300px) {
+    .one-project {
+        width: 100%;
+        transition: 0.25s;
+        margin-bottom: -15px;
     }
 }
 

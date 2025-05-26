@@ -69,6 +69,9 @@ function htmlToNode(html) {
 async function getProjectStats() {
     let stats = await (await fetch(`/api/v1/users/${username}/projectStats`)).json();
     projectData = stats.projects;
+    if (projectData.length == 0) {
+        document.querySelector("#user-projects-container").innerHTML = `<span style="text-align: center;font-size: large;" id="nothingFound" hidden>No Projects Found</span>`;
+    }
     applyStats(stats);
     createList();
     document.querySelector(".sorter").click();
@@ -109,6 +112,7 @@ function createList() {
     while (i < 16 /*Math.min(offset, projectData.length)*/) {
         let project = projectData[offset + i];
         if (!project) {
+            document.querySelector("#loadMoreButton").hidden = true;
             break;
         }
         let newProject = htmlToNode(baseProject);
@@ -181,6 +185,9 @@ function popularitySort(a, b) {
 
 function sortBy(sorter, el) {
     offset = 0;
+    if (mobileAndTabletCheck()) {
+        document.querySelector("#loadMoreButton").hidden = false;
+    }
     document.querySelectorAll(".sorter").forEach((el) => (el.style.fontWeight = ""));
     el.style.fontWeight = "bold";
     if (currentSorting == sorter) {
@@ -227,7 +234,9 @@ window.mobileAndTabletCheck = function () {
 };
 
 if (mobileAndTabletCheck()) {
-    document.querySelector("#loadMoreButton").hidden = false
+    document.querySelector("#loadMoreButton").hidden = false;
+    document.querySelector(".nav-logo").style.textShadow = "";
+    console.log("mobile");
 } else {
     window.addEventListener("scroll", function () {
         if (Math.abs(window.scrollY - (document.body.scrollHeight - document.body.clientHeight)) < 50) {
