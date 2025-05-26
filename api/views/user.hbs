@@ -117,6 +117,10 @@ async function getMoreData() {
         document.querySelector("#followers").innerText = data.followers || "?";
     }
     document.querySelector("#following").innerText = data.following || "?";
+    document.querySelectorAll("#followers, #following").forEach(function(a) {
+        a.previousElementSibling.style.display = "none";
+        a.hidden = false;
+    })
 }
 
 async function getEvenMoreData() {
@@ -127,7 +131,7 @@ async function getEvenMoreData() {
     document.querySelector("#os").innerText = data2.os || "?"
     document.querySelector("#projectsShared").innerText = data2.projectsShared || "?"
 
-    document.querySelectorAll("#browserOStimeAgo, #browser, #os, #followers, #following, #projectsShared").forEach(function(a) {
+    document.querySelectorAll("#browserOStimeAgo, #browser, #os, #projectsShared").forEach(function(a) {
         a.previousElementSibling.style.display = "none";
         a.hidden = false;
     })
