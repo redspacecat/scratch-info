@@ -28,6 +28,12 @@ body {
     text-decoration: none;
     margin-right: 20px;
     white-space: nowrap;
+    transition: 0.35s;
+}
+
+.nav-logo:hover {
+    text-shadow: 1px 1px 10px #ebfbff, 1px -2px 6px #7bc7ff;
+    transition: 0.35s;
 }
 
 .nav-link {
@@ -54,7 +60,7 @@ body {
 }
 
 #search-input:focus::placeholder {
-  color: transparent;
+    color: transparent;
 }
 
 .search-form input {
@@ -102,7 +108,8 @@ body {
     }
 }
 
-#search-input, .search-form button {
+#search-input,
+.search-form button {
     height: 32px;
 }
 
@@ -111,10 +118,10 @@ body {
     line-height: 1.5;
 }
 .navbar input::placeholder,
-    textarea::placeholder {
-        opacity:1;
-        color:#9ca3af;
-    }
+textarea::placeholder {
+    opacity: 1;
+    color: #9ca3af;
+}
 
 #navbar-logo-img {
     width: 32px;
