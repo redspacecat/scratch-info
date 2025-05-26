@@ -1,5 +1,6 @@
 let text = document.querySelector("#username-text").innerText;
 history.replaceState(null, "", "/users/" + text.slice(0, text.endsWith("*") ? text.length - 1 : text.length));
+
 async function getMoreData() {
     let data = await (await fetch(`/api/v1/users/${username}/info?mode=followering`)).json();
     if (username != "griffpatch") {
@@ -51,6 +52,7 @@ if (username == "griffpatch") {
 
 let projectData;
 let currentSorting = "popularity";
+let offset = 0
 let direction = 1;
 // 0 is normal, 1 is inverted
 document.querySelectorAll(".info[data-info]").forEach((el) => (el.style.display = "none"));
@@ -101,7 +103,14 @@ function createList() {
               </div>`;
     let replaceRegex = /\\n[ ]+/gi;
     baseProject = baseProject.replaceAll(replaceRegex, "");
-    for (let project of projectData) {
+    // for (let project of projectData) {
+    // for (let [i, project] of projectData.entries()) {
+    let i = 0
+    while (i < 16/*Math.min(offset, projectData.length)*/) {
+        let project = projectData[offset + i]
+        if (!project) {
+            break
+        }
         let newProject = htmlToNode(baseProject);
         newProject.querySelector("img").src = project.img;
         newProject.querySelector("a").href = `/projects/${project.id}`;
@@ -115,6 +124,7 @@ function createList() {
         newProject.querySelectorAll("span")[5].innerText = `${Math.round(project.faveToLoveRatio * 100) / 100}% favorite/love`; // newProject.querySelectorAll("span")[6].innerText = project.remixCount.toLocaleString()
 
         projectListEl.appendChild(newProject);
+        i++
     }
 
     search(document.querySelector("#searchbox").value);
@@ -170,6 +180,7 @@ function popularitySort(a, b) {
 }
 
 function sortBy(sorter, el) {
+    offset = 0
     document.querySelectorAll(".sorter").forEach((el) => (el.style.fontWeight = ""));
     el.style.fontWeight = "bold";
     if (currentSorting == sorter) {
@@ -206,3 +217,10 @@ function search(query) {
         }
     }
 }
+
+window.addEventListener("scroll", function() {   
+    if (Math.abs(window.scrollY - (document.body.scrollHeight - document.body.clientHeight)) < 50) {
+        offset += 16
+        createList()
+    }
+})
