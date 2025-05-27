@@ -61,6 +61,7 @@ api.followering = async function (request, reply) {
     reply.headers({
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Cache-Control": "max-age=3600",
     });
     reply.code(200).header("Content-Type", "application/json; charset=utf-8").send(JSON.stringify(data, null, 4));
 };
@@ -142,6 +143,7 @@ api.projectStats = async function (request, reply) {
     reply.headers({
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Cache-Control": "max-age=3600",
     });
     reply
         .code(200)
@@ -339,6 +341,7 @@ api.getUserInfo = async function (request, reply) {
     reply.headers({
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Cache-Control": "max-age=3600",
     });
     let code = 200;
     let data;
@@ -352,32 +355,43 @@ api.getUserInfo = async function (request, reply) {
         code = 400;
     }
     delete data.nav;
+    reply.headers({
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Cache-Control": "max-age=3600",
+    });
     reply.code(code).header("Content-Type", "application/json; charset=utf-8").send(JSON.stringify(data, null, 4));
 };
 
 api.browserHistoryPage = async function (request, reply) {
-    console.log(request.params);
+    // console.log(request.params);
     let params = {
         username: request.params.username,
-        page: request.query.page || 1,
-        nextPage: parseInt(request.query.page || 1) + 1,
+        // page: request.query.page || 1,
+        // nextPage: parseInt(request.query.page || 1) + 1,
     };
     params.nav = navbarCode;
-    params.prevPage = params.page > 1 ? params.page - 1 : 1;
+    // params.prevPage = params.page > 1 ? params.page - 1 : 1;
 
     return reply.view("/browserHistory.hbs", params);
 };
 
 api.browserHistory = async function (request, reply) {
-    let user = request.params.username;
+    let user = request.params.username.toString();
     let data = [];
     let projects;
 
-    if (projectDB.has(user)) {
+    let blobDetails = await head("projectData.json");
+    let projectInfoDB = await (await fetch(blobDetails.url + `?nocache=${Math.random()}&download=1`)).json();
+    let blobDetails2 = await head("userProjectList.json");
+    let userDB = await (await fetch(blobDetails2.url + `?nocache=${Math.random()}&download=1`)).json();
+
+    if (userDB[user]) {
     // if (false) {
-        let offset = request.query.page ? (request.query.page - 1) * 40 : 0;
-        projects = projectDB.get(user).slice(offset, offset + 40);
-        console.log("using stored projects for user", user);
+        // let offset = request.query.page ? (request.query.page - 1) * 40 : 0;
+        // projects = projectDB.get(user).slice(offset, offset + 40);
+        projects = userDB[user]
+        console.log("using stored projects for user", user, projects);
     } else {
         let page = 0;
         projects = [];
@@ -398,9 +412,10 @@ api.browserHistory = async function (request, reply) {
 
         let ids = projects.map((a) => a.id);
         // projectDB.set(user, ids);
+        userDB[user] = ids
         console.log("created project list for user:", user);
 
-        let offset = request.query.page ? (request.query.page - 1) * 40 : 0;
+        // let offset = request.query.page ? (request.query.page - 1) * 40 : 0;
         // projects = projectDB.get(user).slice(offset, offset + 40);
     }
     // console.log("using project list", projects)
@@ -409,25 +424,31 @@ api.browserHistory = async function (request, reply) {
     for (let i = 0; i < projects.length; i++) {
         promises.push(
             new Promise(async function (resolve, reject) {
-                let id = projects[i]; //.id
+                let id = projects[i].id || projects[i]
                 let time, ua;
-                // if (projectInfoDB.has(id.toString())) {
-                if (false) {
-                    time = projectInfoDB.get(`${id}.time`);
-                    ua = projectInfoDB.get(`${id}.ua`);
+                if (projectInfoDB[id.toString()]) {
+                // if (false) {
+                    time = projectInfoDB[id.toString()].time
+                    ua = projectInfoDB[id.toString()].ua
+                    console.log("using stored data")
                 } else {
                     let info = await (await fetch2("https://api.scratch.mit.edu/projects/" + id)).json();
+                    // console.log(info)
                     time = new Date(info.history.modified).getTime();
                     let token;
                     token = info.project_token;
                     try {
-                        ua = (await (await fetch2("https://projects.scratch.mit.edu/" + id + "?token=" + token)).json()).meta.agent;
+                        ua = (await (await fetch("https://projects.scratch.mit.edu/" + id + "?token=" + token)).json()).meta.agent;
                     } catch {
                         ua = "";
                     }
-                    // projectInfoDB.set(id.toString(), {});
-                    // projectInfoDB.set(`${id}.time`, time);
-                    // projectInfoDB.set(`${id}.ua`, ua);
+                    // console.log("setting id", id, time, ua)
+                    projectInfoDB[id.toString()] = {
+                        time: time,
+                        ua: ua
+                    }
+
+                    console.log("fetching new data")
                 }
                 projectInfo.push({ time: time, agent: ua, id: id });
                 resolve();
@@ -459,10 +480,26 @@ api.browserHistory = async function (request, reply) {
             data.push({ browser: browser, os: os, time: project.time, id: project.id });
         }
     }
+
+    console.log("done")
+
+    // console.log(projectInfoDB)
+    const blob = await put("projectData.json", JSON.stringify(projectInfoDB), {
+        access: "public",
+        allowOverwrite: true,
+    });
+    const blob2 = await put("userProjectList.json", JSON.stringify(userDB), {
+        access: "public",
+        allowOverwrite: true,
+    });
+    console.log("blob", blob.url, blob2.url)
+
+
     //data.sort(compare)
     reply.headers({
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Cache-Control": "max-age=3600",
     });
     reply.code(200).header("Content-Type", "application/json; charset=utf-8").send(JSON.stringify(data, null, 4));
 };
@@ -482,6 +519,7 @@ api.apiProjectData = async function apiProjectData(request, reply) {
     reply.headers({
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Cache-Control": "max-age=3600",
     });
     let data = await getProjectData(request.params.id);
     delete data.nav;
@@ -607,6 +645,11 @@ api.griffpatchFollowerCount = async function (request, reply) {
     const blob = await put("data.json", JSON.stringify(data, null, 4), {
         access: "public",
         allowOverwrite: true,
+    });
+    reply.headers({
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Cache-Control": "max-age=3600",
     });
     reply.code(200).send(griffyFollowerCount);
 };

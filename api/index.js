@@ -36,22 +36,18 @@ async function main() {
 
     fastify.all("/", api.main);
     fastify.all("/users/:username", api.getUser);
-    // fastify.all("/users/:username/browserHistory", { config: { rateLimit: { max: 4, timeWindow: 15000 } } }, api.browserHistoryPage);
+    fastify.all("/users/:username/browserHistory", { config: { rateLimit: { max: 4, timeWindow: 15000 } } }, api.browserHistoryPage);
     fastify.all("/projects/:project", api.projectPage);
     fastify.all("/about", api.about);
     fastify.all("/api/docs", api.docs);
-    // fastify.all("/test", async function (request, reply) {
-    //     const data = {
-    //         "lastCount": 735240,
-    //         "lastTime": 1748296478778,
-    //         "perHour": 30
-    //     }
-    //     const blob = await put("data.json", JSON.stringify(data), {
-    //         access: 'public',
-    //         allowOverwrite: true
-    //     });
-    //     reply.code(200).send("ok")
-    // });
+    fastify.all("/test", async function (request, reply) {
+        const data = {}
+        const blob = await put("userProjectList.json", JSON.stringify(data), {
+            access: 'public',
+            allowOverwrite: true
+        });
+        reply.code(200).send("ok")
+    });
 
     // Run the server and report out to the logs
     fastify.listen({ port: process.env.PORT, host: "0.0.0.0" }, function (err, address) {
