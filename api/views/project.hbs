@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
@@ -74,7 +75,7 @@
                 } else if ("{{reviewStatus}}" == "notsafe") {
                     document.querySelector("#review-status").innerText = "⛔ Rated NFE"
                 }
-                
+
                 document.querySelector(".loves").innerText = ({{stats.loves}}).toLocaleString()
                 document.querySelector(".faves").innerText = ({{stats.favorites}}).toLocaleString()
                 document.querySelector(".views").innerText = ({{stats.views}}).toLocaleString()
