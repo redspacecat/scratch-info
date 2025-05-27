@@ -40,14 +40,14 @@ async function main() {
     fastify.all("/projects/:project", api.projectPage);
     fastify.all("/about", api.about);
     fastify.all("/api/docs", api.docs);
-    fastify.all("/test", async function (request, reply) {
-        const data = {}
-        const blob = await put("userProjectList.json", JSON.stringify(data), {
-            access: 'public',
-            allowOverwrite: true
-        });
-        reply.code(200).send("ok")
-    });
+    // fastify.all("/test", async function (request, reply) {
+    //     const data = {}
+    //     const blob = await put("userProjectList.json", JSON.stringify(data), {
+    //         access: 'public',
+    //         allowOverwrite: true
+    //     });
+    //     reply.code(200).send("ok")
+    // });
 
     // Run the server and report out to the logs
     fastify.listen({ port: process.env.PORT, host: "0.0.0.0" }, function (err, address) {

@@ -49,7 +49,16 @@ function setup3() {
     window.addEventListener("pageshow", function (event) {
         if (event.persisted) {
             console.log("This page has been restored from the bfcache.");
-            topbar.hide()
+            topbar.hide();
+
+            if (location.pathname == "/") {
+                setTimeout(function () {
+                    const submitButton = this.document.querySelector(".submit-button");
+                    submitButton.style.display = "";
+                    submitButton.disabled = false;
+                    document.querySelector("#loading-spinner").style.display = "none";
+                }, 100);
+            }
         } else {
             console.log("This page was loaded normally and not from the bfcache.");
         }
