@@ -3,6 +3,7 @@ const uap = require("ua-parser-js");
 const HTMLParser = require("node-html-parser");
 const path = require("path");
 import { put, head } from "@vercel/blob";
+import { time } from "console";
 const fs = require("fs");
 const navbarCode = fs.readFileSync(path.join(__dirname, "api", "navbar.txt"), "utf8");
 // const Database = require("easy-json-database");
@@ -675,5 +676,15 @@ api.docs = async function (request, reply) {
     params.nav = navbarCode;
     return reply.view("/apiDocs.hbs", params);
 };
+
+api.rateLimit = function(max, timeWindow) {
+    return {
+        config: {
+            rateLimit: {
+                max: max, timeWindow: timeWindow
+            }
+        }
+    }
+}
 
 module.exports = api;

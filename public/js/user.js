@@ -40,12 +40,16 @@ async function getEvenMoreData() {
 async function getGriffyFollowers() {
     document.querySelector("span.info[data-info='griffyfollowers']").style.visibility = "visible";
     //document.querySelector("#followers").innerText = "Loading... (this may take up to 30 seconds if the server is slow)";
-    let data = await (
+    let data = 
         // await fetch("https://griffpatch-follower-count.glitch.me/count", {
         //     method: "POST",
         // })
         await fetch("/api/v1/users/griffpatch/followerCount")
-    ).text();
+    if (!data.ok) {
+        data = "Oops, looks like there was an error: " + data.status
+    } else {
+        data = await data.text()
+    }
     document.querySelector("#followers").innerText = data;
     document.querySelector("#followers").previousElementSibling.style.display = "none";
     document.querySelector("#followers").hidden = false;

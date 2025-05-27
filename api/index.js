@@ -30,13 +30,13 @@ async function main() {
     fastify.all("/api/v1/users/:username/followering", api.followering);
     fastify.all("/api/v1/users/:username/projectStats", api.projectStats);
     fastify.all("/api/v1/users/:username/info", api.getUserInfo);
-    fastify.all("/api/v1/users/griffpatch/followerCount", api.griffpatchFollowerCount);
+    fastify.all("/api/v1/users/griffpatch/followerCount", api.rateLimit(3, 60000), api.griffpatchFollowerCount);
     fastify.all("/api/v1/users/:username/browserHistory", api.browserHistory);
     fastify.all("/api/v1/projects/:id/info", api.apiProjectData);
 
     fastify.all("/", api.main);
     fastify.all("/users/:username", api.getUser);
-    fastify.all("/users/:username/browserHistory", { config: { rateLimit: { max: 4, timeWindow: 15000 } } }, api.browserHistoryPage);
+    fastify.all("/users/:username/browserHistory", api.rateLimit(5, 60000), api.browserHistoryPage);
     fastify.all("/projects/:project", api.projectPage);
     fastify.all("/about", api.about);
     fastify.all("/api/docs", api.docs);
