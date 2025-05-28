@@ -33,6 +33,7 @@ async function main() {
     fastify.all("/api/v1/users/griffpatch/followerCount", api.rateLimit(3, 60000), api.griffpatchFollowerCount);
     fastify.all("/api/v1/users/:username/browserHistory", api.browserHistory);
     fastify.all("/api/v1/projects/:id/info", api.apiProjectData);
+    fastify.all("/api/v1/projects/random", api.rateLimit(5, 60000), api.randomProject);
 
     fastify.all("/", api.main);
     fastify.all("/users/:username", api.getUser);
@@ -42,7 +43,7 @@ async function main() {
     fastify.all("/api/docs", api.docs);
     // fastify.all("/test", async function (request, reply) {
     //     const data = {}
-    //     const blob = await put("userProjectList.json", JSON.stringify(data), {
+    //     const blob = await put("usernames.txt", usernameData, {
     //         access: 'public',
     //         allowOverwrite: true
     //     });

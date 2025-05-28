@@ -687,4 +687,26 @@ api.rateLimit = function(max, timeWindow) {
     }
 }
 
+function randInt(min, max) { // min and max included 
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+api.randomProject = async function(request, reply) {
+    reply.headers({
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+    });
+    while (true) {
+        let testId = randInt(104, 1200000000)
+        console.log("trying id", testId)
+        let response = await (await fetch2("https://api.scratch.mit.edu/projects/" + testId)).json()
+        if (!(response.code == "NotFound"|| response.code == "ResourceNotFound")) {
+            console.log("found", testId)
+            reply.code(200).send(testId)
+            break
+        }
+    }
+    
+}
+
 module.exports = api;
