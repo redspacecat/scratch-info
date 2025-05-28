@@ -25,7 +25,7 @@
 </body>
 </html> -->
 
-<!DOCTYPE html>
+{{!-- <!DOCTYPE html>
 <html lang="en">
 
     <head>
@@ -139,4 +139,357 @@ function showSpinnerAndRedirect() {
         </script>
     </body>
 
+</html> --}}
+
+{{!-- <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Scratch Info</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="/js/main.js"></script>
+        <script src="/js/navbar.js"></script>
+        <link href="/css/homepage.css" rel="stylesheet" />
+        <link href="/css/navbar.css" rel="stylesheet" />
+    </head>
+    <body>
+        {{{nav}}}
+        <div class="bg-gray-100 flex justify-center items-center p-4" style="min-height: calc(100vh - 52px);">
+            <div class="container bg-white p-8 md:p-12 rounded-xl shadow-lg text-center w-full max-w-md">
+                <h1 class="text-3xl md:text-4xl font-bold text-blue-700 mb-8">Scratch Info</h1>
+                <div class="toggle-switch flex justify-center mb-8 bg-blue-50 rounded-lg shadow-inner">
+                    <button id="user-toggle" class="toggle-btn flex-1 py-3 px-4 rounded-lg text-gray-700 text-lg cursor-pointer transition-all duration-300 ease-in-out active" onclick="toggleSearch('user')">Search Users</button>
+                    <button id="project-toggle" class="toggle-btn flex-1 py-3 px-4 rounded-lg text-gray-700 text-lg cursor-pointer transition-all duration-300 ease-in-out" onclick="toggleSearch('project')">Search Projects</button>
+                </div>
+                <form id="search-form" action="javascript:;" onsubmit="showSpinnerAndRedirect()" class="flex flex-col items-center">
+                    <label for="search-input-home" id="input-label" class="mb-4 text-lg text-gray-600 font-medium"> Enter a Scratch username: </label>
+                    <input type="text" id="search-input-home" required class="w-full p-3 mb-6 border-2 border-gray-300 rounded-lg text-lg focus:border-blue-500 focus:ring-4 focus:ring-blue-200 outline-none transition-all duration-300 ease-in-out shadow-sm" />
+                    <div id="loading-spinner" class="spinner mt-2 mb-8"></div>
+                    <button type="submit" class="submit-button bg-green-600 hover:bg-green-700 text-white py-3 px-8 rounded-lg text-xl font-semibold cursor-pointer transition-all duration-300 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-1">Get User Info</button>
+                </form>
+                <div class="flex justify-center mt-6 space-x-4">
+                    <button id="random-user-button" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-lg text-lg font-semibold cursor-pointer transition-all duration-300 ease-in-out shadow-md" onclick="redirectToRandom('user')">Random User</button>
+                    <button id="random-project-button" class="bg-purple-500 hover:bg-purple-600 text-white py-2 px-6 rounded-lg text-lg font-semibold cursor-pointer transition-all duration-300 ease-in-out shadow-md" onclick="redirectToRandom('project')">Random Project</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            let currentSearchType = "user"; // Default search type
+
+            /**
+             * Toggles the search type between 'user' and 'project'.
+             * Updates button styles, input label, and submit button text accordingly.
+             * @param {string} type - The search type ('user' or 'project').
+             */
+            function toggleSearch(type) {
+                currentSearchType = type;
+                const userToggle = document.getElementById("user-toggle");
+                const projectToggle = document.getElementById("project-toggle");
+                const inputLabel = document.getElementById("input-label");
+                const searchInput = document.getElementById("search-input-home");
+                const submitButton = document.querySelector(".submit-button");
+
+                // Remove active class from both and add to the selected one
+                userToggle.classList.remove("active");
+                projectToggle.classList.remove("active");
+                const selectedToggle = document.getElementById(`${type}-toggle`);
+                if (selectedToggle) {
+                    selectedToggle.classList.add("active");
+                }
+
+                // Update label and submit button text based on selected type
+                if (type === "user") {
+                    inputLabel.textContent = "Enter a Scratch username:";
+                    submitButton.textContent = "Get User Info";
+                } else {
+                    inputLabel.textContent = "Enter a Scratch project ID:";
+                    submitButton.textContent = "Get Project Info";
+                }
+
+                // Clear input field and focus it
+                searchInput.value = "";
+                searchInput.focus();
+            }
+
+            /**
+             * Shows the loading spinner, hides the submit button, and then redirects the user
+             * based on the current search type and the input value.
+             */
+            function showSpinnerAndRedirect() {
+                const inputValue = document.getElementById("search-input-home").value.trim();
+                const submitButton = document.querySelector(".submit-button");
+
+                if (!inputValue) {
+                    console.log("Please enter a value to search.");
+                    return;
+                }
+
+                // Show the spinner
+                const spinner = document.getElementById("loading-spinner");
+                if (spinner) spinner.style.display = "block";
+
+                // Hide and disable the submit button
+                submitButton.style.display = "none";
+                submitButton.disabled = true;
+
+                // Redirect after a short delay to allow spinner to render
+                setTimeout(() => {
+                    if (typeof topbar !== 'undefined' && typeof topbar.show === 'function') {
+                        topbar.show();
+                    }
+                    if (currentSearchType === "user") {
+                        window.location.href = `/users/${inputValue}`;
+                    } else {
+                        window.location.href = `/projects/${inputValue}`;
+                    }
+                }, 100);
+            }
+
+            /**
+             * Fetches a random user or project and redirects the user to their page.
+             * @param {string} type - The type to fetch ('user' or 'project').
+             */
+            async function redirectToRandom(type) {
+                const spinner = document.getElementById("loading-spinner");
+                const submitButton = document.querySelector(".submit-button");
+
+                if (spinner) spinner.style.display = "block";
+                if (submitButton) {
+                    submitButton.style.display = "none";
+                    submitButton.disabled = true;
+                }
+
+                try {
+                    const response = await fetch(`/api/v1/${type}s/random`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.text();
+
+                    if (typeof topbar !== 'undefined' && typeof topbar.show === 'function') {
+                        topbar.show();
+                    }
+
+                    if (type === 'user' && data) {
+                        window.location.href = `/users/${data}`;
+                    } else if (type === 'project' && data) {
+                        window.location.href = `/projects/${data}`;
+                    } else {
+                        console.error(`Could not get random ${type} data.`);
+                        if (spinner) spinner.style.display = "none";
+                        if (submitButton) {
+                            submitButton.style.display = "block";
+                            submitButton.disabled = false;
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error fetching random item:", error);
+                    alert(`Failed to fetch a random ${type}. Please try again later.`);
+                    if (spinner) spinner.style.display = "none";
+                    if (submitButton) {
+                        submitButton.style.display = "block";
+                        submitButton.disabled = false;
+                    }
+                }
+            }
+        </script>
+    </body>
+</html> --}}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Scratch Info</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="/js/main.js"></script>
+        <script src="/js/navbar.js"></script>
+        <link href="/css/homepage.css" rel="stylesheet" />
+        <link href="/css/navbar.css" rel="stylesheet" />
+    </head>
+    <body>
+        <nav class="navbar">
+    <div class="navbar-content">
+        <a href="/" class="nav-logo">Scratch Info</a>
+        <a href="/" class="nav-link">Home</a>
+        <a href="/about" class="nav-link">About</a>
+        <a href="/api/docs" class="nav-link">API Docs</a>
+        <form id="search-form" class="search-form">
+            <input type="text" id="search-input" placeholder="🔍 Enter username or project id">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+        <div class="bg-gray-100 flex justify-center items-center p-4" style="min-height: calc(100vh - 52px);">
+            <div class="container bg-white p-8 md:p-12 rounded-xl shadow-lg text-center w-full max-w-md">
+                <h1 class="text-3xl md:text-4xl font-bold text-blue-700 mb-8">Scratch Info</h1>
+                <div class="toggle-switch flex justify-center mb-8 bg-blue-50 rounded-lg shadow-inner">
+                    <button id="user-toggle" class="toggle-btn flex-1 py-3 px-4 rounded-lg text-gray-700 text-lg cursor-pointer transition-all duration-300 ease-in-out active" onclick="toggleSearch('user')">Search Users</button>
+                    <button id="project-toggle" class="toggle-btn flex-1 py-3 px-4 rounded-lg text-gray-700 text-lg cursor-pointer transition-all duration-300 ease-in-out" onclick="toggleSearch('project')">Search Projects</button>
+                </div>
+                <form id="search-form" action="javascript:;" onsubmit="showSpinnerAndRedirect()" class="flex flex-col items-center">
+                    <label for="search-input-home" id="input-label" class="mb-4 text-lg text-gray-600 font-medium"> Enter a Scratch username: </label>
+                    <input type="text" id="search-input-home" required class="w-full p-3 mb-6 border-2 border-gray-300 rounded-lg text-lg focus:border-blue-500 focus:ring-4 focus:ring-blue-200 outline-none transition-all duration-300 ease-in-out shadow-sm" />
+                    <div id="loading-spinner" class="spinner mt-2 mb-8"></div>
+                    <button type="submit" class="submit-button bg-green-600 hover:bg-green-700 text-white py-3 px-8 rounded-lg text-xl font-semibold cursor-pointer transition-all duration-300 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-1">Get User Info</button>
+                </form>
+                <div class="flex flex-col items-center">
+                    <button id="random-user-button" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 ease-in-out shadow-md" onclick="redirectToRandom('user')" style="display: none;">Random User</button>
+                    <button id="random-project-button" class="mt-4 bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 ease-in-out shadow-md" onclick="redirectToRandom('project')" style="display: none;">Random Project</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            let currentSearchType = "user"; // Default search type
+
+            /**
+             * Toggles the search type between 'user' and 'project'.
+             * Updates button styles, input label, and submit button text accordingly.
+             * @param {string} type - The search type ('user' or 'project').
+             */
+            function toggleSearch(type) {
+                currentSearchType = type;
+                const userToggle = document.getElementById("user-toggle");
+                const projectToggle = document.getElementById("project-toggle");
+                const inputLabel = document.getElementById("input-label");
+                const searchInput = document.getElementById("search-input-home");
+                const submitButton = document.querySelector(".submit-button");
+                const randomUserButton = document.getElementById("random-user-button");
+                const randomProjectButton = document.getElementById("random-project-button");
+
+
+                // Remove active class from both and add to the selected one
+                userToggle.classList.remove("active");
+                projectToggle.classList.remove("active");
+                const selectedToggle = document.getElementById(`${type}-toggle`);
+                if (selectedToggle) {
+                    selectedToggle.classList.add("active");
+                }
+
+                // Update label and submit button text based on selected type
+                if (type === "user") {
+                    inputLabel.textContent = "Enter a Scratch username:";
+                    submitButton.textContent = "Get User Info";
+                    randomUserButton.style.display = "block"; // Show random user button
+                    randomProjectButton.style.display = "none"; // Hide random project button
+                } else {
+                    inputLabel.textContent = "Enter a Scratch project ID:";
+                    submitButton.textContent = "Get Project Info";
+                    randomProjectButton.style.display = "block"; // Show random project button
+                    randomUserButton.style.display = "none"; // Hide random user button
+                }
+
+                // Clear input field and focus it
+                searchInput.value = "";
+                searchInput.focus();
+            }
+
+            /**
+             * Shows the loading spinner, hides the submit button, and then redirects the user
+             * based on the current search type and the input value.
+             */
+            function showSpinnerAndRedirect() {
+                const inputValue = document.getElementById("search-input-home").value.trim();
+                const submitButton = document.querySelector(".submit-button");
+                const randomUserButton = document.getElementById("random-user-button");
+                const randomProjectButton = document.getElementById("random-project-button");
+
+
+                if (!inputValue) {
+                    console.log("Please enter a value to search.");
+                    return;
+                }
+
+                // Show the spinner
+                const spinner = document.getElementById("loading-spinner");
+                if (spinner) spinner.style.display = "block";
+
+                // Hide and disable the submit button and random buttons
+                submitButton.style.display = "none";
+                submitButton.disabled = true;
+                randomUserButton.style.display = "none";
+                randomProjectButton.style.display = "none";
+
+                // Redirect after a short delay to allow spinner to render
+                setTimeout(() => {
+                    if (typeof topbar !== 'undefined' && typeof topbar.show === 'function') {
+                        topbar.show();
+                    }
+                    if (currentSearchType === "user") {
+                        window.location.href = `/users/${inputValue}`;
+                    } else {
+                        window.location.href = `/projects/${inputValue}`;
+                    }
+                }, 100);
+            }
+
+            /**
+             * Fetches a random user or project and redirects the user to their page.
+             * @param {string} type - The type to fetch ('user' or 'project').
+             */
+            async function redirectToRandom(type) {
+                const spinner = document.getElementById("loading-spinner");
+                const submitButton = document.querySelector(".submit-button");
+                const randomUserButton = document.getElementById("random-user-button");
+                const randomProjectButton = document.getElementById("random-project-button");
+
+                if (spinner) spinner.style.display = "block";
+                if (submitButton) {
+                    submitButton.style.display = "none";
+                    submitButton.disabled = true;
+                }
+                randomUserButton.style.display = "none"; // Hide random user button
+                randomProjectButton.style.display = "none"; // Hide random project button
+
+
+                try {
+                    topbar.show()
+                    const response = await fetch(`/api/v1/${type}s/random`);
+                    topbar.hide()
+                    setTimeout(topbar.show, 200)
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.text(); // Assuming the API returns plain text (username or project ID)
+
+                    if (type === 'user' && data) {
+                        window.location.href = `/users/${data}`;
+                    } else if (type === 'project' && data) {
+                        window.location.href = `/projects/${data}`;
+                    } else {
+                        console.error(`Could not get random ${type} data.`);
+                        if (spinner) spinner.style.display = "none";
+                        if (submitButton) {
+                            submitButton.style.display = "block";
+                            submitButton.disabled = false;
+                        }
+                        if (type === 'user') {
+                            randomUserButton.style.display = "block";
+                        } else {
+                            randomProjectButton.style.display = "block";
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error fetching random item:", error);
+                    alert(`Failed to fetch a random ${type}. Please try again later.`);
+                    if (spinner) spinner.style.display = "none";
+                    if (submitButton) {
+                        submitButton.style.display = "block";
+                        submitButton.disabled = false;
+                    }
+                    if (type === 'user') {
+                        randomUserButton.style.display = "block";
+                    } else {
+                        randomProjectButton.style.display = "block";
+                    }
+                }
+            }
+            // Initialize button visibility on page load
+            document.addEventListener('DOMContentLoaded', () => {
+                toggleSearch(currentSearchType);
+            });
+        </script>
+    </body>
 </html>

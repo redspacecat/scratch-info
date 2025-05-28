@@ -727,7 +727,7 @@ api.randomUser = async function(request, reply) {
     })).text()).trim()
 
     response = response.replaceAll("\r", "")
-    let trimmed = response.slice(response.indexOf("\n"), response.lastIndexOf("\n", response.length - 2)).trim()
+    let trimmed = response.slice(response.indexOf("\n"), response.lastIndexOf("\n", response.length - 1)).trim()
     let userList = trimmed.split("\n")
     let randomUser = userList[randInt(0, userList.length - 1)]
     console.log("from userlist", userList, "picking", randomUser)

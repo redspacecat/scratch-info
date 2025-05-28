@@ -253,12 +253,16 @@ td {
     #project-data-container * {
         margin-left: auto !important;
         margin-right: auto !important;
+        text-align: center;
     }
     #project-data-container table {
         width: 100%;
     }
     #review-status-container {
         display: table;
+    }
+    #lots-of-data {
+        width: 100%;
     }
 }
 

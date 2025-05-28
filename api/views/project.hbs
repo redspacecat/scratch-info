@@ -23,7 +23,7 @@
                         <div class="img-load-wrapper" style="width: 480px;height: 360px;">
                             <div class="activity"></div>
                         </div>
-                        <img src="{{image}}" loading="lazy" style="max-height:360px;max-width:100%;border-radius:10px;border:1px solid black;" onload="this.previousElementSibling.style.display = 'none'" />
+                        <img src="{{image}}" style="max-height:360px;max-width:100%;border-radius:10px;border:1px solid black;" hidden onload="this.hidden = false;this.previousElementSibling.style.display = 'none'">
                     </a>
                     <div style="display: flex;flex-wrap: wrap;">
                         <a href="https://scratch.mit.edu/projects/{{id}}" target="_blank" style="text-decoration: none;vertical-align: top;margin-left: 10px;display:block;">
@@ -36,7 +36,7 @@
                         </a>
                     </div>
                 </div>
-                <div style="vertical-align: top;margin-left: 10px">
+                <div style="vertical-align: top;margin-left: 10px" id="lots-of-data">
                     <a style="font-size: x-large;color:blue" target="_blank" href="https://scratch.mit.edu/projects/{{id}}">{{title}}</a>
                     <br />
                     <div style="display:flex">
