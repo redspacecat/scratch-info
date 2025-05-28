@@ -128,7 +128,7 @@ td {
     border: 1px solid gray;
     border-radius: 10px;
     visibility: hidden;
-    
+
     opacity: 1;
     animation-name: fadeInOpacity;
     animation-iteration-count: 1;
@@ -246,6 +246,19 @@ td {
     }
     #otherinfo {
         min-width: 60%;
+    }
+}
+
+@media screen and (max-width: 530px) {
+    #project-data-container * {
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    #project-data-container table {
+        width: 100%;
+    }
+    #review-status-container {
+        display: table;
     }
 }
 

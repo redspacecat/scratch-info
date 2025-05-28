@@ -17,7 +17,7 @@
     <body>
         {{{nav}}}
         <div id="container">
-            <div style="display:flex;flex-wrap:wrap;">
+            <div style="display:flex;flex-wrap:wrap;" id="project-data-container">
                 <div>
                     <a href="https://scratch.mit.edu/projects/{{id}}" target="_blank">
                         <div class="img-load-wrapper" style="width: 480px;height: 360px;">
@@ -48,7 +48,7 @@
                             </div>
                         </a>
                     </div>
-                    <table id="project-stats" width="300px" style="margin-top:5px;text-align:center">
+                    <table id="project-stats" style="margin-top:5px;text-align:center;min-width:300px">
                         <tr><td colspan="3">Project Statistics</td></tr>
                         <tr><td class="loves"></td><td class="faves"></td></tr>
                         <tr><td class="views"></td><td class="remixes" style="vertical-align:middle;"></td></tr>
@@ -61,7 +61,10 @@
                         <tr><td id="modified"></td></tr>
                         <tr><td id="shared"></td></tr>
                     </table>
-                    <span id="review-status">...</span><span class="info" data-info="reviewstatus"></span>
+                    <span id="review-status-container">
+                        <span id="review-status">...</span>
+                        <span class="info" data-info="reviewstatus"></span>
+                    </span>
                 </div>
             </div>
         </div>
