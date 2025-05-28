@@ -27,20 +27,20 @@ async function main() {
         root: path.join(__dirname, "views"),
     });
 
-    fastify.all("/api/v1/users/:username/followering", api.followering);
-    fastify.all("/api/v1/users/:username/projectStats", api.projectStats);
-    fastify.all("/api/v1/users/:username/info", api.getUserInfo);
-    fastify.all("/api/v1/users/griffpatch/followerCount", api.rateLimit(3, 60000), api.griffpatchFollowerCount);
-    fastify.all("/api/v1/users/:username/browserHistory", api.browserHistory);
-    fastify.all("/api/v1/projects/:id/info", api.apiProjectData);
-    fastify.all("/api/v1/projects/random", api.rateLimit(5, 60000), api.randomProject);
+    fastify.get("/api/v1/users/:username/followering", api.followering);
+    fastify.get("/api/v1/users/:username/projectStats", api.projectStats);
+    fastify.get("/api/v1/users/:username/info", api.getUserInfo);
+    fastify.get("/api/v1/users/griffpatch/followerCount", api.rateLimit(3, 60000), api.griffpatchFollowerCount);
+    fastify.get("/api/v1/users/:username/browserHistory", api.browserHistory);
+    fastify.get("/api/v1/projects/:id/info", api.apiProjectData);
+    fastify.get("/api/v1/projects/random", api.rateLimit(5, 60000), api.randomProject);
 
-    fastify.all("/", api.main);
-    fastify.all("/users/:username", api.getUser);
-    fastify.all("/users/:username/browserHistory", api.rateLimit(5, 60000), api.browserHistoryPage);
-    fastify.all("/projects/:project", api.projectPage);
-    fastify.all("/about", api.about);
-    fastify.all("/api/docs", api.docs);
+    fastify.get("/", api.main);
+    fastify.get("/users/:username", api.getUser);
+    fastify.get("/users/:username/browserHistory", api.rateLimit(5, 60000), api.browserHistoryPage);
+    fastify.get("/projects/:project", api.projectPage);
+    fastify.get("/about", api.about);
+    fastify.get("/api/docs", api.docs);
     // fastify.all("/test", async function (request, reply) {
     //     const data = {}
     //     const blob = await put("usernames.txt", usernameData, {
