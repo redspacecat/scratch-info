@@ -709,4 +709,30 @@ api.randomProject = async function(request, reply) {
     
 }
 
+api.randomUser = async function(request, reply) {
+    reply.headers({
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+    });
+    let blobDetails = await head("usernames.txt");
+    let max = 120031047
+    let min = 100
+    let num2 = randInt(min, max)
+    let num1 = num2 - min
+    let response = (await (await fetch(blobDetails.url, {
+        method: "GET",
+        headers: {
+            "Range": `bytes=${num1}-${num2}`
+        }
+    })).text()).trim()
+
+    response = response.replaceAll("\r", "")
+    let trimmed = response.slice(response.indexOf("\n"), response.lastIndexOf("\n", response.length - 2)).trim()
+    let userList = trimmed.split("\n")
+    let randomUser = userList[randInt(0, userList.length - 1)]
+    console.log("from userlist", userList, "picking", randomUser)
+    
+    reply.code(200).send(randomUser)
+}
+
 module.exports = api;
