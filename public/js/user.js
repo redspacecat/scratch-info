@@ -249,7 +249,7 @@ if (mobileAndTabletCheck()) {
     console.log("mobile");
 } else {
     window.addEventListener("scroll", function () {
-        if (Math.abs(window.scrollY - (document.body.scrollHeight - document.body.clientHeight)) < 50) {
+        if (Math.abs(window.scrollY - (document.documentElement.scrollHeight - document.documentElement.clientHeight)) < 50) {
             offset += 16;
             createList();
         }
