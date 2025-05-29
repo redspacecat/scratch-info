@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+{{!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -23,7 +23,7 @@
     }
   </script>
 </body>
-</html> -->
+</html> --}}
 
 {{!-- <!DOCTYPE html>
 <html lang="en">
@@ -448,7 +448,7 @@ function showSpinnerAndRedirect() {
                     topbar.show()
                     const response = await fetch(`/api/v1/${type}s/random`);
                     topbar.hide()
-                    setTimeout(topbar.show, 200)
+                    setTimeout(topbar.show, 150)
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
@@ -474,6 +474,7 @@ function showSpinnerAndRedirect() {
                 } catch (error) {
                     console.error("Error fetching random item:", error);
                     alert(`Failed to fetch a random ${type}. Please try again later.`);
+                    topbar.hide()
                     if (spinner) spinner.style.display = "none";
                     if (submitButton) {
                         submitButton.style.display = "block";
