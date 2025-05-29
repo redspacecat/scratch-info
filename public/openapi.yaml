@@ -1,5 +1,5 @@
 openapi: 3.0.4
-swagger: "2.0"
+# swagger: "2.0"
 basePath: "/api/v1"
 info:
   title: Scratch Info API
@@ -26,7 +26,7 @@ paths:
       parameters:
         - name: username
           in: path
-          description: The username of the of the user
+          description: The username of the user
           required: true
           schema:
             type: string
@@ -97,7 +97,7 @@ paths:
       parameters:
         - name: username
           in: path
-          description: The username of the of the user
+          description: The username of the user
           required: true
           schema:
             type: string
@@ -159,7 +159,7 @@ paths:
       parameters:
         - name: username
           in: path
-          description: The username of the of the user
+          description: The username of the user
           required: true
           schema:
             type: string
@@ -169,7 +169,16 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                type: array
+                items:
+                  type: object
+                  example:
+                    - browser: "Chrome 71.0.3578.98"
+                      os: "macOS 10.13.6"
+                      time: 1546482978000
+                      id: 273517776
+                    - more data: goes here
+
   /users/griffpatch/followerCount:
     get:
         tags:
@@ -184,6 +193,7 @@ paths:
               application/json:
                 schema:
                   type: integer
+                  example: 654321
   /projects/{projectID}/info:
     get:
       tags:
@@ -259,7 +269,7 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                type: integer
                 example: 123456
   /users/random:
     get:
