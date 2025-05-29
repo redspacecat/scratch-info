@@ -36,12 +36,12 @@ async function main() {
     fastify.get("/api/v1/projects/random", api.rateLimit(5, 60000), api.randomProject);
     fastify.get("/api/v1/users/random", api.rateLimit(5, 60000), api.randomUser);
 
-    fastify.get("/", api.main);
+    fastify.get("/", api.page("main"));
     fastify.get("/users/:username", api.getUser);
     fastify.get("/users/:username/browserHistory", api.rateLimit(5, 60000), api.browserHistoryPage);
     fastify.get("/projects/:project", api.projectPage);
-    fastify.get("/about", api.about);
-    fastify.get("/api/docs", api.docs);
+    fastify.get("/about", api.page("about"));
+    fastify.get("/api/docs", api.page("apiDocs"));
     // fastify.all("/test", async function (request, reply) {
     //     const data = {}
     //     const blob = await put("usernames.txt", usernameData, {

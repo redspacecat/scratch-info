@@ -659,23 +659,13 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-api.main = async function (request, reply) {
-    let params = {};
-    params.nav = navbarCode;
-    return reply.view("/main.hbs", params);
-};
-
-api.about = async function (request, reply) {
-    let params = {};
-    params.nav = navbarCode;
-    return reply.view("/about.hbs", params);
-};
-
-api.docs = async function (request, reply) {
-    let params = {};
-    params.nav = navbarCode;
-    return reply.view("/apiDocs.hbs", params);
-};
+api.page = function(page) {
+    return function (request, reply) {
+        let params = {};
+        params.nav = navbarCode;
+        return reply.view(`/${page}.hbs`, params);
+    }
+}
 
 api.rateLimit = function(max, timeWindow) {
     return {
@@ -731,7 +721,7 @@ api.randomUser = async function(request, reply) {
     let userList = trimmed.split("\n")
     let randomUser = userList[randInt(0, userList.length - 1)]
     console.log("from userlist", userList, "picking", randomUser)
-    
+
     reply.code(200).send(randomUser)
 }
 
