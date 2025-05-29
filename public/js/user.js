@@ -21,9 +21,9 @@ async function getMoreData() {
 async function getEvenMoreData() {
     // other data
     let data2 = await (await fetch(`/api/v1/users/${username}/info?mode=extra`)).json();
-    let days = data2.browserOStimeAgo
-    let years = Math.floor(days / 365.25)
-    document.querySelector("#browserOStimeAgo").innerText = `(as of${years ? " " + years + ` year${years > 1 ? "s": ""},`: ""} ${Math.round(days % 365.25) || "?"} ${Math.round(days % 365.25) == 1 ? "day": "days"} ago)`
+    let days = data2.browserOStimeAgo;
+    let years = Math.floor(days / 365.25);
+    document.querySelector("#browserOStimeAgo").innerText = `(as of${years ? " " + years + ` year${years > 1 ? "s" : ""},` : ""} ${Math.round(days % 365.25) || "?"} ${Math.round(days % 365.25) == 1 ? "day" : "days"} ago)`;
     document.querySelector("#browser").innerText = data2.browser || "?";
     document.querySelector("#os").innerText = data2.os || "?";
     document.querySelector("#projectsShared").innerText = data2.projectsShared || "?";
@@ -34,22 +34,22 @@ async function getEvenMoreData() {
     });
 
     if (data2.deleted) {
-        document.querySelector("#profile-picture-link").parentElement.appendChild(htmlToNode(`<span style="margin-left: 10px;vertical-align: middle;"><img src="/images/warning.png" style="width: 32px;vertical-align: middle;"><span style="vertical-align: middle;">Deleted</span></span>`))
+        document.querySelector("#profile-picture-link").parentElement.appendChild(htmlToNode(`<span style="margin-left: 10px;vertical-align: middle;"><img src="/images/warning.png" style="width: 32px;vertical-align: middle;"><span style="vertical-align: middle;">Deleted</span></span>`));
     }
 }
 
 async function getGriffyFollowers() {
     document.querySelector("span.info[data-info='griffyfollowers']").style.visibility = "visible";
     //document.querySelector("#followers").innerText = "Loading... (this may take up to 30 seconds if the server is slow)";
-    let data = 
+    let data =
         // await fetch("https://griffpatch-follower-count.glitch.me/count", {
         //     method: "POST",
         // })
-        await fetch("/api/v1/users/griffpatch/followerCount")
+        await fetch("/api/v1/users/griffpatch/followerCount");
     if (!data.ok) {
-        data = "Oops, looks like there was an error: " + data.status
+        data = "Oops, looks like there was an error: " + data.status;
     } else {
-        data = await data.text()
+        data = await data.text();
     }
     document.querySelector("#followers").innerText = data;
     document.querySelector("#followers").previousElementSibling.style.display = "none";
@@ -80,10 +80,13 @@ function htmlToNode(html) {
 async function getProjectStats() {
     let stats = await (await fetch(`/api/v1/users/${username}/projectStats`)).json();
     projectData = stats.projects;
-    if (projectData.length == 0) {
-        document.querySelector("#user-projects-container").innerHTML = `<span style="text-align: center;font-size: large;" id="nothingFound" hidden>No Projects Found</span>`;
-    }
     applyStats(stats);
+     if (projectData.length == 0) {
+        document.querySelector("#user-projects-container").innerHTML = `<span style="text-align: center;font-size: large;" id="nothingFound">No Projects Found</span>`;
+        document.querySelector("#user-projects-container").hidden = false;
+        document.querySelector("#user-projects-container").style.textAlign = "center"
+        return
+    }
     createList();
     document.querySelector(".sorter").click();
     document.querySelectorAll(".info[data-info]").forEach((el) => (el.style.display = ""));
@@ -252,7 +255,9 @@ if (mobileAndTabletCheck()) {
     window.addEventListener("scroll", function () {
         if (Math.abs(window.scrollY - (document.documentElement.scrollHeight - document.documentElement.clientHeight)) < 50) {
             offset += 16;
-            createList();
+            try {
+                createList();
+            } catch {}
         }
     });
 }

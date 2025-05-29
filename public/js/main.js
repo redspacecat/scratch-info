@@ -57,6 +57,8 @@ function setup3() {
                     submitButton.style.display = "";
                     submitButton.disabled = false;
                     document.querySelector("#loading-spinner").style.display = "none";
+
+                    toggleSearch(currentSearchType)
                 }, 100);
             }
         } else {
