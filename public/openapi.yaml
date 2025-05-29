@@ -149,6 +149,41 @@ paths:
                           img: "https://uploads.scratch.mit.edu/get_image/project/276660763_230x500.png"
                           time: 1546458127000
                         - "more data": "goes here"
+  /users/{username}/browserHistory:
+    get:
+      tags:
+        - users
+      summary: Get user browser and os history
+      description: This endpoint gives information about a user's browser and os history
+      operationId: browserAndOSHistory
+      parameters:
+        - name: username
+          in: path
+          description: The username of the of the user
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /users/griffpatch/followerCount:
+    get:
+        tags:
+          - users
+        summary: "Get @griffpatch's follower count"
+        description: "This endpoint returns griffpatch's follower count. This is because his followers page doesn't load on the Scratch website, so this is a replacement that fetches data using the API."
+        operationId: griffyFollowerCount
+        responses:
+          '200':
+            description: Successful operation
+            content:
+              application/json:
+                schema:
+                  type: integer
   /projects/{projectID}/info:
     get:
       tags:
@@ -211,3 +246,33 @@ paths:
                   reviewStatus:
                     type: string
                     example: "notreviewed"
+  /projects/random:
+    get:
+      tags:
+        - projects
+      summary: "Get a random project id"
+      description: "This endpoint gives the id of a random project"
+      operationId: randomProject
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: string
+                example: 123456
+  /users/random:
+    get:
+      tags:
+        - users
+      summary: "Get a random user"
+      description: "This endpoint gives the id of a random user"
+      operationId: randomUser
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "ScratchCat"

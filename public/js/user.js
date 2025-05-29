@@ -23,7 +23,7 @@ async function getEvenMoreData() {
     let data2 = await (await fetch(`/api/v1/users/${username}/info?mode=extra`)).json();
     let days = data2.browserOStimeAgo
     let years = Math.floor(days / 365.25)
-    document.querySelector("#browserOStimeAgo").innerText = `(as of${years ? " " + years + ` year${years > 1 ? "s": ""},`: ""} ${Math.round(days % 365.25)} ${(Math.round(days % 365.25) > 1 ? "days": "day") || "?"} ago)`
+    document.querySelector("#browserOStimeAgo").innerText = `(as of${years ? " " + years + ` year${years > 1 ? "s": ""},`: ""} ${Math.round(days % 365.25) || "?"} ${Math.round(days % 365.25) == 1 ? "day": "days"} ago)`
     document.querySelector("#browser").innerText = data2.browser || "?";
     document.querySelector("#os").innerText = data2.os || "?";
     document.querySelector("#projectsShared").innerText = data2.projectsShared || "?";

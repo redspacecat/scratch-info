@@ -27,7 +27,7 @@ async function main() {
         root: path.join(__dirname, "views"),
     });
 
-    fastify.get("/api/v1/users/:username/followering", api.followering);
+    fastify.get("/api/v1/users/:username/followering", api.followering); // deprecated
     fastify.get("/api/v1/users/:username/projectStats", api.projectStats);
     fastify.get("/api/v1/users/:username/info", api.getUserInfo);
     fastify.get("/api/v1/users/griffpatch/followerCount", api.rateLimit(3, 60000), api.griffpatchFollowerCount);
