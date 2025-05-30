@@ -447,8 +447,8 @@ function showSpinnerAndRedirect() {
                 try {
                     topbar.show()
                     const response = await fetch(`/api/v1/${type}s/random`);
-                    topbar.hide()
-                    setTimeout(topbar.show, 150)
+                    //topbar.hide()
+                    //setTimeout(topbar.show, 150)
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
