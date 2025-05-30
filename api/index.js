@@ -42,6 +42,8 @@ async function main() {
     fastify.get("/projects/:project", api.projectPage);
     fastify.get("/about", api.page("about"));
     fastify.get("/api/docs", api.page("apiDocs"));
+
+    fastify.setNotFoundHandler(api.page("404"))
     // fastify.all("/test", async function (request, reply) {
     //     const data = {}
     //     const blob = await put("usernames.txt", usernameData, {
