@@ -52,14 +52,15 @@ function setup3() {
             topbar.hide();
 
             if (location.pathname == "/") {
-                setTimeout(function () {
-                    const submitButton = this.document.querySelector(".submit-container");
-                    submitButton.style.display = "";
-                    submitButton.disabled = false;
-                    document.querySelector("#loading-spinner").style.display = "none";
+                // setTimeout(function () {
+                //     const submitButton = this.document.querySelector(".submit-container");
+                //     submitButton.style.display = "";
+                //     submitButton.disabled = false;
+                //     document.querySelector("#loading-spinner").style.display = "none";
 
-                    toggleSearch(currentSearchType)
-                }, 100);
+                //     toggleSearch(currentSearchType)
+                // }, 100);
+                location.reload()
             }
         } else {
             console.log("This page was loaded normally and not from the bfcache.");
