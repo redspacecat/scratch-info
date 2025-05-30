@@ -53,7 +53,7 @@ function setup3() {
 
             if (location.pathname == "/") {
                 setTimeout(function () {
-                    const submitButton = this.document.querySelector(".submit-button");
+                    const submitButton = this.document.querySelector(".submit-container");
                     submitButton.style.display = "";
                     submitButton.disabled = false;
                     document.querySelector("#loading-spinner").style.display = "none";

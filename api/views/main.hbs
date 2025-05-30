@@ -333,11 +333,16 @@ function showSpinnerAndRedirect() {
                     <label for="search-input-home" id="input-label" class="mb-4 text-lg text-gray-600 font-medium"> Enter a Scratch username: </label>
                     <input type="text" id="search-input-home" required class="w-full p-3 mb-6 border-2 border-gray-300 rounded-lg text-lg focus:border-blue-500 focus:ring-4 focus:ring-blue-200 outline-none transition-all duration-300 ease-in-out shadow-sm" />
                     <div id="loading-spinner" class="spinner mt-2 mb-8"></div>
-                    <button type="submit" class="submit-button bg-green-600 hover:bg-green-700 text-white py-3 px-8 rounded-lg text-xl font-semibold cursor-pointer transition-all duration-300 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-1">Get User Info</button>
-                </form>
-                <div class="flex flex-col items-center">
+                    <div style="display: flex;align-items: center;" class="submit-container">
+                        <button type="submit" style="" class="submit-button bg-green-600 hover:bg-green-700 text-white py-3 px-8 rounded-lg text-xl font-semibold cursor-pointer transition-all duration-300 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-1 mr-2">Get User Info</button>
+                        <img src="/images/random.png" id="random-thing" style="width: 35px;height:45px;" title="Get a random user/project" onclick="redirectToRandom(currentSearchType)"></div>
+                    </form>
+                {{!-- <div class="flex flex-col items-center">
                     <button id="random-user-button" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 ease-in-out shadow-md" onclick="redirectToRandom('user')" style="display: none;">Random User</button>
                     <button id="random-project-button" class="mt-4 bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 ease-in-out shadow-md" onclick="redirectToRandom('project')" style="display: none;">Random Project</button>
+                </div> --}}
+                <div class="mt-2">
+                   Scratch Info gives you information about Scratch users and projects. It also comes with a handy <a href="/api/docs" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">api!</a> Try it out below or <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="/about">learn more</a>
                 </div>
             </div>
         </div>
@@ -356,9 +361,10 @@ function showSpinnerAndRedirect() {
                 const inputLabel = document.getElementById("input-label");
                 const searchInput = document.getElementById("search-input-home");
                 const submitButton = document.querySelector(".submit-button");
-                const randomUserButton = document.getElementById("random-user-button");
-                const randomProjectButton = document.getElementById("random-project-button");
-
+                {{!-- const randomUserButton = document.getElementById("random-user-button");
+                const randomProjectButton = document.getElementById("random-project-button"); --}}
+                const submitContainer = document.querySelector(".submit-container")
+                const randomThing = document.querySelector("#random-thing")
 
                 // Remove active class from both and add to the selected one
                 userToggle.classList.remove("active");
@@ -372,13 +378,15 @@ function showSpinnerAndRedirect() {
                 if (type === "user") {
                     inputLabel.textContent = "Enter a Scratch username:";
                     submitButton.textContent = "Get User Info";
-                    randomUserButton.style.display = "block"; // Show random user button
-                    randomProjectButton.style.display = "none"; // Hide random project button
+                    {{!-- randomUserButton.style.display = "block"; // Show random user button --}}
+                    {{!-- randomProjectButton.style.display = "none"; // Hide random project button --}}
+                    randomThing.title = "Get a random user"
                 } else {
                     inputLabel.textContent = "Enter a Scratch project ID:";
                     submitButton.textContent = "Get Project Info";
-                    randomProjectButton.style.display = "block"; // Show random project button
-                    randomUserButton.style.display = "none"; // Hide random user button
+                    {{!-- randomProjectButton.style.display = "block"; // Show random project button --}}
+                    {{!-- randomUserButton.style.display = "none"; // Hide random user button --}}
+                    randomThing.title = "Get a random project"
                 }
 
                 // Clear input field and focus it
@@ -393,8 +401,9 @@ function showSpinnerAndRedirect() {
             function showSpinnerAndRedirect() {
                 const inputValue = document.getElementById("search-input-home").value.trim();
                 const submitButton = document.querySelector(".submit-button");
-                const randomUserButton = document.getElementById("random-user-button");
-                const randomProjectButton = document.getElementById("random-project-button");
+                {{!-- const randomUserButton = document.getElementById("random-user-button");
+                const randomProjectButton = document.getElementById("random-project-button"); --}}
+                const submitContainer = document.querySelector(".submit-container")
 
 
                 if (!inputValue) {
@@ -409,8 +418,9 @@ function showSpinnerAndRedirect() {
                 // Hide and disable the submit button and random buttons
                 submitButton.style.display = "none";
                 submitButton.disabled = true;
-                randomUserButton.style.display = "none";
-                randomProjectButton.style.display = "none";
+                {{!-- randomUserButton.style.display = "none";
+                randomProjectButton.style.display = "none"; --}}
+                submitContainer.style.display = "none"
 
                 // Redirect after a short delay to allow spinner to render
                 setTimeout(() => {
@@ -432,16 +442,18 @@ function showSpinnerAndRedirect() {
             async function redirectToRandom(type) {
                 const spinner = document.getElementById("loading-spinner");
                 const submitButton = document.querySelector(".submit-button");
-                const randomUserButton = document.getElementById("random-user-button");
-                const randomProjectButton = document.getElementById("random-project-button");
+                const submitContainer = document.querySelector(".submit-container")
+                //const randomUserButton = document.getElementById("random-user-button");
+                //const randomProjectButton = document.getElementById("random-project-button");
 
                 if (spinner) spinner.style.display = "block";
                 if (submitButton) {
                     submitButton.style.display = "none";
                     submitButton.disabled = true;
+                    submitContainer.style.display = "none"
                 }
-                randomUserButton.style.display = "none"; // Hide random user button
-                randomProjectButton.style.display = "none"; // Hide random project button
+                //randomUserButton.style.display = "none"; // Hide random user button
+                //randomProjectButton.style.display = "none"; // Hide random project button
 
 
                 try {
@@ -465,11 +477,11 @@ function showSpinnerAndRedirect() {
                             submitButton.style.display = "block";
                             submitButton.disabled = false;
                         }
-                        if (type === 'user') {
+                        {{!-- if (type === 'user') {
                             randomUserButton.style.display = "block";
                         } else {
                             randomProjectButton.style.display = "block";
-                        }
+                        } --}}
                     }
                 } catch (error) {
                     console.error("Error fetching random item:", error);
@@ -480,11 +492,11 @@ function showSpinnerAndRedirect() {
                         submitButton.style.display = "block";
                         submitButton.disabled = false;
                     }
-                    if (type === 'user') {
+                    {{!-- if (type === 'user') {
                         randomUserButton.style.display = "block";
                     } else {
                         randomProjectButton.style.display = "block";
-                    }
+                    } --}}
                 }
             }
             // Initialize button visibility on page load
