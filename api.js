@@ -509,6 +509,9 @@ api.projectPage = async function getProjectPage(request, reply) {
     let params = {};
     let id = request.params.project;
     params = await getProjectData(id);
+    params.loveToViewRatio = params.loveToViewRatio || 0
+    params.faveToViewRatio = params.faveToViewRatio || 0
+    params.faveToViewRatio = params.faveToViewRatio || 0
     if (params == 404) {
         return reply.view("/projectNotFound.hbs", { id: id, nav: navbarCode });
     } else {
