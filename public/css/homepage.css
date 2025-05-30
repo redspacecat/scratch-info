@@ -31,3 +31,7 @@ body {
         transform: rotate(360deg);
     }
 }
+
+#random-thing:hover {
+    filter: invert(51%) sepia(48%) saturate(919%) hue-rotate(173deg) brightness(85%) contrast(90%)
+}
