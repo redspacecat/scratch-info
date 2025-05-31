@@ -29,8 +29,10 @@
             </div>
         </div>
         <script>
-            document.querySelectorAll("#container, html").forEach(el => el.classList.add("dark-mode"))
-            document.querySelectorAll("a").forEach(el => el.classList.add("dark-mode-link"))
+            if (window.darkMode) {
+                document.querySelectorAll("#container, html").forEach(el => el.classList.add("dark-mode"))
+                document.querySelectorAll("a").forEach(el => el.classList.add("dark-mode-link"))
+            }
         </script>
     </body>
 

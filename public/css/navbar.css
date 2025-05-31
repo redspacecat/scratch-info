@@ -87,7 +87,7 @@ body {
     background-color: #30cfc4; /* slightly darker turquoise on hover */
 }
 
-@media (max-width: 655px) {
+@media (max-width: 840px) {
     .navbar-content {
         flex-wrap: wrap;
         justify-content: center;
