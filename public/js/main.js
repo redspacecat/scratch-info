@@ -1,4 +1,10 @@
 window.addEventListener("DOMContentLoaded", setup3);
+window.darkMode = (localStorage.getItem("darkmode") == "true") ? true: false
+console.log(darkMode)
+
+if (window.darkMode) {
+    document.documentElement.classList.add("dark")
+}
 
 function setup3() {
     // add topbar loading bar
@@ -16,15 +22,8 @@ function setup3() {
         // window.addEventListener("load", topbar.hide)
     };
     document.head.appendChild(s);
-    document.querySelectorAll("a").forEach(function (a) {
-        if (a.target != "_blank") {
-            a.addEventListener("click", function (e) {
-                if (!e.ctrlKey) {
-                    topbar.show();
-                }
-            });
-        }
-    });
+    
+    handleLinks()
 
     // add vercel analytics
     window.va =
@@ -66,5 +65,29 @@ function setup3() {
             console.log("This page was loaded normally and not from the bfcache.");
         }
         console.log("Original navigationType:" + performance.getEntriesByType("navigation")[0].type);
+    });
+}
+
+function toggleDarkMode() {
+    let old = localStorage.getItem("darkmode")
+    if (old == "false") {
+        localStorage.setItem("darkmode", true)
+    } else {
+        localStorage.setItem("darkmode", false)
+    }
+    let dark = localStorage.getItem("darkmode")
+    console.log("darkmode", dark)
+    location.reload()
+}
+
+function handleLinks() {
+    document.querySelectorAll("a").forEach(function (a) {
+        if (a.target != "_blank") {
+            a.addEventListener("click", function (e) {
+                if (!e.ctrlKey) {
+                    topbar.show();
+                }
+            });
+        }
     });
 }

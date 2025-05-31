@@ -71,6 +71,18 @@
             </div>
         </div>
         <script>
+
+function handleDarkMode() {
+    if (window.darkMode) {
+        document.querySelectorAll("#container, html").forEach(el => el.classList.add("dark-mode"))
+        document.querySelector("#container img").style.border = "1px solid white"
+        document.querySelectorAll("table td, tr").forEach(el => el.classList.add("dark-mode-table"))
+        document.querySelectorAll("button").forEach(el => el.classList.add("dark-mode", "dark-mode-button"))
+        document.querySelectorAll("a, #username-text").forEach(el => el.classList.add("dark-mode-link"))
+    }
+}
+handleDarkMode()
+
             window.addEventListener("DOMContentLoaded", setup2)
             function setup2() {
                 if ("{{reviewStatus}}" == "notreviewed") {

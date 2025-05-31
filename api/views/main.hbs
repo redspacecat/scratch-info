@@ -306,11 +306,11 @@ function showSpinnerAndRedirect() {
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="/js/main.js"></script>
         <script src="/js/navbar.js"></script>
-        <link href="/css/homepage.css" rel="stylesheet" />
+        <link href="/css/homepage.css" rel="stylesheet" id="homepage-style"/>
         <link href="/css/navbar.css" rel="stylesheet" />
     </head>
     <body>
-        <nav class="navbar">
+        {{!-- <nav class="navbar">
     <div class="navbar-content">
         <a href="/" class="nav-logo">Scratch Info</a>
         <a href="/" class="nav-link">Home</a>
@@ -321,7 +321,8 @@ function showSpinnerAndRedirect() {
             <button type="submit">Search</button>
         </form>
     </div>
-</nav>
+</nav> --}}
+{{{nav}}}
         <div class="bg-gray-100 flex justify-center items-center p-4" style="min-height: calc(100vh - 52px);">
             <div class="container bg-white p-8 md:p-12 rounded-xl shadow-lg text-center w-full max-w-md">
                 <h1 class="text-3xl md:text-4xl font-bold text-blue-700 mb-8">Scratch Info</h1>
@@ -502,7 +503,16 @@ function showSpinnerAndRedirect() {
             // Initialize button visibility on page load
             document.addEventListener('DOMContentLoaded', () => {
                 toggleSearch(currentSearchType);
+                const htmlElement = document.documentElement
+
+                if (window.darkMode) {
+                    htmlElement.classList.add('dark');
+                } else {
+                    htmlElement.classList.remove('dark');
+                }
+
             });
+
         </script>
     </body>
 </html>

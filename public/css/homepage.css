@@ -10,6 +10,9 @@ body {
 .toggle-btn:not(.active):hover {
     background-color: #e2e9f2;
 }
+/* .toggle-btn:not(.active):hover {
+    background-color: #6b6b6b;
+} */
 
 /* Spinner specific styles */
 .spinner {
@@ -34,4 +37,107 @@ body {
 
 #random-thing:hover {
     filter: invert(51%) sepia(48%) saturate(919%) hue-rotate(173deg) brightness(85%) contrast(90%)
+}
+
+/* Dark Mode styles */
+html.dark {
+    /* General background for the body */
+    background-color: #1a202c; /* A dark gray/blue */
+    color: #e2e8f0; /* Light gray for text */
+}
+
+html.dark .navbar {
+    background-color: #2d3748; /* Darker gray for navbar */
+    border-bottom: 1px solid #4a5568;
+}
+
+html.dark .navbar-content .nav-link {
+    color: #cbd5e0; /* Lighter text for nav links */
+}
+
+html.dark .navbar-content .nav-logo {
+    color: #90cdf4; /* Light blue for logo */
+}
+
+html.dark .search-form input {
+    background-color: #4a5568;
+    color: #e2e8f0;
+    border-color: #6a7383;
+}
+
+html.dark .search-form button {
+    background-color: #4c7c5c; /* Darker green for search button */
+    color: #e2e8f0;
+}
+
+html.dark .bg-gray-100 {
+    background-color: #1a202c; /* Dark background for the main content area */
+}
+
+html.dark .container {
+    background-color: #2d3748; /* Darker background for the main container */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+html.dark .text-blue-700 {
+    color: #90cdf4; /* Lighter blue for main heading */
+}
+
+html.dark .toggle-switch {
+    background-color: #4a5568; /* Darker background for toggle switch */
+}
+
+html.dark .toggle-btn {
+    background-color: #4a5568;
+    color: #cbd5e0;
+}
+
+html.dark .toggle-btn:hover {
+    background-color: #6b6b6b;
+}
+
+html.dark .toggle-btn.active {
+    background-color: #63b3ed; /* A medium blue for active toggle button */
+    color: #1a202c; /* Dark text for active button */
+}
+
+html.dark .text-gray-600 {
+    color: #cbd5e0; /* Lighter gray for labels */
+}
+
+html.dark .border-gray-300 {
+    border-color: #6a7383; /* Darker border for input field */
+}
+
+html.dark .text-lg {
+    color: #e2e8f0; /* Light text for input field */
+}
+
+html.dark .focus\:border-blue-500 {
+    border-color: #63b3ed; /* Lighter focus border */
+}
+
+html.dark .focus\:ring-blue-200 {
+    --tw-ring-color: rgba(99, 179, 237, 0.4); /* Lighter focus ring */
+}
+
+html.dark .bg-green-600 {
+    background-color: #4c7c5c; /* Darker green for submit button */
+}
+
+html.dark .hover\:bg-green-700:hover {
+    background-color: #386646; /* Even darker green on hover */
+}
+
+html.dark .text-white {
+    color: #e2e8f0; /* Light text for submit button */
+}
+
+html.dark .text-blue-600,
+html.dark .dark\:text-blue-500 {
+    color: #90cdf4; /* Lighter blue for links */
+}
+
+html.dark .hover\:underline:hover {
+    text-decoration-color: #90cdf4; /* Lighter underline color */
 }

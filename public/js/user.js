@@ -1,6 +1,18 @@
 let text = document.querySelector("#username-text").innerText;
 history.replaceState(null, "", "/users/" + text.slice(0, text.endsWith("*") ? text.length - 1 : text.length));
 
+handleDarkMode()
+
+function handleDarkMode() {
+    if (window.darkMode) {
+        document.querySelector("html").classList.add("dark-mode")
+        document.querySelectorAll("#container, #basicInfo, #browserandos, #otherinfo, #searchbox").forEach(el => el.classList.add("dark-mode"))
+        document.querySelectorAll("table td").forEach(el => el.classList.add("dark-mode-table"))
+        document.querySelectorAll("button").forEach(el => el.classList.add("dark-mode", "dark-mode-button"))
+        document.querySelectorAll("a, #username-text").forEach(el => el.classList.add("dark-mode-link"))
+    }
+}
+
 async function getMoreData() {
     let data = await (await fetch(`/api/v1/users/${username}/info?mode=followering`)).json();
     if (username != "griffpatch") {
@@ -96,7 +108,7 @@ async function getProjectStats() {
 function createList() {
     let projectListEl = document.querySelector("#projects");
     let baseProject = `<div class="one-project">
-                <a onclick="topbar.show()">
+                <a>
                   <div style="width:240px;height:181px;" class="img-load-wrapper">
                     <div class="activity"></div>
                   </div>
@@ -146,6 +158,8 @@ function createList() {
     }
 
     search(document.querySelector("#searchbox").value);
+    handleDarkMode()
+    handleLinks()
 }
 
 function applyStats(stats) {

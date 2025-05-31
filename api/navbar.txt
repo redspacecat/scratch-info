@@ -8,5 +8,6 @@
             <input type="text" id="search-input" placeholder="🔍 Enter username or project id">
             <button type="submit">Search</button>
         </form>
+        <img src="/images/dark-mode.svg" id="dark-mode" title="Toggle Dark Mode" onclick="toggleDarkMode();topbar.show()">
     </div>
 </nav>

@@ -15,7 +15,7 @@
     <body>
         {{{nav}}}
         <div id="container" style="height: 60vh">
-            <div style="display:flex;align-items:center;width:50%;height:100%" class="c">
+            <div id="about-div" class="c">
                 <div>
                     <p>Scratch Info is a JavaScript tool/website with an API that returns information about Scratch users and projects. It's kind of a mix between <a href="https://scratchstats.com" target="_blank">ScratchStats</a> and <a href="https://scratchviews.com" target="_blank">ScratchViews</a>.</p>
                     <p>It automatically calculates statistics and gives useful information.</p>
@@ -28,6 +28,10 @@
                 </div>
             </div>
         </div>
+        <script>
+            document.querySelectorAll("#container, html").forEach(el => el.classList.add("dark-mode"))
+            document.querySelectorAll("a").forEach(el => el.classList.add("dark-mode-link"))
+        </script>
     </body>
 
 </html>

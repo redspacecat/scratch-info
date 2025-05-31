@@ -7,6 +7,10 @@ html {
     min-height: 100vh;
 }
 
+html.dark-mode {
+    background-color: black;
+}
+
 *,
 *:before,
 *:after {
@@ -27,7 +31,8 @@ body {
 }
 
 #container {
-    margin: 1rem;
+    margin: 0;
+    padding: 1rem;
 }
 
 /* images and videos max out at full width */
@@ -326,4 +331,43 @@ td {
 
 #profile-picture-link:hover {
     color: blue;
+}
+
+.dark-mode {
+    background-color: black;
+    color: white;
+}
+
+.dark-mode-table {
+    border: 2px solid white;
+    columns: white;
+}
+
+.dark-mode-button {
+    border-radius: 2px;
+    border: 2px solid white;
+    background-color: #404040;
+}
+
+.dark-mode-link:not(.nav-link) {
+    color: lightblue !important;
+}
+
+#about-div {
+    display: flex;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+}
+
+@media screen and (max-width: 900px) {
+    #about-div {
+        width: 70%;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    #about-div {
+        width: 90%;
+    }
 }
