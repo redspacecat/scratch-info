@@ -91,7 +91,7 @@ async function getStats(username) {
         let r = await (await fetch2(url)).json();
         projects.push(r);
 
-        if (Object.keys(r).length < 40 || page > 10) {
+        if (Object.keys(r).length < 40 || page > 15) {
             break;
         }
         page++;
@@ -402,7 +402,7 @@ api.browserHistory = async function (request, reply) {
             let r = await (await fetch2(url)).json();
             projects.push(r);
 
-            if (Object.keys(r).length < 40 || page > 10) {
+            if (Object.keys(r).length < 40 || page > 15) {
                 break;
             }
             page++;
