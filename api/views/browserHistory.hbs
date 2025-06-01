@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="/css/navbar.css" />
         <script src="/js/main.js"></script>
         <script src="/js/navbar.js"></script>
+        <style id="darkmodestyle"></style>
     </head>
 
     <body>
@@ -102,6 +103,17 @@
             window.onerror = function (e) {
                 alert("Error: " + e)
                 }
+
+            if (window.darkMode) {
+              document.querySelector("#darkmodestyle").textContent = `
+:not(nav) {
+  filter: invert(1) hue-rotate(180deg);
+}
+#container {
+  color: white;
+}
+`
+            }
         </script>
     </body>
 

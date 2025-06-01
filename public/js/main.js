@@ -1,5 +1,5 @@
 window.addEventListener("DOMContentLoaded", setup3);
-window.darkMode = (localStorage.getItem("darkmode") == "true") ? true: false
+window.darkMode = (localStorage.getItem("darkmode")) ? ((localStorage.getItem("darkmode") == "true") ? true: false): window.matchMedia('(prefers-color-scheme: dark)').matches
 console.log(darkMode)
 
 if (window.darkMode) {
