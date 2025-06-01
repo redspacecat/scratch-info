@@ -66,6 +66,10 @@ function setup3() {
         }
         console.log("Original navigationType:" + performance.getEntriesByType("navigation")[0].type);
     });
+
+    if (window.darkMode) {
+        document.querySelector("#search-input").style.color = "white"
+    }
 }
 
 function toggleDarkMode() {
