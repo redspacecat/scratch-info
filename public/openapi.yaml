@@ -32,7 +32,7 @@ paths:
             type: string
         - name: mode
           in: query
-          description: Controls which data is returned. Can be "all", "extra", "regular", or "followering". "all" is all the data, "extra" is the browser, os, and projects shared, "regular" is just basic data abou the user, and "followering" is the follower and following counts of the user.
+          description: Controls which data is returned. Can be "all", "extra", "regular", or "followering". "all" is all the data, "extra" is the browser, os, and projects shared, "regular" is just basic data about the user, and "followering" is the follower and following counts of the user.
           required: true
           schema:
             type: string
@@ -40,6 +40,7 @@ paths:
             - all
             - extra
             - regular
+            - followering
       responses:
         '200':
           description: Successful operation
