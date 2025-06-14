@@ -41,7 +41,7 @@ let t = {
     },
     griffyfollowers: {
       title: "How do we know @griffpatch's follower count?",
-      text: "Since his followers page doesn't load on the Scratch website, I made an API endpoint to get his follower count using the api instead. You can find documentation at <a href='/api'>/api</a>"
+      text: "Since his followers page doesn't load on the Scratch website, I made an API endpoint to get his follower count using the api instead. You can find documentation at <a href='/api/docs'>here</a>"
     }
 };
 
