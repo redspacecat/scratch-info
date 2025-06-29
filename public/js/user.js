@@ -15,14 +15,14 @@ function handleDarkMode() {
 
 async function getMoreData() {
     let data = await (await fetch(`/api/v1/users/${username}/info?mode=followering`)).json();
-    if (username != "griffpatch") {
+    // if (username != "griffpatch") {
         document.querySelector("#followers").innerText = data.followers || "?";
 
         document.querySelectorAll("#followers").forEach(function (a) {
             a.previousElementSibling.style.display = "none";
             a.hidden = false;
         });
-    }
+    // }
     document.querySelector("#following").innerText = data.following || "?";
     document.querySelectorAll("#following").forEach(function (a) {
         a.previousElementSibling.style.display = "none";
@@ -69,9 +69,9 @@ async function getGriffyFollowers() {
 }
 getMoreData();
 getEvenMoreData();
-if (username == "griffpatch") {
-    getGriffyFollowers();
-}
+// if (username == "griffpatch") {
+//     getGriffyFollowers();
+// }
 
 let projectData;
 let currentSorting = "popularity";

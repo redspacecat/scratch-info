@@ -30,7 +30,7 @@ async function main() {
     fastify.get("/api/v1/users/:username/followering", api.followering); // deprecated
     fastify.get("/api/v1/users/:username/projectStats", api.projectStats);
     fastify.get("/api/v1/users/:username/info", api.getUserInfo);
-    fastify.get("/api/v1/users/griffpatch/followerCount", api.rateLimit(3, 60000), api.griffpatchFollowerCount);
+    fastify.get("/api/v1/users/griffpatch/followerCount", api.rateLimit(4, 60000), api.griffpatchFollowerCount);
     fastify.get("/api/v1/users/:username/browserHistory", api.browserHistory);
     fastify.get("/api/v1/projects/:id/info", api.apiProjectData);
     fastify.get("/api/v1/projects/random", api.rateLimit(5, 60000), api.randomProject);

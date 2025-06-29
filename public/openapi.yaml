@@ -184,8 +184,8 @@ paths:
     get:
         tags:
           - users
-        summary: "Get @griffpatch's follower count"
-        description: "This endpoint returns griffpatch's follower count. This is because his followers page doesn't load on the Scratch website, so this is a replacement that fetches data using the API."
+        summary: "Get @griffpatch's total all time follower count"
+        description: "This endpoint returns griffpatch's total ever follower count. This includes every account that followed him and has since been deleted."
         operationId: griffyFollowerCount
         responses:
           '200':
