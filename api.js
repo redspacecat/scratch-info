@@ -388,10 +388,10 @@ api.browserHistory = async function (request, reply) {
     let userDB = await (await fetch(blobDetails2.url + `?nocache=${Math.random()}&download=1`)).json();
 
     if (userDB[user]) {
-    // if (false) {
+        // if (false) {
         // let offset = request.query.page ? (request.query.page - 1) * 40 : 0;
         // projects = projectDB.get(user).slice(offset, offset + 40);
-        projects = userDB[user]
+        projects = userDB[user];
         console.log("using stored projects for user", user, projects);
     } else {
         let page = 0;
@@ -413,7 +413,7 @@ api.browserHistory = async function (request, reply) {
 
         let ids = projects.map((a) => a.id);
         // projectDB.set(user, ids);
-        userDB[user] = ids
+        userDB[user] = ids;
         console.log("created project list for user:", user);
 
         // let offset = request.query.page ? (request.query.page - 1) * 40 : 0;
@@ -425,13 +425,13 @@ api.browserHistory = async function (request, reply) {
     for (let i = 0; i < projects.length; i++) {
         promises.push(
             new Promise(async function (resolve, reject) {
-                let id = projects[i].id || projects[i]
+                let id = projects[i].id || projects[i];
                 let time, ua;
                 if (projectInfoDB[id.toString()]) {
-                // if (false) {
-                    time = projectInfoDB[id.toString()].time
-                    ua = projectInfoDB[id.toString()].ua
-                    console.log("using stored data")
+                    // if (false) {
+                    time = projectInfoDB[id.toString()].time;
+                    ua = projectInfoDB[id.toString()].ua;
+                    console.log("using stored data");
                 } else {
                     let info = await (await fetch2("https://api.scratch.mit.edu/projects/" + id)).json();
                     // console.log(info)
@@ -446,10 +446,10 @@ api.browserHistory = async function (request, reply) {
                     // console.log("setting id", id, time, ua)
                     projectInfoDB[id.toString()] = {
                         time: time,
-                        ua: ua
-                    }
+                        ua: ua,
+                    };
 
-                    console.log("fetching new data")
+                    console.log("fetching new data");
                 }
                 projectInfo.push({ time: time, agent: ua, id: id });
                 resolve();
@@ -482,7 +482,7 @@ api.browserHistory = async function (request, reply) {
         }
     }
 
-    console.log("done")
+    console.log("done");
 
     // console.log(projectInfoDB)
     const blob = await put("projectData.json", JSON.stringify(projectInfoDB), {
@@ -493,8 +493,7 @@ api.browserHistory = async function (request, reply) {
         access: "public",
         allowOverwrite: true,
     });
-    console.log("blob", blob.url, blob2.url)
-
+    console.log("blob", blob.url, blob2.url);
 
     //data.sort(compare)
     reply.headers({
@@ -509,12 +508,12 @@ api.projectPage = async function getProjectPage(request, reply) {
     let params = {};
     let id = request.params.project;
     params = await getProjectData(id);
-    params.loveToViewRatio = params.loveToViewRatio || 0
-    params.faveToViewRatio = params.faveToViewRatio || 0
-    params.faveToLoveRatio = params.faveToLoveRatio || 0
     if (params == 404) {
         return reply.view("/projectNotFound.hbs", { id: id, nav: navbarCode });
     } else {
+        params.loveToViewRatio = params.loveToViewRatio || 0;
+        params.faveToViewRatio = params.faveToViewRatio || 0;
+        params.faveToLoveRatio = params.faveToLoveRatio || 0;
         return reply.view("/project.hbs", params);
     }
 };
@@ -662,70 +661,75 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-api.page = function(page) {
+api.page = function (page) {
     return function (request, reply) {
         let params = {};
         params.nav = navbarCode;
         return reply.view(`/${page}.hbs`, params);
-    }
-}
+    };
+};
 
-api.rateLimit = function(max, timeWindow) {
+api.rateLimit = function (max, timeWindow) {
     return {
         config: {
             rateLimit: {
-                max: max, timeWindow: timeWindow
-            }
-        }
-    }
+                max: max,
+                timeWindow: timeWindow,
+            },
+        },
+    };
+};
+
+function randInt(min, max) {
+    // min and max included
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-function randInt(min, max) { // min and max included 
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-api.randomProject = async function(request, reply) {
+api.randomProject = async function (request, reply) {
     reply.headers({
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
     });
     while (true) {
-        let testId = randInt(104, 1200000000)
-        console.log("trying id", testId)
-        let response = await (await fetch2("https://api.scratch.mit.edu/projects/" + testId)).json()
-        if (!(response.code == "NotFound"|| response.code == "ResourceNotFound")) {
-            console.log("found", testId)
-            reply.code(200).send(testId)
-            break
+        let testId = randInt(104, 1200000000);
+        console.log("trying id", testId);
+        let response = await (await fetch2("https://api.scratch.mit.edu/projects/" + testId)).json();
+        if (!(response.code == "NotFound" || response.code == "ResourceNotFound")) {
+            console.log("found", testId);
+            reply.code(200).send(testId);
+            break;
         }
     }
-    
-}
+};
 
-api.randomUser = async function(request, reply) {
+api.randomUser = async function (request, reply) {
     reply.headers({
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
     });
     let blobDetails = await head("usernames.txt");
-    let max = 120031047
-    let min = 100
-    let num2 = randInt(min, max)
-    let num1 = num2 - min
-    let response = (await (await fetch(blobDetails.url, {
-        method: "GET",
-        headers: {
-            "Range": `bytes=${num1}-${num2}`
-        }
-    })).text()).trim()
+    let max = 120031047;
+    let min = 100;
+    let num2 = randInt(min, max);
+    let num1 = num2 - min;
+    let response = (
+        await (
+            await fetch(blobDetails.url, {
+                method: "GET",
+                headers: {
+                    Range: `bytes=${num1}-${num2}`,
+                },
+            })
+        ).text()
+    ).trim();
 
-    response = response.replaceAll("\r", "")
-    let trimmed = response.slice(response.indexOf("\n"), response.lastIndexOf("\n", response.length - 1)).trim()
-    let userList = trimmed.split("\n")
-    let randomUser = userList[randInt(0, userList.length - 1)]
-    console.log("from userlist", userList, "picking", randomUser)
+    response = response.replaceAll("\r", "");
+    let trimmed = response.slice(response.indexOf("\n"), response.lastIndexOf("\n", response.length - 1)).trim();
+    let userList = trimmed.split("\n");
+    let randomUser = userList[randInt(0, userList.length - 1)];
+    console.log("from userlist", userList, "picking", randomUser);
 
-    reply.code(200).send(randomUser)
-}
+    reply.code(200).send(randomUser);
+};
 
 module.exports = api;
