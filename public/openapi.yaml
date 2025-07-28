@@ -9,7 +9,7 @@ externalDocs:
   description: Find out more about Scratch Info
   url: /about
 servers:
-  - url: https://scratch-info.vercel.app/api/v1
+  - url: https://scratchinfo.quuq.dev/api/v1
 tags:
   - name: users
     description: Information about users
@@ -277,7 +277,7 @@ paths:
       tags:
         - users
       summary: "Get a random user"
-      description: "This endpoint gives the id of a random user"
+      description: "This endpoint gives the username of a random user"
       operationId: randomUser
       responses:
         '200':
