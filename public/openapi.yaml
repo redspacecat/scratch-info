@@ -277,7 +277,7 @@ paths:
       tags:
         - users
       summary: "Get a random user"
-      description: "This endpoint gives the username of a random user"
+      description: "This endpoint gives the username of a random user from SUI"
       operationId: randomUser
       responses:
         '200':
