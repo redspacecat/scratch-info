@@ -201,7 +201,11 @@ async function getUserData(username, mode) {
                 let parsed = uap(agent);
                 params.browser = `${parsed.browser.name} ${parsed.browser.version || ""}`.trim();
                 if (parsed.os.name == "Windows" && parsed.os.version == "10") {
-                    parsed.os.version = "10/11";
+                    if (parsed.browser.name.includes("Chrome") && parsed.browser.version.replaceAll(".0", "") < 110) {
+                        parsed.os.version = "7-11"
+                    } else {
+                        parsed.os.version = "10/11";
+                    }
                 }
                 params.os = `${parsed.os.name} ${parsed.os.version || ""}`.trim();
             } catch {}
