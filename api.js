@@ -604,7 +604,7 @@ api.griffpatchFollowerCount = async function (request, reply) {
     let hours = Math.max(Math.abs(Date.now() - data.lastTime) / 36e5, 0.8);
     console.log("Difference in hours: ", hours);
     let estimatedNewFollowers = Math.ceil(data.perHour * hours);
-    console.log("Estimated new followers:", estimatedNewFollowers);
+    console.log("Estimated new followers:", estimatedNewFollowers + 10);
     let max = Math.ceil(min + estimatedNewFollowers);
     console.log("Min", min, "Max", max);
 
