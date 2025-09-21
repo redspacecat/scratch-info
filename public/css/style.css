@@ -409,3 +409,17 @@ td {
 #back-to-top {
     color: black;
 }
+
+.forum-user-link {
+    color: black;
+    text-decoration: none;
+}
+.forum-user-link:hover {
+    color: blue;
+}
+#table.dark-mode .forum-user-link {
+    color: white;
+}
+#table.dark-mode .forum-user-link:hover {
+    color: lightblue;
+}

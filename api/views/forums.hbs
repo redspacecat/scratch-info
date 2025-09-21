@@ -260,7 +260,7 @@
                     container.appendChild(newEl)
                     if (i2 > -1) mode = 1
                 } else {*/
-                    newEl = htmlToNode(`<tr id="${i2 - base}"><td>#${i2 + 1} ${user.user}</td><td style="width: 60px;text-align: center;">${user.count}</td></tr>`)
+                    newEl = htmlToNode(`<tr id="${i2 - base}"><td>#${i2 + 1} <a class="forum-user-link" onclick="topbar.show()" href="/users/${user.user}/posts">${user.user}</td><td style="width: 60px;text-align: center;">${user.count}</td></tr>`)
                     container2.appendChild(newEl)
                     if (i2 > 1000 + base - 2) break
                 i2++
