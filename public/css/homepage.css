@@ -141,3 +141,11 @@ html.dark .dark\:text-blue-500 {
 html.dark .hover\:underline:hover {
     text-decoration-color: #90cdf4; /* Lighter underline color */
 }
+
+img {
+    display: unset !important;
+}
+
+.navbar-content * {
+    vertical-align: middle;
+}

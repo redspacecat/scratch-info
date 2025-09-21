@@ -6,10 +6,97 @@
         <a href="/api/docs" class="nav-link">API Docs</a>
         <div style="display: flex;">
             <form id="search-form" class="search-form">
-                <input type="text" id="search-input" placeholder="🔍 Enter username or project id">
-                <button type="submit">Search</button>
+                <div id="input-container">
+                    <input type="text" id="search-input" placeholder="🔍 Enter username or project id" onkeyup="toSearch = value;handleInput(this.value)" autocomplete="off">
+                    <button type="submit">Search</button>
+                    <div id="input-dropdown" hidden style="max-width: 250px;">
+                    <div id="loader-container">
+                        <span class="loader"></span>
+                    </div>
+                    <div id="dropdown-items"></div>
+                </div>
+
             </form>
             <img src="/images/dark-mode.svg" id="dark-mode" title="Toggle Dark Mode" onclick="toggleDarkMode();topbar.show()">
         </div>
     </div>
+        <script>
+        let busy = false
+        let searchTerm = ""
+        let toSearch = ""
+
+        function htmlToNode(html) {
+            const template = document.createElement('template');
+            template.innerHTML = html;
+            const nNodes = template.content.childNodes.length;
+            return template.content.firstChild;
+        }
+
+        async function handleInput(value) {
+            if (busy) return
+            busy = true
+            let oldSearch
+            console.log("Searching for", value)
+            if (searchTerm.slice(0, 2) == value.slice(0, 2)) {
+                oldSearch = true
+            }
+            searchTerm = value
+            const dropdown = document.querySelector("#input-dropdown")
+            const dropdownItems = document.querySelector("#dropdown-items")
+            const loader = document.querySelector("#loader-container")
+            if (value.length >= 2) {
+                dropdown.hidden = false
+                if (!oldSearch) {
+                    loader.hidden = false
+                    dropdownItems.innerHTML = ""
+                }
+                // const baseURL = "https://cdn.jsdelivr.net/gh/redspacecat/sui-usernames"
+                const baseURL = "https://raw.githubusercontent.com/redspacecat/sui-usernames/refs/heads/main"
+                const results = (await (await fetch(`${baseURL}/chars/${value[0].toLowerCase()}/${value[1].toLowerCase()}/data.txt`)).text()).split("\n").map(el => el.split(","))
+                // console.log(results)
+                loader.hidden = true
+                let i = 0
+                if (oldSearch) {
+                    dropdownItems.innerHTML = ""
+                }
+                let usernames = results.map(el => el[0])
+                let usernameIndex = usernames.map((a) => { return a.toLowerCase() }).indexOf(value.toLowerCase())
+                if (usernameIndex >= 0) {
+                    console.log(value)
+                    results.unshift(results[usernameIndex])
+                    results.splice(usernameIndex + 1, 1)
+                    console.log("removing", usernameIndex)
+                }
+                for (const user of results) {
+                    const items = user
+                    if (items[0].toLowerCase().startsWith(value.toLowerCase())) {
+                        let highlightPart = items[0].slice(0, value.length)
+                        let nonHighlightPart = items[0].slice(value.length)
+                        dropdownItems.appendChild(htmlToNode(`<a style="margin: 5px; display: block;color: black;" class="nav-item-name" onclick="topbar.show()" href="/users/${items[0]}"><span class="img-load-wrapper" style="width: 25px; height: 25px; display: inline-block;"><span class="activity"></span></span><img class="user-img" style="display: none !important;" src="https://cdn2.scratch.mit.edu/get_image/user/${items[1]}_25x25.png" onload="this.previousElementSibling.style.display = 'none';this.style.display = 'unset'"><span style="margin-left: 10px;" class="highlighted-username">${highlightPart}</span><span>${nonHighlightPart}</span></a>`))
+                        i++
+                        if (i > 6) {
+                            break
+                        }
+                    }
+                }
+                if (i > 0) {
+                    dropdownItems.classList.remove("empty")
+                } else {
+                    dropdownItems.innerHTML = "<span>Nothing found</span>"
+                    dropdownItems.classList.add("empty")
+                }
+            } else {
+                dropdown.hidden = true
+            }
+            busy = false
+        }
+
+        setInterval(function () {
+            if (!busy && toSearch && toSearch != searchTerm) {
+                console.log("Searching toSearch", toSearch)
+                handleInput(toSearch)
+                toSearch = ""
+            }
+        }, 100)
+    </script>
 </nav>

@@ -4,7 +4,8 @@ body {
 }
 
 .navbar {
-    background: linear-gradient(to right, #1976d2, #7b1fa2); /* lighter dark blue to lighter purple */
+    background: linear-gradient(to right, #1976d2, #7b1fa2);
+    /* lighter dark blue to lighter purple */
     padding: 8px 0;
     color: white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -75,7 +76,8 @@ body {
 .search-form button {
     padding: 0px 12px;
     border: none;
-    background-color: #008b8b; /* turquoise */
+    background-color: #008b8b;
+    /* turquoise */
     color: white;
     border-radius: 0 4px 4px 0;
     font-weight: bold;
@@ -84,14 +86,16 @@ body {
 }
 
 .search-form button:hover {
-    background-color: #30cfc4; /* slightly darker turquoise on hover */
+    background-color: #30cfc4;
+    /* slightly darker turquoise on hover */
 }
 
 @media (max-width: 840px) {
     .navbar-content {
         flex-wrap: wrap;
         justify-content: center;
-        gap: 15px; /* smaller gap between items */
+        gap: 15px;
+        /* smaller gap between items */
     }
 
     .nav-logo {
@@ -117,7 +121,9 @@ body {
 .navbar * {
     box-sizing: border-box;
     line-height: 1.5;
+    vertical-align: middle;
 }
+
 .navbar input::placeholder,
 textarea::placeholder {
     opacity: 1;
@@ -141,16 +147,19 @@ textarea::placeholder {
 
 
 html.dark .navbar {
-    background-color: #2d3748; /* Darker gray for navbar */
+    background-color: #2d3748;
+    /* Darker gray for navbar */
     border-bottom: 1px solid #4a5568;
 }
 
 html.dark .navbar-content .nav-link {
-    color: #cbd5e0; /* Lighter text for nav links */
+    color: #cbd5e0;
+    /* Lighter text for nav links */
 }
 
 html.dark .navbar-content .nav-logo {
-    color: #90cdf4; /* Light blue for logo */
+    color: #90cdf4;
+    /* Light blue for logo */
 }
 
 html.dark .search-form input {
@@ -160,6 +169,120 @@ html.dark .search-form input {
 }
 
 html.dark .search-form button {
-    background-color: #4c7c5c; /* Darker green for search button */
+    background-color: #4c7c5c;
+    /* Darker green for search button */
     color: #e2e8f0;
+}
+
+
+#input-container {
+    position: relative;
+    width: fit-content;
+}
+
+#input-container #input-dropdown {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% - 1px);
+    width: calc(100% - 4px);
+    background-color: rgb(224, 235, 249);
+    border-left: 2px solid lightskyblue;
+    border-right: 2px solid lightskyblue;
+    border-bottom: 2px solid lightskyblue;
+    border-radius: 2px;
+    color: black;
+}
+
+.loader {
+    width: 32px;
+    height: 32px;
+    border: 5px solid blue;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#loader-container {
+    text-align: center;
+    margin: 10px;
+}
+
+.user-img {
+    width: 25px;
+    height: 25px;
+    border-radius: 2px;
+}
+
+#dropdown-items * {
+    vertical-align: middle;
+}
+
+#dropdown-items span:not(.activity) {
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: calc(100% - 35px);
+    overflow: hidden;
+}
+
+#dropdown-items.empty {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.img-load-wrapper {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-color: rgb(211, 211, 211);
+    z-index: 99999;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.activity {
+    position: absolute;
+    left: -45%;
+    height: 100%;
+    width: 45%;
+    background-image: linear-gradient(to left, rgba(251, 251, 251, 0.05), rgba(251, 251, 251, 0.3), rgba(251, 251, 251, 0.6), rgba(251, 251, 251, 0.3), rgba(251, 251, 251, 0.05));
+    background-image: -moz-linear-gradient(to left, rgba(251, 251, 251, 0.05), rgba(251, 251, 251, 0.3), rgba(251, 251, 251, 0.6), rgba(251, 251, 251, 0.3), rgba(251, 251, 251, 0.05));
+    background-image: -webkit-linear-gradient(to left, rgba(251, 251, 251, 0.05), rgba(251, 251, 251, 0.3), rgba(251, 251, 251, 0.6), rgba(251, 251, 251, 0.3), rgba(251, 251, 251, 0.05));
+    animation: loading 1s infinite;
+    z-index: 100000;
+}
+
+@keyframes loading {
+    0% {
+        left: -45%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+.highlighted-username {
+    background-color: lightyellow;
+}
+
+#input-container * {
+    z-index: 999999;
+}
+
+.nav-item-name:hover {
+    outline: 5px solid lightblue;
+    background-color: lightblue;
 }
