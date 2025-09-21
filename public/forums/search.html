@@ -18,8 +18,8 @@
     const usernames = data.map(el => el.user.toLowerCase())
     const index = usernames.indexOf(toSearch.toLowerCase())
     console.log(index)
-    const page = Math.floor(index / 10000)
-    const piece = index % 10000
+    const page = Math.floor(index / 1000)
+    const piece = index % 1000
     location.href = location.origin + "/forums" + `?page=${page + 1}&item=${piece}`
     topbar.show()
 </script>

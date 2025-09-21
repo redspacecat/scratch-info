@@ -51,6 +51,23 @@
         #container.dark-mode {
             background-color: black;
         }
+
+        .loader3 {
+            width: 50px;
+            padding: 8px;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: #25b09b;
+            --_m: 
+                conic-gradient(#0000 10%,#000),
+                linear-gradient(#000 0 0) content-box;
+            -webkit-mask: var(--_m);
+                    mask: var(--_m);
+            -webkit-mask-composite: source-out;
+                    mask-composite: subtract;
+            animation: l3 1s infinite linear;
+        }
+        @keyframes l3 {to{transform: rotate(1turn)}}
     </style>
 </head>
 
@@ -64,13 +81,69 @@
         </form>
     </div>
     <button id="back-to-top">Back to Top</button>
-    <div class="cf" style="margin-top: 10px;">
+    <div class="cf" style="margin-top: 5px;">
+                <select id="categorySwitcher" onchange="changeCategory()">
+            <option value="All">All</option>
+            <optgroup label="Welcome to Scratch"> <!-- list from postpercent -->
+                <option value="Announcements">Announcements</option>
+                <option value="New Scratchers">New Scratchers</option>
+            </optgroup>
+            <optgroup label="Making Scratch Projects">
+                <option value="Help With Scripts">Help With Scripts</option>
+                <option value="Show and Tell">Show and Tell</option>
+                <option value="Project Ideas">Project Ideas</option>
+                <option value="Collaboration">Collaboration</option>
+                <option value="Requests">Requests</option>
+            </optgroup>
+            <optgroup label="About Scratch">
+                <option value="Questions about Scratch">Questions about Scratch</option>
+                <option value="Suggestions">Suggestions</option>
+                <option value="Bugs and Glitches">Bugs and Glitches</option>
+                <option value="Advanced Topics">Advanced Topics</option>
+                <option value="Connecting to the Physical World">Connecting to the Physical World</option>
+                <option value="Developing Scratch Extensions">Developing Scratch Extensions</option>
+                <option value="Open Source Projects">Open Source Projects</option>
+            </optgroup>
+            <optgroup label="Interests Beyond Scratch">
+                <option value="Things I'm Making and Creating">Things I'm Making and Creating</option>
+                <option value="Things I'm Reading and Playing">Things I'm Reading and Playing</option>
+            </optgroup>
+            <optgroup label="Scratch Around the World">
+                <option value="Africa">Africa</option>
+                <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                <option value="Català">Català</option>
+                <option value="Deutsch">Deutsch</option>
+                <option value="Ελληνικά">Ελληνικά</option>
+                <option value="Español">Español</option>
+                <option value="فارسی">فارسی</option>
+                <option value="Français">Français</option>
+                <option value="עברית">עברית</option>
+                <option value="हिन्दी">हिन्दी</option>
+                <option value="한국어">한국어</option>
+                <option value="Italiano">Italiano</option>
+                <option value="Nederlands">Nederlands</option>
+                <option value="日本語">日本語</option>
+                <option value="Norsk">Norsk</option>
+                <option value="Polski">Polski</option>
+                <option value="Português">Português</option>
+                <option value="Pусский">Pусский</option>
+                <option value="Türkçe">Türkçe</option>
+                <option value="中文">中文</option>
+                <option value="Other Languages">Other Languages</option>
+                <option value="Translating Scratch">Translating Scratch</option>
+            </optgroup>
+        </select>
+    </div>
+    <div class="cf" style="margin-top: 5px;">
         <a id="prev">&lt; Previous Page</a>
         <input type="number" placeholder="Page #" id="gopage">
         <a id="next">Next Page &gt;</a>
     </div>
     <br>
     <div id="list"></div>
+    <div class="cf">
+    <div class="loader3"></div>
+    </div>
     <table id="table" class="c" hidden>
         <tr style="font-weight: bold;text-align: center;"><td>Username</td><td>Posts</td></tr>
     </table>
@@ -80,7 +153,7 @@
             document.querySelector("html").classList.add("dark-mode");
             document.querySelectorAll("a").forEach((el) => el.classList.add("dark-mode-link"));
             document.querySelectorAll("button, input[type='button']").forEach((el) => el.classList.add("dark-mode", "dark-mode-button"));
-            document.querySelector("#table, #container").classList.add("dark-mode")
+            document.querySelectorAll("#table, #container").forEach((el) => el.classList.add("dark-mode"))
         }
         window.onscroll = scrollFunction
         scrollFunction()
@@ -106,6 +179,12 @@
             window.scrollTo({top: 0, behavior: 'smooth'});
         });
 
+        function changeCategory() {
+            let target = document.querySelector("#categorySwitcher").value
+            location.search = `?category=${categories[target]}`
+            topbar.show()
+        }
+
         function findUser(e) {
             e.preventDefault()
             const toSearch = document.querySelector("#usersearch").value
@@ -113,9 +192,9 @@
             const usernames = data.map(el => el.user.toLowerCase())
             const index = usernames.indexOf(toSearch.toLowerCase())
             console.log(index)
-            const page = Math.floor(index / 10000)
-            const piece = index % 10000
-            location.search = `?page=${page + 1}&item=${piece}`
+            const page = Math.floor(index / 1000)
+            const piece = index % 1000
+            location.search = `?page=${page + 1}&item=${piece}&category=${category}`
             topbar.show()
         }
         
@@ -133,21 +212,23 @@
         (async function go() {
             let searchParams = new URLSearchParams(location.search)
             window.page = searchParams.get("page") || 1
-            document.querySelector("#prev").href = "?page=" + (parseInt(page) - 1)
-            document.querySelector("#next").href = "?page=" + (parseInt(page) + 1)
+            window.category = searchParams.get("category") || 0
+            document.querySelector("#categorySwitcher").value = ""
+            document.querySelector("#prev").href = "?page=" + (parseInt(page) - 1) + "&category=" + category
+            document.querySelector("#next").href = "?page=" + (parseInt(page) + 1) + "&category=" + category
             document.querySelector("#gopage").value = page
             if (page == 1) {
                 document.querySelector("#prev").hidden = true
             }
             console.log(page)
-            let data = (await (await fetch("https://cdn.jsdelivr.net/gh/redspacecat/scratch-forums-data/post_counts.txt")).text()).trim().split("\n")
+            let data = (await (await fetch(`https://cdn.jsdelivr.net/gh/redspacecat/scratch-forums-data/post_counts${parseInt(category) ? "_" + category: ""}.txt`)).text()).trim().split("\n")
             for ([i, d] of data.entries()) {
                 // data[i] = JSON.parse(d)
                 const item = d.split(",")
                 data[i] = {user: item[0], count: parseInt(item[1].trim())}
             }
 
-            if (page > Math.floor(data.length / 10000)) {
+            if (page > Math.floor(data.length / 1000)) {
                 document.querySelector("#next").hidden = true
             }
 
@@ -160,7 +241,7 @@
             if (page == 1) {
                 i2 = 0
             } else {
-                i2 = (page - 1) * 10000
+                i2 = (page - 1) * 1000
             }
             let base = i2
             let mode = 0
@@ -177,12 +258,13 @@
                 } else {*/
                     newEl = htmlToNode(`<tr id="${i2 - base}"><td>#${i2 + 1} ${user.user}</td><td style="width: 60px;text-align: center;">${user.count}</td></tr>`)
                     container2.appendChild(newEl)
-                    if (i2 > 10000 + base - 2) break
+                    if (i2 > 1000 + base - 2) break
                 i2++
                 if (i2 == data.length) break
             }
 
             document.querySelector("#table").hidden = false
+            document.querySelector(".loader3").style.display = "none"
 
             if (searchParams.has("item")) {
                 const el = document.getElementById(searchParams.get("item").toString())
@@ -200,6 +282,15 @@
             }
 
         })()
+    </script>
+    <script type="module">
+        import categoryMap from "https://cdn.jsdelivr.net/gh/jeffalo/ocular@f321922b56d96f5aa4b135315cc252ba95b3e807/assets/category-map.js" // thanks to jeffalo!
+        const f = obj => Object.fromEntries(Object.entries(obj).map(a => a.reverse()))
+        window.categories = f(Object.fromEntries(categoryMap))
+        window.categories["All"] = "0"
+        window.categories2 = Object.fromEntries(categoryMap)
+        window.categories2["0"] = "All"
+        document.querySelector("#categorySwitcher").value = categories2[category]
     </script>
     </div>
 </body>
