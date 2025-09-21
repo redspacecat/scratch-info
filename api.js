@@ -736,4 +736,8 @@ api.randomUser = async function (request, reply) {
     reply.code(200).send(randomUser);
 };
 
+api.posts = async function (request, reply) {
+    return reply.view("/posts.hbs", {username: request.params.username, nav: navbarCode})
+}
+
 module.exports = api;

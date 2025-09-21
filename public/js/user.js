@@ -50,6 +50,13 @@ async function getEvenMoreData() {
     }
 }
 
+async function getForumPosts() {
+    let count = await (await fetch(`https://redspacecat.alwaysdata.net/count/${username}`)).text();
+    document.querySelector("#postCount").innerText = count
+    document.querySelector("#postCount").previousElementSibling.style.display = "none";
+    document.querySelector("#postCount").hidden = false
+}
+
 async function getGriffyFollowers() {
     document.querySelector("span.info[data-info='griffyfollowers']").style.visibility = "visible";
     //document.querySelector("#followers").innerText = "Loading... (this may take up to 30 seconds if the server is slow)";
@@ -69,6 +76,7 @@ async function getGriffyFollowers() {
 }
 getMoreData();
 getEvenMoreData();
+getForumPosts()
 // if (username == "griffpatch") {
 //     getGriffyFollowers();
 // }

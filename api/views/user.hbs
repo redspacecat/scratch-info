@@ -35,16 +35,26 @@
                     <span id="username-text">{{usernameAsterisk}}</span><br />
                 </a>
             </div>
-            <div style="display:flex;flex-wrap:wrap">
-                <div class="cf user-info-box" id="basicInfo">
-                    <h3 class="ct h0">Basic Info</h3>
-                    <span>User ID: {{id}}</span><br />
-                    <span>Join Date: {{joinDate}}</span><br />
-                    <span>Country: {{country}}</span><br />
-                </div>
-                <!--       </div> -->
-                <div class="cf ct user-info-box" id="browserandos">
-                    <div style="text-align:center">
+            <div style="font-size: large;display: flex; justify-content:center;flex-wrap: wrap" class="cf">
+                    <div style="display: flex; flex-wrap: wrap">
+                    <div class="cf info-section" style="margin-right: 10px;">
+                        <h3 class="cf">Basic Info</h3>
+                        <div>
+                        <span style="margin-left: 10px;"># User ID: {{id}}</span><br />
+                        <span>⏱️ Join Date: {{joinDate}}</span><br />
+                        <span>🗺️ Country: {{country}}</span><br />
+                        </div>
+                    </div>
+                    <div class="cf info-section" style="text-align: center;margin-left: 10px;">
+                        <h3>Followers and Following</h3>
+                        <span>Follower Count: {{{smallLoading}}}<span id="followers" hidden>Loading...</span></span><span class="info" data-info="griffyfollowers" style="visibility:hidden;"></span><br />
+                        <span>Following Count: {{{smallLoading}}}<span id="following" hidden>Loading...</span></span><br />
+                    </div>
+                    </div>
+                    <div style="visibility: hidden;width: 100%;height: 1px;">Line Break</div>
+
+                    <div style="display: flex; flex-wrap: wrap;margin-top: 20px;">
+                    <div style="text-align:center;margin-right: 10px;" class="info-section">
                         <h3 class="ct h0">Browser and OS<span class="info" data-info="browserandos"></span></h3>
                         <small style="text-align: center;height: 20px;display: inline-block;">
                             <div class="img-load-wrapper" style="width: 103px;height: 18px;margin-left:auto;margin-right:auto;">
@@ -52,23 +62,31 @@
                             </div>
                             <span id="browserOStimeAgo" hidden>Loading...</span>
                         </small><br />
+                        <div class="cf">
+                            <div>
+                            <span>Browser: {{{mediumLoading}}}<span id="browser" hidden>Loading...</span></span><br />
+                            <span>OS: {{{mediumLoading}}} <span id="os" hidden>Loading...</span></span><br />
+                            <br>
+                            </div>
+                            <div style="height: 30%;display: flex;justify-content: flex-end;flex-direction: column;">
+                            <a href="{{username}}/browserHistory" class="blueButton">View Browser and OS History</a><br>
+                            </div>
+                        </div>
                     </div>
-                    <span>Browser: {{{mediumLoading}}}<span id="browser" hidden>Loading...</span></span><br />
-                    <span>OS: {{{mediumLoading}}} <span id="os" hidden>Loading...</span></span><br />
-                    <a href="{{username}}/browserHistory">View Browser and OS History</a><br>
-                </div>
+                        <div class="cf info-section" style="text-align: center;margin-left: 10px;">
+                            <div style="height: calc(76% - 10px)">
+                            <h3 class="h0">Other Stats</h3>
+                            <div style="margin-top: 20px;">
+                            <span>Project Shared: {{{smallLoading}}}<span id="projectsShared" hidden>Loading...</span></span><br />
+                            <span>Forum Posts: {{{smallLoading}}}<span id="postCount" hidden>Loading...</span></span><br />
+                            </div>
+                            </div>
+                            <div style="height: calc(36% - 10px);display: flex;justify-content: flex-end;align-items: center;">
+                            <a id="postHistory" class="blueButton" href="{{username}}/posts">View Forum Post History & Info</a>
+                            </div>
+                        </div>
+                    </div>
             </div>
-
-            <div class="cf user-info-box" id="otherinfo">
-                <h3 class="ct h0">Other Info</h3>
-                <div class="cf">
-                    <span>Follower Count: {{{smallLoading}}}<span id="followers" hidden>Loading...</span></span><span class="info" data-info="griffyfollowers" style="visibility:hidden;"></span><br />
-                    <span>Following Count: {{{smallLoading}}}<span id="following" hidden>Loading...</span></span><br />
-                    <span>Project Shared: {{{smallLoading}}}<span id="projectsShared" hidden>Loading...</span></span><br />
-                </div>
-            </div>
-            <!--       </div> -->
-            <!--     </div> -->
 
             <br />
             <h3 class="cf h0">Statistics</h3>

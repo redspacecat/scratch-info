@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>{{username}} Forum Posts — Scratch Info</title>
+
+        <link rel="stylesheet" href="/css/style.css" />
+        <link rel="stylesheet" href="/css/spinner.css" />
+        <link rel="stylesheet" href="/css/navbar.css" />
+        <script src="/js/main.js"></script>
+        <script src="/js/navbar.js"></script>
+        <style id="darkmodestyle"></style>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0"></script>
+        <style>
+        #categories {
+            text-align: center;
+            border-collapse: collapse;
+            width: 30%;
+        }
+
+        #categories td {
+            border: 2px solid black;
+            margin: 5px;
+            padding: 2px 6px;
+        }
+
+        #categories thead {
+            font-weight: bold;
+        }
+
+
+        </style>
+    </head>
+
+    <body>
+        {{{nav}}}
+        <div id="container">
+        {{!-- <h3>Viewing Post Info & History for {{username}}</h3> --}}
+        <!DOCTYPE html>
+
+    {{!-- <div id="loader-container">
+        <span class="loader2"></span>
+    </div> --}}
+    <div id="output-container">
+        <div id="data">
+            <h2 id="postCount" class="cf">
+                <span>{{username}}</span> has <span class="img-load-wrapper" style="width: 70px;height: 20px;display: inline-block;margin-bottom: -4px;"><span class="activity"></span></span> posts
+            </h2>
+        </div>
+        <div style="display: flex;">
+            <table id="categories" hidden>
+                <thead>
+                    <tr>
+                        <td>Category</td>
+                        <td>Post Count</td>
+                        <td>Percentage</td>
+                    </tr>
+                </thead>
+            </table>
+            <div style="width: 40%; margin: 15px;max-height: 100vh;">
+                <h3 style="text-align: center;margin: 0;">Posts By Category</h3>
+                <span class="img-load-wrapper" style="width: 100%;display: inline-block;margin-bottom: -4px;height: 70%;border-radius: 50%;margin-top: 20px;"><span class="activity"></span></span>
+                <canvas id="categoryDonut" width="90%" height="100%"></canvas>
+            </div>
+            <div style="width: 60%; margin: 15px;">
+                <h3 style="text-align: center;margin: 0;">Post History Over Time</h3>
+                <span class="img-load-wrapper" style="width: 100%;display: inline-block;margin-bottom: -4px;height: 340px;"><span class="activity"></span></span>
+                <canvas id="postsOverTime" hidden></canvas>
+                <h3 style="text-align: center;margin: 0;">Posts Per Month</h3>
+                <span class="img-load-wrapper" style="width: 100%;display: inline-block;margin-bottom: -4px;height: 340px;"><span class="activity"></span></span>
+                <canvas id="ppm" hidden></canvas>
+            </div>
+        </div>
+    </div>
+    <script type="module">
+        import categoryData from "https://cdn.jsdelivr.net/gh/jeffalo/ocular@f321922b56d96f5aa4b135315cc252ba95b3e807/assets/category-map.js" // thanks to jeffalo!
+        // import Utils from "https://cdn.jsdelivr.net/gh/chartjs/Chart.js@ce375a6876f35b545aca70c138ba12640c931c5d/docs/scripts/utils.js"
+
+        // setTimeout(function () { document.querySelector("style").textContent += `.loader::after { animation-delay: 1s; }` }, 1000)
+
+        let username = "{{username}}"
+        username = (await (await fetch(`https://trampoline.turbowarp.org/api/users/${username}`)).json()).username
+        console.log(username)
+        document.querySelector("#postCount").querySelector("span").innerText = username
+
+        const categories = Object.fromEntries(categoryData)
+        let categoryPostData = {}
+
+        function htmlToNode(html) {
+            const template = document.createElement('template');
+            template.innerHTML = html;
+            const nNodes = template.content.childNodes.length;
+            return template.content.firstChild;
+        }
+
+        let response = (await (await fetch("https://redspacecat.alwaysdata.net/user/" + username)).text()).split("\n")
+        const postCount = response.length
+        console.log("Post count:", postCount)
+
+        for (const post of response) {
+            const data = post.split(",")
+            const category = data[1]
+            if (!categoryPostData[category]) {
+                categoryPostData[category] = 0
+            }
+            categoryPostData[category] += 1
+        }
+        // Create items array
+        var items = Object.keys(categoryPostData).map(function (key) {
+            return [key, categoryPostData[key]];
+        });
+
+        // Sort the array based on the second element
+        items.sort(function (first, second) {
+            console.log(second, first)
+            return second[1] - first[1];
+        });
+
+        categoryPostData = items
+
+        console.log(categoryPostData)
+
+        const categoryEl = document.getElementById("categories")
+        // categoryEl.hidden = false
+
+        for (const [key, value] of Object.entries(categoryPostData)) {
+            // console.log(key, value)
+            categoryEl.appendChild(htmlToNode(`<tr><td>${categories[value[0]]}</td><td>${value[1]}</td><td>${(value[1] / postCount * 100).toFixed(2)}%</td></tr>`))
+        }
+
+        const dataEl = document.querySelector("#data")
+        document.querySelector("#postCount").innerHTML = `${username} has ${postCount} posts`
+
+        const postCountsOverTime = []
+        const allPostCounts = []
+        let accumulatedCount = 0
+        let timeSinceLast = null
+        let ppm = 0
+        for (const post of response) {
+            const data = post.split(",")
+            // console.log(data)
+            const date = parseInt(data[2] + "000")
+            const id = parseInt(data[0])
+            accumulatedCount += 1
+            if ((date - timeSinceLast > 86400000 * 30) || response.at(-1) == post) {
+                // console.log("skipping")
+                timeSinceLast = date
+                postCountsOverTime.push({ date: date, count: accumulatedCount, ppm: ppm })
+                allPostCounts.push({ date: date, id: id })
+                ppm = 0
+            } else {
+                ppm += 1
+                allPostCounts.push({ date: date, id: id })
+            }
+        }
+        createPostsChart(postCountsOverTime, categoryPostData)
+        // console.log(allPostCounts)
+
+        function makeStone(number) {
+            return { count: number, time: allPostCounts[number - 1].date, id: allPostCounts[number - 1].id }
+        }
+
+        // Milestones
+        const milestones = []
+        window.blah = allPostCounts
+        milestones.push(makeStone(100))
+        milestones.push(makeStone(500))
+        let change = 1000
+        if (postCount < 5000) {
+            change = 1000
+        } else if (postCount < 20000) {
+            milestones.push(makeStone(1000))
+            change = 5000
+        } else {
+            milestones.push(makeStone(1000))
+            milestones.push(makeStone(5000))
+            change = 10000
+        }
+        for (let i = change; i < postCount; i += change) {
+            if (i > postCount) break
+            milestones.push({ count: i, time: allPostCounts[i - 1].date, id: allPostCounts[i - 1].id })
+        }
+        console.log("milestones", milestones)
+        {{!-- dataEl.innerHTML += `<p>Milestones</p><ul>`
+        window.hi = milestones.entries()
+        for (const stone of milestones) {
+            console.log(stone)
+            dataEl.innerHTML += `<li><a href="https://scratch.mit.edu/discuss/post/${stone.id}">${stone.count}</a> — ${new Date(stone.time).toLocaleDateString()}</li>`
+        }
+        dataEl.innerHTML += `</ul>` --}}
+
+        {{!-- document.querySelector("#output-container").hidden = false --}}
+        {{!-- document.querySelector("#loader-container").style.display = "none" --}}
+
+        function createPostsChart(d, d2) {
+            console.log(d)
+            const dCounts = d.map(el => el.count)
+            const dDates = d.map(el => el.date)
+            window.a = dDates
+            console.log(dDates)
+            const dateLabels = dDates.map(el => new Date(el).toLocaleDateString())
+            document.getElementById('postsOverTime').hidden = "false"
+            document.getElementById('ppm').hidden = "false"
+            var ctx = document.getElementById('postsOverTime').getContext('2d');
+            var ctx2 = document.getElementById('ppm').getContext('2d');
+            var ctx3 = document.getElementById('categoryDonut').getContext('2d');
+            document.getElementById('postsOverTime').previousElementSibling.style.display = "none"
+            document.getElementById('ppm').previousElementSibling.style.display = "none"
+            document.getElementById('categoryDonut').previousElementSibling.style.display = "none"
+
+            var chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dateLabels,
+                    datasets: [{
+                        label: "Post Count",
+                        borderColor: "blue",
+                        fill: false,
+                        data: d.map(function (el) {
+                            return { x: el.date, y: el.count }
+                        }),
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            min: d[0].date,
+                            // time: {
+                            //     // Luxon format string
+                            //     tooltipFormat: 'MM/dd/yyyy',
+                            //     // unit: "month"
+                            // },
+                        },
+                        // y: {
+                        // }
+                    },
+                    plugins: {
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                title:
+                                    function (context) {
+                                        return dateLabels[context[0].dataIndex]
+                                    }
+                            },
+                            displayColors: false,
+                        },
+                        legend: {
+                            display: false
+                        },
+
+                    },
+                    hover: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    responsive: true
+                },
+            })
+            var chart2 = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: dateLabels,
+                    datasets: [{
+                        label: "Posts Per Month",
+                        borderColor: "green",
+                        fill: false,
+                        data: d.map(function (el) {
+                            return { x: el.date, y: el.ppm }
+                        }),
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            min: d[0].date,
+                            // time: {
+                            //     // Luxon format string
+                            //     tooltipFormat: 'MM/dd/yyyy',
+                            //     // unit: "month"
+                            // },
+                        },
+                        // y: {
+                        // }
+                    },
+                    plugins: {
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                title:
+                                    function (context) {
+                                        return dateLabels[context[0].dataIndex]
+                                    }
+                            },
+                            displayColors: false,
+                        },
+                        legend: {
+                            display: false
+                        },
+
+                    },
+                    hover: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    responsive: true
+
+                },
+            })
+            // var chart = new Chart(ctx, {
+            //     type: 'line',
+            //     data: {
+            //         labels: dateLabels,
+            //         datasets: [{
+            //             label: 'Post Count',
+            //             data: d.map(el => el.count),
+            //             borderColor: 'blue',
+            //             fill: false
+            //         }]
+            //     },
+            //     options: {
+            //         tooltips: {
+            //             mode: 'index',
+            //             intersect: false
+            //         },
+            //         hover: {
+            //             mode: 'index',
+            //             intersect: false
+            //         },
+            //         legend: {
+            //             display: false
+            //         },
+            //         // title: {
+            //         //     display: true,
+            //         //     text: 'Post History Over Time',
+            //         //     size: "30px"
+            //         // }
+            //     }
+            // });
+            // var chart2 = new Chart(ctx2, {
+            //     type: 'line',
+            //     data: {
+            //         labels: dateLabels,
+            //         datasets: [{
+            //             label: 'Posts Per Month',
+            //             data: d.map(el => el.ppm),
+            //             borderColor: 'green',
+            //             fill: false
+            //         }]
+            //     },
+            //     options: {
+            //         tooltips: {
+            //             mode: 'index',
+            //             intersect: false
+            //         },
+            //         hover: {
+            //             mode: 'index',
+            //             intersect: false
+            //         },
+            //         plugins: {
+            //             title: {
+            //                 display: true,
+            //                 text: 'Posts Per Month'
+            //             }
+            //         },
+            //         legend: {
+            //             display: false
+            //         },
+            //     }
+            // });
+            // console.log(Array.from(d2).map(([key, value]) => categories[value[0]]))
+            for (let item of d2) {
+                // console.log(item)
+                item[0] = categories[item[0]]
+            }
+            window.b = d2
+            var chart3 = new Chart(ctx3, {
+                type: 'pie',
+                data: {
+                    labels: Array.from(d2).map(([key, value]) => key),
+                    datasets: [{
+                        label: 'Posts',
+                        data: Array.from(d2).map(([key, value]) => (value)),
+                        // borderColor: 'green',
+                        // fill: false,
+                        borderWidth: 0,
+                        backgroundColor: Array.from({ length: d2.length }, e => '#' + (Math.random() * 0xFFFFFF << 0).toString(16))
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            displayColors: false,
+                            callbacks: {
+                                label:
+                                    function (context) {
+                                        // console.log(context.parsed)
+                                        return `${context.parsed} posts - ${(context.parsed / postCount * 100).toFixed(2)}%`
+                                    }
+                            }
+                        },
+                    },
+
+                }
+            });
+        }
+
+    </script>
+</body>
+
+</html>
+        </div>
+        </script>
+    </body>
+
+</html>

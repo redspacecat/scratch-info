@@ -39,9 +39,11 @@ async function main() {
     fastify.get("/", api.page("main"));
     fastify.get("/users/:username", api.getUser);
     fastify.get("/users/:username/browserHistory", api.rateLimit(5, 60000), api.browserHistoryPage);
+    fastify.get("/users/:username/posts", api.posts);
     fastify.get("/projects/:project", api.projectPage);
     fastify.get("/about", api.page("about"));
     fastify.get("/api/docs", api.page("apiDocs"));
+    fastify.get("/forums", api.page("forums"));
 
     fastify.setNotFoundHandler(api.page("404"))
     // fastify.all("/test", async function (request, reply) {

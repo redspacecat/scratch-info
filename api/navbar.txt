@@ -3,7 +3,8 @@
         <a href="/" class="nav-logo">Scratch <!--<img src="/favicon.ico" id="navbar-logo-img">-->Info</a>
         <a href="/" class="nav-link">Home</a>
         <a href="/about" class="nav-link">About</a>
-        <a href="/api/docs" class="nav-link">API Docs</a>
+        <a href="/api/docs" class="nav-link">API</a>
+        <a href="/forums" class="nav-link">Forum Rankings</a>
         <div style="display: flex;">
             <form id="search-form" class="search-form">
                 <div id="input-container">
@@ -14,6 +15,7 @@
                         <span class="loader"></span>
                     </div>
                     <div id="dropdown-items"></div>
+                    </div>
                 </div>
 
             </form>

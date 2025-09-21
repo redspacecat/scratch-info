@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <script src="/js/info.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/navbar.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scratch Forum Leaderboards</title>
+    <style>
+        .item {
+            background-color: rgb(225, 232, 236);
+            margin: 5px 0px;
+            padding: 2px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            font-family: Roboto, Arial, sans-serif;
+            border-radius: 5px;
+            flex-wrap: wrap;
+            transition: width 1s;
+        }
+        /* #list .item:nth-child(1) {
+            background-color: rgb(236, 231, 204);
+        } */
+
+        #back-to-top {
+            position: fixed;
+            top: 0;
+            right: 0;
+            margin: 10px;
+            padding: 10px;
+            background-color: aquamarine;
+            border: 3px solid green;
+            border-radius: 10px;
+            transition: 0.5s;
+            opacity: 0;
+        }
+
+        #back-to-top:hover {
+            background-color: rgb(110, 181, 157);
+        }
+
+        #gopage {
+            width: 80px;
+        }
+    </style>
+</head>
+
+<body>
+    {{{nav}}}
+    <div id="container">
+    <div class="cf">
+        <form onsubmit="findUser(event)">
+        <input type="text" style="width: 250px" placeholder="🔍 Find a user" id="usersearch">
+        <input type="submit" value="Go">
+        </form>
+    </div>
+    <button id="back-to-top">Back to Top</button>
+    <div class="cf" style="margin-top: 10px;">
+        <a id="prev">&lt; Previous Page</a>
+        <input type="number" placeholder="Page #" id="gopage">
+        <a id="next">Next Page &gt;</a>
+    </div>
+    <br>
+    <div id="list"></div>
+    <table id="table" class="c" hidden>
+        <tr style="font-weight: bold;text-align: center;"><td>Username</td><td>Posts</td></tr>
+    </table>
+    </div>
+    <script>
+        window.onscroll = scrollFunction
+        scrollFunction()
+
+        document.querySelector("#gopage").addEventListener("keyup", ({key}) => {
+            if (key === "Enter") {
+                if (!isNaN(document.querySelector("#gopage").value))
+                location.search = "?page=" + document.querySelector("#gopage").value
+                topbar.show()
+            }
+        })
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
+                document.getElementById("back-to-top").style.opacity = "1";
+            } else {
+                document.getElementById("back-to-top").style.opacity = "0";
+            }
+        }
+
+        document.getElementById("back-to-top").addEventListener("click", function(event){
+            event.preventDefault();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+
+        function findUser(e) {
+            e.preventDefault()
+            const toSearch = document.querySelector("#usersearch").value
+            console.log(toSearch)
+            const usernames = data.map(el => el.user.toLowerCase())
+            const index = usernames.indexOf(toSearch.toLowerCase())
+            console.log(index)
+            const page = Math.floor(index / 10000)
+            const piece = index % 10000
+            location.search = `?page=${page + 1}&item=${piece}`
+            topbar.show()
+        }
+        
+        function htmlToNode(html) {
+            const template = document.createElement('template');
+            template.innerHTML = html;
+            const nNodes = template.content.childNodes.length;
+            return template.content.firstChild;
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        (async function go() {
+            let searchParams = new URLSearchParams(location.search)
+            window.page = searchParams.get("page") || 1
+            document.querySelector("#prev").href = "?page=" + (parseInt(page) - 1)
+            document.querySelector("#next").href = "?page=" + (parseInt(page) + 1)
+            document.querySelector("#gopage").value = page
+            if (page == 1) {
+                document.querySelector("#prev").hidden = true
+            }
+            console.log(page)
+            let data = (await (await fetch("https://cdn.jsdelivr.net/gh/redspacecat/scratch-forums-data/post_counts.txt")).text()).trim().split("\n")
+            for ([i, d] of data.entries()) {
+                // data[i] = JSON.parse(d)
+                const item = d.split(",")
+                data[i] = {user: item[0], count: parseInt(item[1].trim())}
+            }
+
+            if (page > Math.floor(data.length / 10000)) {
+                document.querySelector("#next").hidden = true
+            }
+
+            console.log(data)
+            window.data = data
+            container = document.querySelector("#list")
+            container2 = document.querySelector("#table")
+            let max = data[0].count
+            let i2
+            if (page == 1) {
+                i2 = 0
+            } else {
+                i2 = (page - 1) * 10000
+            }
+            let base = i2
+            let mode = 0
+            for (let [i, item] of data.entries()) {
+                user = data[i + base]
+                /*if (mode == 0) {
+                    if (i2 > -1) {
+                        mode = 1
+                        continue
+                    }
+                    newEl = htmlToNode(`<div data-target-width="${(user.count / max * 100).toFixed(3)}%" style="width: fit-content; margin: 5px auto;" class="item"><span style="margin: 0px 5px;">#${i2 + 1}</span><span>${user.user}</span><span style="margin-left: auto;margin-right: 10px;">${user.count}</span></div>`)
+                    container.appendChild(newEl)
+                    if (i2 > -1) mode = 1
+                } else {*/
+                    newEl = htmlToNode(`<tr id="${i2 - base}"><td>#${i2 + 1} ${user.user}</td><td style="width: 60px;text-align: center;">${user.count}</td></tr>`)
+                    container2.appendChild(newEl)
+                    if (i2 > 10000 + base - 2) break
+                i2++
+                if (i2 == data.length) break
+            }
+
+            document.querySelector("#table").hidden = false
+
+            if (searchParams.has("item")) {
+                const el = document.getElementById(searchParams.get("item").toString())
+                el.scrollIntoView({
+                    behavior: 'auto',
+                    block: 'center',
+                    inline: 'center',
+                    behavior: "smooth"
+                });
+                el.style.backgroundColor = "lightyellow"
+            }
+
+        })()
+    </script>
+    </div>
+</body>
+
+</html>
