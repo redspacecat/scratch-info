@@ -280,6 +280,7 @@ api.getUser = async function (request, reply) {
     if (data == 404) {
         return reply.view("/userNotFound.hbs", params);
     }
+    params.username = data.username
     params.browser = data.browser;
     params.os = data.os || "?";
     params.id = data.id || "?";

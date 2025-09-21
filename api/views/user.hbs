@@ -13,6 +13,7 @@
         <link rel="preload" href="/api/v1/users/{{username}}/projectStats" as="fetch" crossorigin />
         <link rel="preload" href="/api/v1/users/{{username}}/info?mode=extra" as="fetch" crossorigin />
         <link rel="preload" href="/api/v1/users/{{username}}/info?mode=followering" as="fetch" crossorigin />
+        <link rel="preload" href="https://redspacecat.alwaysdata.net/user/{{username}}" as="fetch" crossorigin />
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="/js/main.js"></script>
         <script src="/js/navbar.js"></script>
@@ -79,6 +80,8 @@
                             <div style="margin-top: 20px;">
                             <span>Project Shared: {{{smallLoading}}}<span id="projectsShared" hidden>Loading...</span></span><br />
                             <span>Forum Posts: {{{smallLoading}}}<span id="postCount" hidden>Loading...</span></span><br />
+                            <span><a href="/forums/search.html?q={{username}}">Forum Ranking:</a><span> </span>{{{smallLoading}}}<span id="forumRanking" hidden>Loading...</span></span>
+                            {{!-- <a href=""><img src="/images/new-tab.png" style="width: 16px;height: 16px;"></a><br> --}}
                             </div>
                             </div>
                             <div style="height: calc(36% - 10px);display: flex;justify-content: flex-end;align-items: center;">

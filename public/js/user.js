@@ -1,27 +1,27 @@
 let text = document.querySelector("#username-text").innerText;
 history.replaceState(null, "", "/users/" + text.slice(0, text.endsWith("*") ? text.length - 1 : text.length));
 
-handleDarkMode()
+handleDarkMode();
 
 function handleDarkMode() {
     if (window.darkMode) {
-        document.querySelector("html").classList.add("dark-mode")
-        document.querySelectorAll("#container, #basicInfo, #browserandos, #otherinfo, #searchbox").forEach(el => el.classList.add("dark-mode"))
-        document.querySelectorAll("table td").forEach(el => el.classList.add("dark-mode-table"))
-        document.querySelectorAll("button").forEach(el => el.classList.add("dark-mode", "dark-mode-button"))
-        document.querySelectorAll("a, #username-text").forEach(el => el.classList.add("dark-mode-link"))
+        document.querySelector("html").classList.add("dark-mode");
+        document.querySelectorAll("#container, .info-section, #searchbox").forEach((el) => el.classList.add("dark-mode"));
+        document.querySelectorAll("table td").forEach((el) => el.classList.add("dark-mode-table"));
+        document.querySelectorAll("button").forEach((el) => el.classList.add("dark-mode", "dark-mode-button"));
+        document.querySelectorAll("a, #username-text").forEach((el) => el.classList.add("dark-mode-link"));
     }
 }
 
 async function getMoreData() {
     let data = await (await fetch(`/api/v1/users/${username}/info?mode=followering`)).json();
     // if (username != "griffpatch") {
-        document.querySelector("#followers").innerText = data.followers || "?";
+    document.querySelector("#followers").innerText = data.followers || "?";
 
-        document.querySelectorAll("#followers").forEach(function (a) {
-            a.previousElementSibling.style.display = "none";
-            a.hidden = false;
-        });
+    document.querySelectorAll("#followers").forEach(function (a) {
+        a.previousElementSibling.style.display = "none";
+        a.hidden = false;
+    });
     // }
     document.querySelector("#following").innerText = data.following || "?";
     document.querySelectorAll("#following").forEach(function (a) {
@@ -51,10 +51,26 @@ async function getEvenMoreData() {
 }
 
 async function getForumPosts() {
+    getRanking();
     let count = await (await fetch(`https://redspacecat.alwaysdata.net/count/${username}`)).text();
-    document.querySelector("#postCount").innerText = count
+    document.querySelector("#postCount").innerText = count;
     document.querySelector("#postCount").previousElementSibling.style.display = "none";
-    document.querySelector("#postCount").hidden = false
+    document.querySelector("#postCount").hidden = false;
+}
+
+async function getRanking() {
+    const data = (await (await fetch("https://cdn.jsdelivr.net/gh/redspacecat/scratch-forums-data/post_counts.txt")).text()).trim().split("\n");
+    for (let [i, d] of data.entries()) {
+        const item = d.split(",");
+        data[i] = { user: item[0], count: parseInt(item[1].trim()) };
+    }
+
+    const usernames = data.map((el) => el.user.toLowerCase());
+    const index = usernames.indexOf(username.toLowerCase());
+    console.log("forum ranking", index);
+    document.querySelector("#forumRanking").innerText = "#" + (index + 1);
+    document.querySelector("#forumRanking").hidden = false
+    document.querySelector("#forumRanking").previousElementSibling.style.display = "none";
 }
 
 async function getGriffyFollowers() {
@@ -76,7 +92,7 @@ async function getGriffyFollowers() {
 }
 getMoreData();
 getEvenMoreData();
-getForumPosts()
+getForumPosts();
 // if (username == "griffpatch") {
 //     getGriffyFollowers();
 // }
@@ -101,11 +117,11 @@ async function getProjectStats() {
     let stats = await (await fetch(`/api/v1/users/${username}/projectStats`)).json();
     projectData = stats.projects;
     applyStats(stats);
-     if (projectData.length == 0) {
+    if (projectData.length == 0) {
         document.querySelector("#user-projects-container").innerHTML = `<span style="text-align: center;font-size: large;" id="nothingFound">No Projects Found</span>`;
         document.querySelector("#user-projects-container").hidden = false;
-        document.querySelector("#user-projects-container").style.textAlign = "center"
-        return
+        document.querySelector("#user-projects-container").style.textAlign = "center";
+        return;
     }
     createList();
     document.querySelector(".sorter").click();
@@ -166,8 +182,8 @@ function createList() {
     }
 
     search(document.querySelector("#searchbox").value);
-    handleDarkMode()
-    handleLinks()
+    handleDarkMode();
+    handleLinks();
 }
 
 function applyStats(stats) {

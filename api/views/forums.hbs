@@ -47,6 +47,10 @@
         #gopage {
             width: 80px;
         }
+
+        #container.dark-mode {
+            background-color: black;
+        }
     </style>
 </head>
 
@@ -72,6 +76,12 @@
     </table>
     </div>
     <script>
+        if (darkMode) {
+            document.querySelector("html").classList.add("dark-mode");
+            document.querySelectorAll("a").forEach((el) => el.classList.add("dark-mode-link"));
+            document.querySelectorAll("button, input[type='button']").forEach((el) => el.classList.add("dark-mode", "dark-mode-button"));
+            document.querySelector("#table, #container").classList.add("dark-mode")
+        }
         window.onscroll = scrollFunction
         scrollFunction()
 
@@ -182,7 +192,11 @@
                     inline: 'center',
                     behavior: "smooth"
                 });
-                el.style.backgroundColor = "lightyellow"
+                if (darkMode) {
+                    el.style.backgroundColor = "darkblue"
+                } else {
+                    el.style.backgroundColor = "lightyellow"
+                }
             }
 
         })()

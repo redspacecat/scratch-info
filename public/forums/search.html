@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<link rel="stylesheet" href="/css/style.css">
+<script src="/js/main.js"></script>
+<script type="module">
+    if (window.darkMode) {
+        document.querySelector("html").style.backgroundColor = "black"
+    }
+    const data = (await (await fetch("https://cdn.jsdelivr.net/gh/redspacecat/scratch-forums-data/post_counts.txt")).text()).trim().split("\n")
+    for (let [i, d] of data.entries()) {
+        const item = d.split(",")
+        data[i] = {user: item[0], count: parseInt(item[1].trim())}
+    }
+
+    const toSearch = new URLSearchParams(location.search).get("q")
+
+    const usernames = data.map(el => el.user.toLowerCase())
+    const index = usernames.indexOf(toSearch.toLowerCase())
+    console.log(index)
+    const page = Math.floor(index / 10000)
+    const piece = index % 10000
+    location.href = location.origin + "/forums" + `?page=${page + 1}&item=${piece}`
+    topbar.show()
+</script>
+<title>Redirecting...</title>
+</head>
+<body></body>
+</html>
