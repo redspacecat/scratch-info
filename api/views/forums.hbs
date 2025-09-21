@@ -191,6 +191,10 @@
             console.log(toSearch)
             const usernames = data.map(el => el.user.toLowerCase())
             const index = usernames.indexOf(toSearch.toLowerCase())
+            if (index == -1) {
+                alert(`${toSearch} has not posted in ${categories2[category]}`)
+                return
+            }
             console.log(index)
             const page = Math.floor(index / 1000)
             const piece = index % 1000

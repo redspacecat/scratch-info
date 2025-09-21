@@ -67,10 +67,14 @@ async function getRanking() {
 
     const usernames = data.map((el) => el.user.toLowerCase());
     const index = usernames.indexOf(username.toLowerCase());
-    console.log("forum ranking", index);
-    document.querySelector("#forumRanking").innerText = "#" + (index + 1);
-    document.querySelector("#forumRanking").hidden = false
-    document.querySelector("#forumRanking").previousElementSibling.style.display = "none";
+    if (index != -1) {
+        console.log("forum ranking", index);
+        document.querySelector("#forumRanking").innerText = "#" + (index + 1);
+        document.querySelector("#forumRanking").hidden = false
+        document.querySelector("#forumRanking").previousElementSibling.style.display = "none";
+    } else {
+        document.querySelector("#forumRanking").parentElement.remove()
+    }
 }
 
 async function getGriffyFollowers() {
