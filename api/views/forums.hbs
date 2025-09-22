@@ -161,7 +161,7 @@
         document.querySelector("#gopage").addEventListener("keyup", ({key}) => {
             if (key === "Enter") {
                 if (!isNaN(document.querySelector("#gopage").value))
-                location.search = "?page=" + document.querySelector("#gopage").value
+                location.search = "?page=" + document.querySelector("#gopage").value + "&category=" + category
                 topbar.show()
             }
         })
