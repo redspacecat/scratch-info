@@ -225,7 +225,7 @@
                 document.querySelector("#prev").hidden = true
             }
             console.log(page)
-            let data = (await (await fetch(`https://cdn.jsdelivr.net/gh/redspacecat/scratch-forums-data/post_counts${parseInt(category) ? "_" + category: ""}.txt`)).text()).trim().split("\n")
+            let data = (await (await fetch(`https://raw.githubusercontent.com/redspacecat/scratch-forums-data/main/post_counts${parseInt(category) ? "_" + category: ""}.txt`)).text()).trim().split("\n")
             for ([i, d] of data.entries()) {
                 // data[i] = JSON.parse(d)
                 const item = d.split(",")

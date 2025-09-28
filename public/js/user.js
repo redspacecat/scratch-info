@@ -59,7 +59,7 @@ async function getForumPosts() {
 }
 
 async function getRanking() {
-    const data = (await (await fetch("https://cdn.jsdelivr.net/gh/redspacecat/scratch-forums-data/post_counts.txt")).text()).trim().split("\n");
+    const data = (await (await fetch("https://raw.githubusercontent.com/redspacecat/scratch-forums-data/main/post_counts.txt")).text()).trim().split("\n");
     for (let [i, d] of data.entries()) {
         const item = d.split(",");
         data[i] = { user: item[0], count: parseInt(item[1].trim()) };
