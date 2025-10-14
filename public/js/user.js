@@ -52,7 +52,8 @@ async function getEvenMoreData() {
 
 async function getForumPosts() {
     getRanking();
-    let count = (await (await fetch(`https://redspacecat.alwaysdata.net/user/${username}`)).text()).split("\n").length;
+    let text = await (await fetch(`https://redspacecat.alwaysdata.net/user/${username}`)).text()
+    let count = text.trim() == "" ? 0: text.split("\n").length;
     document.querySelector("#postCount").innerText = count;
     document.querySelector("#postCount").previousElementSibling.style.display = "none";
     document.querySelector("#postCount").hidden = false;
