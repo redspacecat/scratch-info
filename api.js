@@ -22,11 +22,22 @@ let api = {};
 
 async function fetch2(url) {
     let proxyURL = "https://corsproxy.josueart40.workers.dev/?";
-    if (url.startsWith("https://api.scratch.mit.edu")) {
-        return await fetch(proxyURL + encodeURIComponent(url));
-    } else {
-        return await fetch(url);
+    let proxyURL2 = "https://python-test-punb.onrender.com/proxy";
+    // if (url.startsWith("https://api.scratch.mit.edu")) {
+    let thing = await fetch(proxyURL + encodeURIComponent(encodeURI(url)));
+    if (!thing.ok) {
+        console.log("scratch is 429, trying to use proxy");
+        thing = await fetch(proxyURL2, {
+            headers: {
+                "X-URL": url,
+            },
+            method: "POST",
+        });
     }
+    return thing;
+    // } else {
+    //     return await fetch(url);
+    // }
 }
 
 api.followering = async function (request, reply) {
@@ -91,7 +102,7 @@ async function getStats(username) {
         let r = await (await fetch2(url)).json();
         projects.push(r);
 
-        if (Object.keys(r).length < 40 || page > 15) {
+        if (Object.keys(r).length < 40 || page > 24) {
             break;
         }
         page++;
@@ -202,7 +213,7 @@ async function getUserData(username, mode) {
                 params.browser = `${parsed.browser.name} ${parsed.browser.version || ""}`.trim();
                 if (parsed.os.name == "Windows" && parsed.os.version == "10") {
                     if (parsed.browser.name.includes("Chrome") && parsed.browser.version.replaceAll(".0", "") < 110) {
-                        parsed.os.version = "7-11"
+                        parsed.os.version = "7-11";
                     } else {
                         parsed.os.version = "10/11";
                     }
@@ -280,7 +291,7 @@ api.getUser = async function (request, reply) {
     if (data == 404) {
         return reply.view("/userNotFound.hbs", params);
     }
-    params.username = data.username
+    params.username = data.username;
     params.browser = data.browser;
     params.os = data.os || "?";
     params.id = data.id || "?";
@@ -560,6 +571,8 @@ async function getProjectData(id) {
     params.loveToViewRatio = (params.stats.loves / params.stats.views) * 100;
     params.faveToViewRatio = (params.stats.favorites / params.stats.views) * 100;
     params.faveToLoveRatio = (params.stats.favorites / params.stats.loves) * 100;
+    params.smallLoading = `<span class="img-load-wrapper" style="width: 70px;height: 20px;display: inline-block;margin-bottom: -4px;"><span class="activity"></span></span>`;
+    params.mediumLoading = `<span class="img-load-wrapper" style="width: 75px;height: 20px;display: inline-block;margin-bottom: -4px;"><span class="activity"></span></span>`;
 
     let response = await fetch2("https://scratch.mit.edu/projects/" + id.toString() + "/remixtree/");
     let t = await response.text();
@@ -738,7 +751,86 @@ api.randomUser = async function (request, reply) {
 };
 
 api.posts = async function (request, reply) {
-    return reply.view("/posts.hbs", {username: request.params.username, nav: navbarCode})
+    return reply.view("/posts.hbs", { username: request.params.username, nav: navbarCode });
+};
+
+async function makeQuery(page, query) {
+    const url = `https://api.scratch.mit.edu/search/projects?limit=40&offset=${page * 40}&language=en&mode=popular&q=${encodeURIComponent(query.toLowerCase())}`;
+    // console.log(url)
+    return (await fetch2(url)).json();
 }
+
+async function getSearchStatus(id, name, username) {
+    const query = name;
+    const queryID = id;
+    let output = {};
+    output.status = null;
+
+    let page = 0;
+    while (page <= 60) {
+        console.log("Getting page", page);
+        let response = (await Promise.all([makeQuery(page, query), makeQuery(page + 1, query), makeQuery(page + 2, query), makeQuery(page + 3, query), makeQuery(page + 4, query)])).flat();
+        for (const project of response) {
+            if (project.id == queryID) {
+                console.log(project.stats);
+                console.log("project", id, name, "indexed");
+                output.status = "indexed";
+                output.stats = project.stats;
+                return output;
+            }
+        }
+        page += 5;
+    }
+    console.log("project", id, name, "not indexed with name, trying username");
+    page = 0;
+    while (page <= 25) {
+        console.log("Getting page", page);
+        // console.log("name", username)
+        let response = (await Promise.all([makeQuery(page, username), makeQuery(page + 1, username), makeQuery(page + 2, username), makeQuery(page + 3, username), makeQuery(page + 4, username)])).flat();
+        for (const project of response) {
+            if (project.id == queryID) {
+                console.log(project.stats);
+                console.log("project", id, name, "indexed");
+                output.status = "indexed";
+                output.stats = project.stats;
+                return output;
+            }
+        }
+        page += 5;
+    }
+    console.log("project", id, name, "not indexed");
+    output.status = "notindexed";
+    return output;
+}
+
+api.searchStatus = async function (request, reply) {
+    reply.headers({
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Cache-Control": "max-age=3600",
+    });
+
+    let id = request.params.id;
+
+    if (!id) {
+        return reply.code(400).send("missing id");
+    }
+    let basicInfo = await (await fetch2(`https://api.scratch.mit.edu/projects/${id}`)).json();
+    if (basicInfo.code == "NotFound" || basicInfo.code == "ResourceNotFound") {
+        return reply.code(404).send("project not found");
+    }
+    try {
+        id = parseInt(id);
+    } catch {
+        id = id;
+    }
+    const title = basicInfo.title;
+    const username = basicInfo.author.username;
+
+    reply
+        .code(200)
+        .header("Content-Type", "application/json; charset=utf-8")
+        .send(JSON.stringify(await getSearchStatus(id, title, username), null, 4));
+};
 
 module.exports = api;

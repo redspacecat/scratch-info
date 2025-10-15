@@ -13,6 +13,11 @@
         <script src="/js/info.js"></script>
         <script src="/js/main.js"></script>
         <script src="/js/navbar.js"></script>
+        <style>
+            #lots-of-data * {
+                font-size: large;
+            }
+        </style>
     </head>
     <body>
         {{{nav}}}
@@ -36,7 +41,7 @@
                         </a>
                     </div>
                 </div>
-                <div style="vertical-align: top;margin-left: 10px" id="lots-of-data">
+                <div style="vertical-align: top;margin-left: 10px;" id="lots-of-data">
                     <a style="font-size: x-large;color:blue" target="_blank" href="https://scratch.mit.edu/projects/{{id}}">{{title}}</a>
                     <br />
                     <div style="display:flex">
@@ -50,6 +55,7 @@
                             </div>
                         </a>
                     </div>
+                    <div style="display: flex;flex-wrap:wrap;">
                     <table id="project-stats" style="margin-top:5px;text-align:center;min-width:300px">
                         <tr><td colspan="3">Project Statistics</td></tr>
                         <tr><td class="loves"></td><td class="faves"></td></tr>
@@ -58,7 +64,17 @@
                         <tr><td class="faveToViewRatio" colspan="2"><span></span><span class="info" data-info="favetoview"></span></td></tr>
                         <tr><td class="faveToLoveRatio" colspan="2"><span></span><span class="info" data-info="favetolove"></span></td></tr>
                     </table>
-                    <table style="font-size:small;margin-top:5px;margin-bottom:5px;">
+                    <div style="width: 10px;"></div>
+                    <table id="search-stats" style="margin-top:5px;text-align:center;min-width:300px">
+                        <tr><td colspan="3">Search Statistics<span class="info" data-info="searchstats"></span></td></tr>
+                        <tr><td class="loves">{{{smallLoading}}}</td><td class="faves">{{{smallLoading}}}</td></tr>
+                        <tr><td class="views" colspan="2">{{{smallLoading}}}</td>{{!-- <td class="remixes" style="vertical-align:middle;">{{{smallLoading}}}</td></tr> --}}
+                        <tr><td class="loveToViewRatio" colspan="2"><span>{{{smallLoading}}}</span><span class="info" data-info="lovetoview"></span></td></tr>
+                        <tr><td class="faveToViewRatio" colspan="2"><span>{{{smallLoading}}}</span><span class="info" data-info="favetoview"></span></td></tr>
+                        <tr><td class="faveToLoveRatio" colspan="2"><span>{{{smallLoading}}}</span><span class="info" data-info="favetolove"></span></td></tr>
+                    </table>
+                    </div>
+                    <table style="font-size:small;margin-top:10px;margin-bottom:5px;">
                         <tr><td id="created"></td></tr>
                         <tr><td id="modified"></td></tr>
                         <tr><td id="shared"></td></tr>
@@ -66,43 +82,67 @@
                     <span id="review-status-container">
                         <span id="review-status">...</span>
                         <span class="info" data-info="reviewstatus"></span>
+                        <span id="index-status" style="margin-left: 20px;">{{{smallLoading}}}</span>
+                        <span class="info" data-info="indexstatus"></span>
                     </span>
                 </div>
             </div>
         </div>
         <script>
 
-function handleDarkMode() {
-    if (window.darkMode) {
-        document.querySelectorAll("#container, html").forEach(el => el.classList.add("dark-mode"))
-        document.querySelector("#container img").style.border = "1px solid white"
-        document.querySelectorAll("table td, tr").forEach(el => el.classList.add("dark-mode-table"))
-        document.querySelectorAll("button").forEach(el => el.classList.add("dark-mode", "dark-mode-button"))
-        document.querySelectorAll("a, #username-text").forEach(el => el.classList.add("dark-mode-link"))
-    }
-}
-handleDarkMode()
+            function handleDarkMode() {
+                if (window.darkMode) {
+                    document.querySelectorAll("#container, html").forEach(el => el.classList.add("dark-mode"))
+                    document.querySelector("#container img").style.border = "1px solid white"
+                    document.querySelectorAll("table td, tr").forEach(el => el.classList.add("dark-mode-table"))
+                    document.querySelectorAll("button").forEach(el => el.classList.add("dark-mode", "dark-mode-button"))
+                    document.querySelectorAll("a, #username-text").forEach(el => el.classList.add("dark-mode-link"))
+                }
+            }
+            handleDarkMode()
 
             window.addEventListener("DOMContentLoaded", setup2)
-            function setup2() {
+
+            async function setup2() {
                 if ("{{reviewStatus}}" == "notreviewed") {
-                    document.querySelector("#review-status").innerText = "🤔 Not Rated"
+                    document.querySelector("#review-status").innerText = "🤔 Not Reviewed"
                 } else if ("{{reviewStatus}}" == "safe") {
                     document.querySelector("#review-status").innerText = "✅ Rated FE"
                 } else if ("{{reviewStatus}}" == "notsafe") {
                     document.querySelector("#review-status").innerText = "⛔ Rated NFE"
                 }
 
-                document.querySelector(".loves").innerText = ({{stats.loves}}).toLocaleString()
-                document.querySelector(".faves").innerText = ({{stats.favorites}}).toLocaleString()
-                document.querySelector(".views").innerText = ({{stats.views}}).toLocaleString()
-                document.querySelector(".remixes").innerText = ({{stats.remixes}}).toLocaleString()
-                document.querySelector(".loveToViewRatio").children[0].innerText = `Love/view ratio: ${Math.round({{loveToViewRatio}} * 100) / 100}%`
-                document.querySelector(".faveToViewRatio").children[0].innerText = `Favorite/view ratio: ${Math.round({{faveToViewRatio}} * 100) / 100}%`
-                document.querySelector(".faveToLoveRatio").children[0].innerText = `Favorite/love ratio: ${Math.round({{faveToLoveRatio}} * 100) / 100}%`
+                const statsEl = document.querySelector("#project-stats")
+
+                statsEl.querySelector(".loves").innerText = ({{stats.loves}}).toLocaleString()
+                statsEl.querySelector(".faves").innerText = ({{stats.favorites}}).toLocaleString()
+                statsEl.querySelector(".views").innerText = ({{stats.views}}).toLocaleString()
+                statsEl.querySelector(".remixes").innerText = ({{stats.remixes}}).toLocaleString()
+                statsEl.querySelector(".loveToViewRatio").children[0].innerText = `Love/view ratio: ${Math.round({{loveToViewRatio}} * 100) / 100}%`
+                statsEl.querySelector(".faveToViewRatio").children[0].innerText = `Favorite/view ratio: ${Math.round({{faveToViewRatio}} * 100) / 100}%`
+                statsEl.querySelector(".faveToLoveRatio").children[0].innerText = `Favorite/love ratio: ${Math.round({{faveToLoveRatio}} * 100) / 100}%`
                 document.querySelector("#created").innerText = `Created: ${new Date("{{history.created}}").toLocaleString()}`
                 document.querySelector("#modified").innerText = `Last Modified: ${new Date("{{history.created}}").toLocaleString()}`
                 document.querySelector("#shared").innerText = `Shared: ${new Date("{{history.created}}").toLocaleString()}` }
+        
+
+                (async function() {
+
+                let searchStatus = await (await fetch("/api/v1/projects/{{id}}/searchStatus")).json()
+                const searchStatusEl = document.querySelector("#search-stats")
+                if (searchStatus.status == "notindexed") {
+                    searchStatusEl.hidden = true
+                    document.querySelector("#index-status").innerHTML = "📉 Not Indexed"
+                    return
+                }
+                searchStatusEl.querySelector(".loves").innerHTML = searchStatus.stats.loves.toLocaleString()
+                searchStatusEl.querySelector(".faves").innerHTML = searchStatus.stats.favorites.toLocaleString()
+                searchStatusEl.querySelector(".views").innerHTML = searchStatus.stats.views.toLocaleString()
+                searchStatusEl.querySelector(".loveToViewRatio").children[0].innerHTML = `Love/view ratio: ${Math.round(searchStatus.stats.loves / searchStatus.stats.views * 10000) / 100}%`
+                searchStatusEl.querySelector(".faveToViewRatio").children[0].innerHTML = `Favorite/view ratio: ${Math.round(searchStatus.stats.favorites / searchStatus.stats.views * 10000) / 100}%`
+                searchStatusEl.querySelector(".faveToLoveRatio").children[0].innerHTML = `Favorite/love ratio: ${Math.round((searchStatus.stats.favorites ?? 0) / (searchStatus.stats.loves ?? 0) * 10000) / 100}%`
+                document.querySelector("#index-status").innerHTML = "📈 Indexed"
+                })()
         </script>
     </body>
 </html>

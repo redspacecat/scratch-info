@@ -33,6 +33,7 @@ async function main() {
     fastify.get("/api/v1/users/griffpatch/followerCount", api.rateLimit(4, 60000), api.griffpatchFollowerCount);
     fastify.get("/api/v1/users/:username/browserHistory", api.browserHistory);
     fastify.get("/api/v1/projects/:id/info", api.apiProjectData);
+    fastify.get("/api/v1/projects/:id/searchStatus", api.searchStatus);
     fastify.get("/api/v1/projects/random", api.rateLimit(5, 60000), api.randomProject);
     fastify.get("/api/v1/users/random", api.rateLimit(5, 60000), api.randomUser);
 

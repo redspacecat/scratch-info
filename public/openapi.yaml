@@ -257,6 +257,38 @@ paths:
                   reviewStatus:
                     type: string
                     example: "notreviewed"
+  /projects/{projectID}/searchStatus:
+    get:
+      tags:
+        - projects
+      summary: "Gets the search and index status of a project"
+      description: "This endpoint gets the indexing status and search statistics for a project"
+      operationId: projectSearch
+      parameters:
+        - name: projectID
+          in: path
+          description: The ID of the project
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "indexed"
+                  stats:
+                    type: object
+                    example:
+                      "views": 46515
+                      "loves": 780
+                      "favorites": 656
+                      "remixes": 0
   /projects/random:
     get:
       tags:

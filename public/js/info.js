@@ -42,6 +42,14 @@ let t = {
     griffyfollowers: {
       title: "How do we know @griffpatch's follower count?",
       text: "Since his followers page doesn't load on the Scratch website, I made an API endpoint to get his follower count using the api instead. You can find documentation <a href='/api/docs'>here</a>"
+    },
+    searchstats: {
+        title: "What are search statistics?",
+        text: "Search statistics are the numbers used for the project in search results. They usually don't update very often and are often out of date."
+    },
+    indexstatus: {
+        title: "What is index status?",
+        text: "The index status of a project is whether it can appear in search results. The Scratch project indexer is pretty slow, so new projects may not get indexed for serveral months or longer."
     }
 };
 
