@@ -80,9 +80,9 @@
                         <tr><td id="shared"></td></tr>
                     </table>
                     <span id="review-status-container">
-                        <span id="review-status">...</span>
-                        <span class="info" data-info="reviewstatus"></span>
-                        <span id="index-status" style="margin-left: 20px;">{{{smallLoading}}}</span>
+                        <!-- <span id="review-status">...</span>
+                        <span class="info" data-info="reviewstatus"></span> -->
+                        <span id="index-status" style="margin-left: 0px;">{{{smallLoading}}}</span>
                         <span class="info" data-info="indexstatus"></span>
                     </span>
                 </div>
@@ -104,13 +104,13 @@
             window.addEventListener("DOMContentLoaded", setup2)
 
             async function setup2() {
-                if ("{{reviewStatus}}" == "notreviewed") {
+                /*if ("{{reviewStatus}}" == "notreviewed") {
                     document.querySelector("#review-status").innerText = "🤔 Not Reviewed"
                 } else if ("{{reviewStatus}}" == "safe") {
                     document.querySelector("#review-status").innerText = "✅ Rated FE"
                 } else if ("{{reviewStatus}}" == "notsafe") {
                     document.querySelector("#review-status").innerText = "⛔ Rated NFE"
-                }
+                }*/
 
                 const statsEl = document.querySelector("#project-stats")
 

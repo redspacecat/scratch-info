@@ -542,6 +542,8 @@ api.apiProjectData = async function apiProjectData(request, reply) {
     });
     let data = await getProjectData(request.params.id);
     delete data.nav;
+    delete data.smallLoading;
+    delete data.mediumLoading;
     reply.code(200).header("Content-Type", "application/json; charset=utf-8").send(JSON.stringify(data, null, 4));
 };
 
@@ -574,30 +576,30 @@ async function getProjectData(id) {
     params.smallLoading = `<span class="img-load-wrapper" style="width: 70px;height: 20px;display: inline-block;margin-bottom: -4px;"><span class="activity"></span></span>`;
     params.mediumLoading = `<span class="img-load-wrapper" style="width: 75px;height: 20px;display: inline-block;margin-bottom: -4px;"><span class="activity"></span></span>`;
 
-    let response = await fetch2("https://scratch.mit.edu/projects/" + id.toString() + "/remixtree/");
-    let t = await response.text();
+    // let response = await fetch2("https://scratch.mit.edu/projects/" + id.toString() + "/remixtree/");
+    // let t = await response.text();
 
-    let root = HTMLParser.parse(t);
-    let els = root.getElementsByTagName("script");
+    // let root = HTMLParser.parse(t);
+    // let els = root.getElementsByTagName("script");
 
-    for (var i = 0; i < els.length; i++) {
-        if (els[i].textContent.includes("var projectData = {")) {
-            let el = els[i];
-            if (el.textContent.includes("notsafe")) {
-                params.reviewStatus = "notsafe";
-                break;
-            }
-            if (el.textContent.includes("safe")) {
-                params.reviewStatus = "safe";
-                break;
-            }
-            if (el.innerHTML.includes("notreviewed")) {
-                params.reviewStatus = "notreviewed";
-                break;
-            }
-            break;
-        }
-    }
+    // for (var i = 0; i < els.length; i++) {
+    //     if (els[i].textContent.includes("var projectData = {")) {
+    //         let el = els[i];
+    //         if (el.textContent.includes("notsafe")) {
+    //             params.reviewStatus = "notsafe";
+    //             break;
+    //         }
+    //         if (el.textContent.includes("safe")) {
+    //             params.reviewStatus = "safe";
+    //             break;
+    //         }
+    //         if (el.innerHTML.includes("notreviewed")) {
+    //             params.reviewStatus = "notreviewed";
+    //             break;
+    //         }
+    //         break;
+    //     }
+    // }
     return params;
 }
 
