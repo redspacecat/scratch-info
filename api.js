@@ -22,10 +22,10 @@ let api = {};
 
 async function fetch2(url) {
     let proxyURL = "https://corsproxy.josueart40.workers.dev/?";
-    let proxyURL2 = "https://python-test-punb.onrender.com/proxy";
+    let proxyURL2 = "https://renderapi.quuq.dev/proxy";
     // if (url.startsWith("https://api.scratch.mit.edu")) {
     let thing = await fetch(proxyURL + encodeURIComponent(encodeURI(url)));
-    if (!thing.ok) {
+    if (!thing.ok && thing.status != 404) {
         console.log("scratch is 429, trying to use proxy");
         thing = await fetch(proxyURL2, {
             headers: {
