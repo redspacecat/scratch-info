@@ -51,7 +51,7 @@
                 <span>{{username}}</span> has <span class="img-load-wrapper" style="width: 70px;height: 20px;display: inline-block;margin-bottom: -4px;"><span class="activity"></span></span> posts
             </h2>
         </div>
-        <div style="display: flex;">
+        <div style="display: flex;" id="output-data">
             <table id="categories" hidden>
                 <thead>
                     <tr>
@@ -97,7 +97,13 @@
             return template.content.firstChild;
         }
 
-        let response = (await (await fetch("https://redspacecat.alwaysdata.net/user/" + username)).text()).split("\n")
+        let response = (await (await fetch("https://redspacecat.alwaysdata.net/user/" + username)).text())
+        if (response.trim() == "") {
+            console.log("No posts")
+            document.querySelector("#postCount").innerHTML = `${username} has not posted`
+            document.querySelector("#output-data").remove()
+        }
+        response = response.split("\n")
         const postCount = response.length
         console.log("Post count:", postCount)
 
