@@ -1,0 +1,108 @@
+.user-followers {
+    float: right;
+}
+
+.user-rank-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+    margin: 0 8px;
+}
+
+.user {
+    margin: 10px;
+    background-image: linear-gradient(to right, #d2eef7, #fee4ff);
+    padding: 5px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.user * {
+    vertical-align: middle;
+}
+
+.user-followers {
+    margin-left: auto;
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.user-name {
+    font-size: large;
+}
+
+.user-flag {
+    margin-left: 8px;
+    border-radius: 0px;
+    width: 40px;
+}
+
+.user-rank-link {
+    text-decoration: none;
+    color: darkblue;
+}
+
+.user-rank-name {
+    font-size: 20px;
+}
+
+#amount * {
+    vertical-align: middle;
+}
+
+.user-rank-index {
+    font-size: 25px;
+}
+
+#buttons-bottom {
+    margin: 10px auto;
+    width: fit-content;
+}
+
+#rank-search {
+    font-size: large;
+    width: 400px;
+    border-radius: 8px;
+    padding: 5px;
+    border: 2px solid lightblue;
+}
+
+.alertify.ajs-closable.ajs-pinnable.ajs-pulse * {
+    z-index: 9999999;
+}
+
+#countryselect {
+    border: 2px solid lightblue;
+    border-radius: 5px;
+}
+
+
+#buttons {
+    display: flex;
+  align-items: center;
+  width: fit-content;
+  margin: 0 auto;
+  gap: 5px;
+}
+
+#amount {
+    margin-top: 2px;
+}
+
+html.dark-mode.dark-mode-ranks a {
+    color: lightblue;
+}
+
+html.dark-mode.dark-mode-ranks {
+    columns: white;
+}
+
+html.dark-mode #user_list div {
+    background-image: linear-gradient(to right, #43558d, #823481)
+}
+
+html.dark-mode body {
+    background-image: none !important;
+}

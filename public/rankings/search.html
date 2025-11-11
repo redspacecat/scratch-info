@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="public">
+    <title>User Rankings</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="/js/info.js"></script>
+    <script src="/js/main.js"></script>
+</head>
+
+<body style="margin: 0;">
+    <div style="display: flex;align-items: center;justify-content: center;height: 100vh;flex-wrap: wrap;">
+        <div style="display: flex;justify-content: center;flex-wrap: wrap;">
+            <h2>Searching user rankings for</h2>
+            <div style="width: 100%;"></div>
+            <div>
+                <img id="user-img"
+                    style="width: 50px;height: 50px;border-radius: 5px;vertical-align: middle;margin-right: 5px;">
+                <span id="user-search" style="font-size: 25px;vertical-align: middle;"></span>
+            </div>
+        </div>
+    </div>
+    <script>
+        (async function () {
+            const user = new URLSearchParams(location.search).get("user")
+            const searchLocation = new URLSearchParams(location.search).get("location")
+            const withinCountry = new URLSearchParams(location.search).get("withinCountry") == "on"
+            document.querySelector("#user-search").innerText = user
+            document.querySelector("#user-img").src = `https://trampoline.turbowarp.org/avatars/by-username/${user}`
+
+            const r = await fetch(`/api/v1/users/${user}/ranking${withinCountry ? "?country=true": ""}`)
+            const t = await r.text()
+            if (t.includes("user not ranked")) {
+                topbar.show()
+                location.href = "/rankings?error=usernotfound"
+            } else {
+                const ranking = JSON.parse(t).ranking
+                const page = Math.ceil(ranking / 100)
+                topbar.show()
+                location.href = `/rankings?page=${page}&highlight=${ranking}${withinCountry ? "&location=" + JSON.parse(t).country: ""}`
+            }
+        })()
+    </script>
+</body>

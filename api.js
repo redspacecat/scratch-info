@@ -6,6 +6,11 @@ import { put, head } from "@vercel/blob";
 import { time } from "console";
 const fs = require("fs");
 const navbarCode = fs.readFileSync(path.join(__dirname, "api", "navbar.txt"), "utf8");
+const flagCodes = JSON.parse(fs.readFileSync(path.join(__dirname, "api", "flagcodes.json"), "utf8"));
+const locations = JSON.parse(fs.readFileSync(path.join(__dirname, "api", "locations.json"), "utf8"));
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(process.env.SUPA_URL, process.env.SUPA_SERVICEROLEKEY);
 // const Database = require("easy-json-database");
 // const projectDB = new Database("./user-project-database.json", {
 //     snapshots: {
@@ -833,6 +838,143 @@ api.searchStatus = async function (request, reply) {
         .code(200)
         .header("Content-Type", "application/json; charset=utf-8")
         .send(JSON.stringify(await getSearchStatus(id, title, username), null, 4));
+};
+
+async function getRankings(country, page) {
+    if (country == "all") country = null;
+    // console.log(await supabase.from("rankings").select("*").limit(5))
+    const offset = page * 100;
+    console.log("fetching rankings country:", country, "offset", offset);
+    if (country) {
+        console.time("fetch");
+        const { data, error } = await supabase.rpc("get_ranking_location", { offset2: offset, location: country });
+        console.log(data, error);
+        // const { data, error } = await supabase
+        //     .from("rankings")
+        //     .select("*")
+        //     .eq("country", country)
+        //     .order("followers", { ascending: false })
+        //     .range(page * 100, page * 100 + 99);
+        console.timeEnd("fetch");
+
+        // console.time("count");
+        // const { data2, count } = await supabase.from("rankings").select("*", { count: "planned" }).eq("country", country);
+        // console.timeEnd("count");
+        // console.log(data2, count);
+
+        return data;
+    } else {
+        console.time("fetch");
+        const { data, error } = await supabase.rpc("get_ranking", { offset2: offset });
+        console.log(data, error);
+        // const { data, error } = await supabase
+        //     .from("rankings")
+        //     .select("*")
+        //     .order("followers", { ascending: false })
+        //     .range(page * 100, page * 100 + 99);
+        console.timeEnd("fetch");
+
+        // console.time("count");
+        // const { data2, count } = await supabase.from("rankings").select("*", { count: "planned" });
+        // console.timeEnd("count");
+        // console.log(data2, count);
+
+        return data;
+    }
+}
+
+async function getUserRankings(username, country) {
+    console.log("ranking requested for", username);
+    const included = await supabase.from("rankings").select("username,country").eq("username", username);
+    if (!included.data.length) {
+        return "ERROR: user not ranked";
+    }
+    const userCountry = included.data[0].country;
+    // if (userCountry != country && country) {
+    //     return "ERROR: country mismatch";
+    // }
+
+    let data, error;
+    if (country) {
+        ({ data, error } = await supabase.rpc("get_user_ranking_country", { say: username, location: userCountry }));
+    } else {
+        ({ data, error } = await supabase.rpc("get_user_ranking", { say: username }));
+    }
+    console.log(data, error);
+    data[0].ranking = data[0].row_number;
+    if (userCountry) data[0].country = userCountry;
+    delete data[0].row_number;
+    console.log(data[0]);
+    return data[0];
+}
+
+api.rankings = async function (request, reply) {
+    reply.headers({
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Cache-Control": "max-age=3600",
+    });
+    reply.code(200).send(await getRankings(request.query.country, request.query.page));
+};
+
+api.userRanking = async function (request, reply) {
+    reply.headers({
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Cache-Control": "max-age=3600",
+    });
+    reply.code(200).send(await getUserRankings(request.params.username, request.query.country));
+};
+
+api.rankingsPage = async function (request, reply) {
+    let params = {};
+    params.nav = navbarCode;
+    const page = parseInt(request.query.page ?? 1) - 1;
+    let country = request.query.location ?? null;
+
+    let data = await getRankings(country, page);
+    data = data || [];
+    console.log(data);
+    let i = page * 100 + 1;
+    for (let user of data) {
+        user.followers = user.followers.toLocaleString();
+        user.index = i;
+        if (user.country && flagCodes[user.country]) {
+            user.countryName = user.country;
+            user.country = flagCodes[user.country].toUpperCase();
+        } else {
+            user.country = "none";
+        }
+        i++;
+    }
+    params.users = data;
+    params.page = page + 1;
+    params.location = country || "none";
+    params.locations = locations;
+    // params.count = count
+    return reply.view("/rankings.hbs", params);
+};
+
+api.rankingsCount = async function (request, reply) {
+    // if (!request.query.country) {
+    //     return reply.code(400).send("Missing country")
+    // }
+    reply.headers({
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Cache-Control": "max-age=604800",
+    });
+    let data, error;
+    let country = request.query.country
+    if (country == "all") country = null;
+    if (!country) {
+        ({ data, error } = await supabase.rpc("get_amount_nocountry"));
+    } else {
+        ({ data, error } = await supabase.rpc("get_amount", { location: country }));
+    }
+    const amount = data[0].count;
+    console.log(amount, "in", country || "all");
+    reply.code(200).send(amount);
 };
 
 module.exports = api;

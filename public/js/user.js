@@ -78,6 +78,20 @@ async function getRanking() {
     }
 }
 
+async function getFollowerRanking() {
+    const data = await (await fetch(`/api/v1/users/${username}/ranking`)).text()
+
+    document.querySelector("#ranking").hidden = false
+    document.querySelector("#ranking").previousElementSibling.style.display = "none";
+    if (data.includes("not ranked")) {
+        document.querySelector("#ranking").innerText = "Unranked"
+    } else {
+        document.querySelector("#ranking").innerText = "#" + JSON.parse(data).ranking
+    }
+
+}
+
+
 async function getGriffyFollowers() {
     document.querySelector("span.info[data-info='griffyfollowers']").style.visibility = "visible";
     //document.querySelector("#followers").innerText = "Loading... (this may take up to 30 seconds if the server is slow)";
@@ -98,6 +112,7 @@ async function getGriffyFollowers() {
 getMoreData();
 getEvenMoreData();
 getForumPosts();
+getFollowerRanking()
 // if (username == "griffpatch") {
 //     getGriffyFollowers();
 // }

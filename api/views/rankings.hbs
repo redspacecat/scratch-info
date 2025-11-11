@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="public">
+    <title>User Rankings — Scratch Info</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <script src="/js/info.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/navbar.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
+
+    <link rel="stylesheet" href="http://cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css">
+    <link rel="stylesheet" href="http://cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/default.min.css">
+    <link rel="stylesheet" href="/css/rankings.css">
+</head>
+
+<body>
+    {{{nav}}}
+    <div style="text-align: center;">
+        <h2 style="margin-bottom: 0;">User Follower Rankings<span id="countrybox"></span></h2>
+        <span>View the rankings of the top 3,000,000+ most followed Scratchers</span>
+        <form id="rank-search-container" class="cf" action="/rankings/search.html" method="get" onsubmit="topbar.show()" style="margin-top: 20px;">
+            <input type="text" name="user" placeholder="🔍 Search for a user..." id="rank-search">
+            <br>
+            <select onchange="setCountry()" id="countryselect">
+                {{#each locations}}
+                <option value="{{this.val}}">{{this.display}}</option>
+                {{/each}}
+            </select>
+            {{!-- <input type="checkbox" id="searchWithCountry" name="withinCountry">
+            <label for="searchWithCountry">Search in user's country</label> --}}
+        </form>
+
+        <div id="buttons">
+            <a id="first" hidden>&lt; First Page</a>
+            <a id="prev" hidden>&lt; Previous Page</a>
+            <span id="amount">
+                <span>Page <input type="number" value="{{page}}" style="width: 70px;text-align: center;margin-bottom: 5px;" onchange="changePage(this.value)"> of </span>
+                <span class="img-load-wrapper" style="width: 50px; height: 20px; display: inline-block;">
+                    <span class="activity"></span>
+                </span>
+                <span id="actual-amount"></span>
+            </span>
+            <a id="next">Next Page &gt;</a>
+            <a id="last" hidden>Last Page &gt;</a>
+        </div>
+    </div>
+    <div id="user_list">
+        {{#each users}}
+        <div class="user" id="item-{{this.index}}">
+            <span class="user-rank-index">#{{this.index}}</span>
+            <a class="user-rank-link" href="/users/{{this.username}}" title="View {{this.username}}'s stats">
+                <span class="img-load-wrapper" style="width: 60px; height: 60px; display: inline-block;border-radius: 5px;margin: 0 8px;"><span class="activity"></span></span>
+                <img src="https://cdn2.scratch.mit.edu/get_image/user/{{this.user_id}}_90x90.png" class="user-rank-img" style="display: none !important;" onload="this.previousElementSibling.style.display = 'none';this.style.display = 'unset'">
+                <span class="user-rank-name">{{this.username}}</span>
+            </a>
+            {{#if this.country}}
+            <a href="?location={{countryName}}"><img class="user-flag" src="https://flagsapi.com/{{this.country}}/flat/48.png" onerror="this.remove()" title="{{this.countryName}}" loading="lazy"></a>
+            {{/if}}
+            <span class="user-followers">{{this.followers}}</span>
+        </div>
+        {{/each}}
+    </div>
+    <div id="buttons-bottom"></div>
+    <script>
+        const page = {{page}}
+        let country = "{{location}}"
+        if (country == "none") country = "all";
+    </script>
+    <script src="/js/rankings.js"></script>
+</body>
+
+</html>
