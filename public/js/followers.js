@@ -5,6 +5,13 @@ document.querySelector("#f").addEventListener("submit", function (e) {
     return 0;
 });
 
+if (location.hash) {
+    document.querySelector("#un").value = location.hash.slice(1)
+    count()
+}
+
+window.onhashchange = () => location.reload()
+
 async function request(url) {
     const r = await fetch("https://renderapi.quuq.dev/proxy", {
         headers: {
@@ -27,9 +34,10 @@ async function count() {
         document.querySelector("#bar").style.width = currentWidth + changePercent + "%";
     }, 250);
     const re = await fetch(`/api/v1/users/${username}/info?mode=followering`)
-    const { followers } = await re.json()
+    const json = await re.json()
+    const { followers } = json
     clearInterval(it);
-    if (Object.keys(re).length == 1) {
+    if (Object.keys(json).length == 1) {
         document.querySelector("#bar").style.width = "100%";
 
         document.querySelector("#output").innerHTML = `${username} does not exist`;
