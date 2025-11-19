@@ -1,9 +1,9 @@
 <nav class="navbar">
     <div class="navbar-content">
         <a href="/" class="nav-logo">Scratch <!--<img src="/favicon.ico" id="navbar-logo-img">-->Info</a>
-        <a href="/" class="nav-link">Home</a>
         <a href="/rankings" class="nav-link">User Rankings</a>
         <a href="/forums" class="nav-link">Forum Leaderboards</a>
+        <a href="/followers" class="nav-link">Total Followers</a>
         <a href="/about" class="nav-link">About</a>
         <a href="/api/docs" class="nav-link">API</a>
         <div style="display: flex;">

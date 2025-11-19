@@ -49,6 +49,7 @@ async function main() {
     fastify.get("/api/docs", api.page("apiDocs"));
     fastify.get("/forums", api.page("forums"));
     fastify.get("/rankings", api.rankingsPage);
+    fastify.get("/followers", api.page("followers"));
 
     fastify.setNotFoundHandler(api.page("404"))
     // fastify.all("/test", async function (request, reply) {

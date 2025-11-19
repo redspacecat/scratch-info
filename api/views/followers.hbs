@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="public">
+    <title>User Followers — Scratch Info</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <script src="/js/info.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/navbar.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/default.min.css">
+    <style>
+        #progress {
+            max-width: 500px;
+            background-color: lightgray;
+            transition: opacity 1s;
+        }
+
+        #bar {
+            width: 0%;
+            height: 30px;
+            background-color: green;
+            transition: width 1s ease;
+        }
+
+        #progress,
+        #bar {
+            border-radius: 15px;
+        }
+
+        #loading-shine {
+            position: absolute;
+            height: 30px;
+            background-image: linear-gradient(to left, rgba(0, 254, 39, 0.05), rgba(0, 254, 39, 0.3), rgba(0, 254, 39, 0.6), rgba(0, 254, 39, 0.3), rgba(0, 254, 39, 0.05));
+            animation: loading 2s infinite;
+            z-index: 45;
+            width: 45%;
+            left: -45%;
+        }
+
+        #bar {
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    {{{nav}}}
+    <div id="container" style="text-align: center;">
+        <h2>Total Follower Count</h2>
+        <p>View the total number of followers you've ever had, including deleted ones.</p>
+        <form id="f">
+            <label for="un">Enter a username: </label>
+            <input type="text" placeholder="griffpatch" id="un">
+            <input type="submit" value="Go">
+        </form>
+        <br>
+        <div id="progress" class="c" hidden>
+            <div id="bar">
+                <div id="loading-shine"></div>
+            </div>
+        </div>
+        <div id="outputs" hidden>
+            <span id="output"></span><br>
+            <span id="output2"></span>
+        </div>
+    </div>
+    <script src="/js/followers.js"></script>
+</body>

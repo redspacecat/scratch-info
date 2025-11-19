@@ -286,3 +286,13 @@ html.dark .search-form button {
     outline: 5px solid lightblue;
     background-color: lightblue;
 }
+
+.nav-link {
+    margin: -1px;
+}
+
+@media (max-width: 1210px) {
+    #input-container {
+        display: none;
+    }
+}
