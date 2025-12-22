@@ -112,7 +112,7 @@ async function getGriffyFollowers() {
 getMoreData();
 getEvenMoreData();
 getForumPosts();
-getFollowerRanking()
+// getFollowerRanking()
 // if (username == "griffpatch") {
 //     getGriffyFollowers();
 // }

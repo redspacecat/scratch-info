@@ -32,13 +32,13 @@ async function main() {
     fastify.get("/api/v1/users/:username/info", api.getUserInfo);
     fastify.get("/api/v1/users/griffpatch/followerCount", api.rateLimit(4, 60000), api.griffpatchFollowerCount);
     fastify.get("/api/v1/users/:username/browserHistory", api.browserHistory);
-    fastify.get("/api/v1/users/:username/ranking", api.userRanking);
+    // fastify.get("/api/v1/users/:username/ranking", api.userRanking);
     fastify.get("/api/v1/projects/:id/info", api.apiProjectData);
     fastify.get("/api/v1/projects/:id/searchStatus", api.searchStatus);
     fastify.get("/api/v1/projects/random", api.rateLimit(5, 60000), api.randomProject);
     fastify.get("/api/v1/users/random", api.rateLimit(5, 60000), api.randomUser);
-    fastify.get("/api/v1/rankings", api.rankings);
-    fastify.get("/api/v1/rankings/count", api.rankingsCount);
+    // fastify.get("/api/v1/rankings", api.rankings);
+    // fastify.get("/api/v1/rankings/count", api.rankingsCount);
 
     fastify.get("/", api.page("main"));
     fastify.get("/users/:username", api.getUser);
@@ -48,7 +48,7 @@ async function main() {
     fastify.get("/about", api.page("about"));
     fastify.get("/api/docs", api.page("apiDocs"));
     fastify.get("/forums", api.page("forums"));
-    fastify.get("/rankings", api.rankingsPage);
+    // fastify.get("/rankings", api.rankingsPage);
     fastify.get("/followers", api.page("followers"));
 
     fastify.setNotFoundHandler(api.page("404"))
