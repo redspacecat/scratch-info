@@ -1,6 +1,4 @@
 User-agent: MJ12bot
 User-agent: dotbot
-Disallow: /
-
 User-agent: SERankingBacklinksBot
-Crawl-delay: 10 
+Disallow: /
