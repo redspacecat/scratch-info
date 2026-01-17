@@ -52,25 +52,27 @@ async function getEvenMoreData() {
 
 async function getForumPosts() {
     getRanking();
-    let text = await (await fetch(`https://redspacecat.alwaysdata.net/user/${username}`)).text()
-    let count = text.trim() == "" ? 0: text.split("\n").length;
+    // let text = await (await fetch(`https://redspacecat.alwaysdata.net/user/${username}`)).text()
+    // let count = text.trim() == "" ? 0: text.split("\n").length;
+    const count = (await (await fetch(`https://api.scratchpost.quuq.dev/users/${username}/count`)).json()).count
     document.querySelector("#postCount").innerText = count;
     document.querySelector("#postCount").previousElementSibling.style.display = "none";
     document.querySelector("#postCount").hidden = false;
 }
 
 async function getRanking() {
-    const data = (await (await fetch("https://raw.githubusercontent.com/redspacecat/scratch-forums-data/main/post_counts.txt")).text()).trim().split("\n");
-    for (let [i, d] of data.entries()) {
-        const item = d.split(",");
-        data[i] = { user: item[0], count: parseInt(item[1].trim()) };
-    }
+    // const data = (await (await fetch("https://raw.githubusercontent.com/redspacecat/scratch-forums-data/main/post_counts.txt")).text()).trim().split("\n");
+    // for (let [i, d] of data.entries()) {
+    //     const item = d.split(",");
+    //     data[i] = { user: item[0], count: parseInt(item[1].trim()) };
+    // }
 
-    const usernames = data.map((el) => el.user.toLowerCase());
-    const index = usernames.indexOf(username.toLowerCase());
-    if (index != -1) {
-        console.log("forum ranking", index);
-        document.querySelector("#forumRanking").innerText = "#" + (index + 1);
+    // const usernames = data.map((el) => el.user.toLowerCase());
+    // const index = usernames.indexOf(username.toLowerCase());
+    const rank = (await (await fetch(`https://api.scratchpost.quuq.dev/users/${username}/ranking`)).json()).rank
+    if (rank) {
+        console.log("forum ranking", rank);
+        document.querySelector("#forumRanking").innerText = "#" + rank;
         document.querySelector("#forumRanking").hidden = false
         document.querySelector("#forumRanking").previousElementSibling.style.display = "none";
     } else {
