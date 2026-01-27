@@ -123,8 +123,8 @@
                 statsEl.querySelector(".faveToViewRatio").children[0].innerText = `Favorite/view ratio: ${Math.round({{faveToViewRatio}} * 100) / 100}%`
                 statsEl.querySelector(".faveToLoveRatio").children[0].innerText = `Favorite/love ratio: ${Math.round({{faveToLoveRatio}} * 100) / 100}%`
                 document.querySelector("#created").innerText = `Created: ${new Date("{{history.created}}").toLocaleString()}`
-                document.querySelector("#modified").innerText = `Last Modified: ${new Date("{{history.created}}").toLocaleString()}`
-                document.querySelector("#shared").innerText = `Shared: ${new Date("{{history.created}}").toLocaleString()}` }
+                document.querySelector("#modified").innerText = `Last Modified: ${new Date("{{history.modified}}").toLocaleString()}`
+                document.querySelector("#shared").innerText = `Shared: ${new Date("{{history.shared}}").toLocaleString()}` }
         
 
                 (async function() {
